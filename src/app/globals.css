@@ -1,0 +1,10 @@
+/* Entry stylesheet.
+   1. Untitled UI base (tailwind + theme tokens + typography)
+   2. 4HER warm palette override — see src/styles/brand.css to retune. */
+@import "../styles/globals.css";
+@import "../styles/brand.css";
+
+body {
+    background: var(--color-bg-primary);
+    color: var(--color-text-primary);
+}

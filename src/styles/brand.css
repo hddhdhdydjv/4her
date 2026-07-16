@@ -1,0 +1,97 @@
+/* ============================================================================
+   4HER — Marca cálida (Comunicación & Marketing)
+   ----------------------------------------------------------------------------
+   ÚNICO lugar para reajustar la "temperatura" de la marca.
+   Sobrescribe los tokens semánticos de Untitled UI con la paleta cálida.
+   Cambiá acá los HEX/HSL y todo el sitio se reacomoda.
+
+   Paleta base:
+     Fondo (off-white cálido)  #FAF6F1
+     Texto                     #1A1512
+     Acento (terracota/coral)  #C96F4A
+     Secundario neutro         #8A8478
+     Cards / fondos suaves     #F2EBE3
+   ============================================================================ */
+
+:root {
+    /* --- Tokens de marca 4HER (referencia rápida) --- */
+    --brand-cream: #faf6f1;
+    --brand-surface: #f2ebe3;
+    --brand-surface-strong: #eadfd3;
+    --brand-ink: #1a1512;
+    --brand-muted: #8a8478;
+    --brand-accent: #c96f4a;
+    --brand-accent-strong: #b25d3a;
+    --brand-line: #e6ddd2;
+
+    /* --- Escala de acento (terracota), reemplaza el "brand" morado de Untitled --- */
+    --color-brand-25: #fdf8f5;
+    --color-brand-50: #faf0e9;
+    --color-brand-100: #f4ddd0;
+    --color-brand-200: #e9bda4;
+    --color-brand-300: #dd9a77;
+    --color-brand-400: #d3855c;
+    --color-brand-500: #c96f4a;
+    --color-brand-600: #b25d3a;
+    --color-brand-700: #934a2e;
+    --color-brand-800: #723a25;
+    --color-brand-900: #5a2e1e;
+    --color-brand-950: #3a1e14;
+
+    /* --- Superficies --- */
+    --color-bg-primary: var(--brand-cream);
+    --color-bg-primary_alt: var(--brand-cream);
+    --color-bg-primary_hover: var(--brand-surface);
+    --color-bg-secondary: var(--brand-surface);
+    --color-bg-secondary_alt: var(--brand-surface);
+    --color-bg-secondary_hover: var(--brand-surface-strong);
+    --color-bg-active: var(--brand-surface);
+    --color-bg-tertiary: var(--brand-surface-strong);
+
+    --color-bg-brand-primary: #faf0e9;
+    --color-bg-brand-primary_alt: #faf0e9;
+    --color-bg-brand-secondary: #f4ddd0;
+    --color-bg-brand-solid: var(--brand-accent);
+    --color-bg-brand-solid_hover: var(--brand-accent-strong);
+    --color-bg-brand-section: #2a211b;
+    --color-bg-brand-section_subtle: #362a22;
+    --color-bg-primary-solid: #1a1512;
+
+    /* --- Texto --- */
+    --color-text-primary: var(--brand-ink);
+    --color-text-secondary: #4a423b;
+    --color-text-secondary_hover: #362f29;
+    --color-text-tertiary: var(--brand-muted);
+    --color-text-tertiary_hover: #6f6a60;
+    --color-text-quaternary: #a49d90;
+    --color-text-placeholder: #a49d90;
+    --color-text-brand-primary: #5a2e1e;
+    --color-text-brand-secondary: var(--brand-accent-strong);
+    --color-text-brand-secondary_hover: #934a2e;
+    --color-text-brand-tertiary: var(--brand-accent);
+    --color-text-brand-tertiary_alt: var(--brand-accent);
+    --color-text-primary_on-brand: #ffffff;
+    --color-text-secondary_on-brand: #f4ddd0;
+    --color-text-tertiary_on-brand: #e9bda4;
+    --color-text-white: #ffffff;
+
+    /* --- Foreground / iconos --- */
+    --color-fg-brand-primary: var(--brand-accent);
+    --color-fg-brand-primary_alt: var(--brand-accent);
+    --color-fg-brand-secondary: var(--brand-accent);
+
+    /* --- Bordes --- */
+    --color-border-primary: var(--brand-line);
+    --color-border-secondary: #efe7dc;
+    --color-border-tertiary: #f4eee6;
+    --color-border-brand: var(--brand-accent);
+    --color-border-brand-solid: var(--brand-accent);
+
+    /* --- Focus ring accesible --- */
+    --color-focus-ring: var(--brand-accent);
+
+    /* --- Tipografía: serif elegante para títulos + sans legible para cuerpo --- */
+    /* Fraunces (serif) y Inter (sans) se cargan en layout.tsx vía next/font. */
+    --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+    --font-body: var(--font-inter), -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
