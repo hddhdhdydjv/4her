@@ -1,6 +1,6 @@
 /* Entry stylesheet.
    1. Untitled UI base (tailwind + theme tokens + typography)
-   2. 4HER brand skin — see src/styles/brand.css to retune palette/fonts. */
+   2. 4HER brand skin - see src/styles/brand.css to retune palette/fonts. */
 @import "../styles/globals.css";
 @import "../styles/brand.css";
 

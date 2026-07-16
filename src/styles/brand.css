@@ -1,5 +1,5 @@
 /* ============================================================================
-   4HER — Dirección visual "Aptos-inspired" (bloques de color + grotesque + mono)
+   4HER - Dirección visual "Aptos-inspired" (bloques de color + grotesque + mono)
    ----------------------------------------------------------------------------
    ÚNICO lugar para reajustar la piel de la marca.
    Base crema + bloques sage/olivo/negro alternados, acento terracota cálido.
@@ -22,7 +22,7 @@
     /* --- Tinta / acentos --- */
     --brand-ink: #151512;
     --brand-muted: #7c766a;
-    --brand-accent: #c96f4a; /* terracota — ADN 4HER */
+    --brand-accent: #c96f4a; /* terracota - ADN 4HER */
     --brand-accent-deep: #b25d3a;
     --brand-line: #dcd7c9;
 

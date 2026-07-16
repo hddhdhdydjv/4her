@@ -1,0 +1,100 @@
+"use client";
+
+import { useScrollProgress } from "@/hooks/use-scroll-progress";
+import { cx } from "@/utils/cx";
+
+const steps = [
+    { number: "01", title: "Nos conocemos", text: "Escuchamos qué querés lograr y a quién querés llegar." },
+    { number: "02", title: "Definimos el rumbo", text: "Acordamos qué decir y por qué antes de producir nada." },
+    { number: "03", title: "Creamos juntos", text: "Mostramos, ajustamos con tu feedback, iteramos rápido." },
+    { number: "04", title: "Acompañamos", text: "Seguimos midiendo y afinando. No entregamos y desaparecemos." },
+];
+
+const N = steps.length;
+
+export function ProcessScroll() {
+    const { ref, progress, reduced } = useScrollProgress<HTMLDivElement>();
+
+    const StepRow = ({ i, active }: { i: number; active: boolean }) => {
+        const s = steps[i];
+        return (
+            <div className="flex gap-6">
+                <div
+                    className={cx(
+                        "flex h-14 w-14 shrink-0 items-center justify-center rounded-full border font-display text-lg font-semibold transition-colors duration-300",
+                        active
+                            ? "border-transparent bg-[var(--brand-accent)] text-white"
+                            : "border-[var(--brand-ink)]/20 text-[var(--brand-ink)]/40",
+                    )}
+                >
+                    {s.number}
+                </div>
+                <div
+                    className={cx(
+                        "pt-1 transition-all duration-300",
+                        active ? "opacity-100" : "opacity-40",
+                    )}
+                >
+                    <h3 className="font-display text-2xl font-semibold text-primary sm:text-3xl">{s.title}</h3>
+                    <p className="mt-2 max-w-md text-base leading-relaxed text-tertiary">{s.text}</p>
+                </div>
+            </div>
+        );
+    };
+
+    if (reduced) {
+        return (
+            <section id="proceso" className="mx-auto max-w-container px-6 py-24">
+                <h2 className="font-display text-4xl font-semibold text-primary">Cómo trabajamos</h2>
+                <div className="mt-12 flex flex-col gap-10">
+                    {steps.map((_, i) => (
+                        <StepRow key={i} i={i} active />
+                    ))}
+                </div>
+            </section>
+        );
+    }
+
+    return (
+        <section id="proceso" ref={ref} className="relative h-[300vh] bg-[var(--brand-cream)]">
+            <div className="sticky top-0 flex h-screen items-center overflow-hidden">
+                <div className="mx-auto grid w-full max-w-container gap-12 px-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
+                    <div>
+                        <h2 className="font-display text-4xl leading-[1.02] font-semibold text-balance text-primary sm:text-5xl">
+                            Un proceso simple, sin cajas negras
+                        </h2>
+                        <p className="mt-6 max-w-sm text-lg text-tertiary">
+                            Cuatro pasos. Te acompañamos en cada uno, sin desaparecer al entregar.
+                        </p>
+                    </div>
+
+                    <div className="relative flex flex-col gap-9 pl-2">
+                        {/* Línea que se dibuja con el scroll */}
+                        <svg
+                            className="absolute top-7 bottom-7 left-[27px] w-1"
+                            viewBox="0 0 2 100"
+                            preserveAspectRatio="none"
+                            aria-hidden="true"
+                        >
+                            <line x1="1" y1="0" x2="1" y2="100" stroke="var(--brand-ink)" strokeOpacity="0.12" strokeWidth="2" />
+                            <line
+                                x1="1"
+                                y1="0"
+                                x2="1"
+                                y2="100"
+                                stroke="var(--brand-accent)"
+                                strokeWidth="2"
+                                pathLength={1}
+                                strokeDasharray="1"
+                                strokeDashoffset={1 - progress}
+                            />
+                        </svg>
+                        {steps.map((_, i) => (
+                            <StepRow key={i} i={i} active={progress * N >= i + 0.35} />
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+}

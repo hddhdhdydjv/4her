@@ -1,6 +1,5 @@
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Stripes } from "@/components/graphics/op-art";
+import { Globe } from "@/components/graphics/illustrations";
 import { Reveal } from "@/components/motion/reveal";
 
 const contrastCards = [
@@ -12,11 +11,12 @@ const contrastCards = [
 export function Hero() {
     return (
         <section id="inicio" className="relative">
-            {/* Bloque superior crema con titular grande */}
             <div className="mx-auto max-w-container px-6 pt-36 pb-16 sm:pt-44 lg:pt-52">
-                <div className="grid gap-10 lg:grid-cols-[1fr_auto] lg:items-end">
+                <div className="grid gap-10 lg:grid-cols-[1fr_auto] lg:items-center">
                     <div className="max-w-4xl">
-                        <Badge>Comunicación &amp; Marketing</Badge>
+                        <p className="font-mono text-xs tracking-[0.14em] text-brand-secondary uppercase">
+                            Comunicación &amp; Marketing
+                        </p>
                         <h1 className="mt-6 font-display text-[2.6rem] leading-[0.98] font-semibold tracking-tight text-balance text-primary sm:text-6xl lg:text-7xl">
                             Más estratégico que una <span className="text-brand-secondary">agencia</span>,
                             <br className="hidden sm:block" /> más cercano que un{" "}
@@ -24,14 +24,12 @@ export function Hero() {
                         </h1>
                     </div>
 
-                    {/* Op-art block (rol de "imagen") */}
-                    <div className="hidden h-40 w-40 shrink-0 overflow-hidden rounded-2xl lg:block">
-                        <Stripes className="h-full w-full" stripe="var(--brand-ink)" bg="var(--brand-sage)" />
+                    <div className="hidden h-44 w-44 shrink-0 text-[var(--brand-ink)] lg:block">
+                        <Globe className="h-full w-full" spin />
                     </div>
                 </div>
             </div>
 
-            {/* Bloque olivo: subtítulo + descripción + CTAs */}
             <div className="bg-[var(--brand-olive)]">
                 <div className="mx-auto grid max-w-container gap-10 px-6 py-16 lg:grid-cols-[1.4fr_1fr] lg:items-center lg:py-20">
                     <div className="max-w-2xl">
@@ -56,7 +54,6 @@ export function Hero() {
                         </div>
                     </div>
 
-                    {/* 3 mini-cards de contraste */}
                     <div className="flex flex-col gap-2.5">
                         {contrastCards.map((card, i) => (
                             <Reveal key={card.vs} delay={i * 90} y={16}>

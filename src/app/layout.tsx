@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Schibsted_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-// Tipografía centralizada — cambiar acá afecta todo el sitio.
+// Tipografía centralizada - cambiar acá afecta todo el sitio.
 // Grotesque neutro para títulos (estilo Aptos):
 const grotesk = Schibsted_Grotesk({
     variable: "--font-grotesk",
@@ -25,7 +25,7 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-    title: "4HER — Comunicación & Marketing",
+    title: "4HER - Comunicación & Marketing",
     description:
         "Marca y comunicación con criterio. Más estratégico que una agencia tradicional, más cercano que un freelance.",
 };

@@ -1,9 +1,8 @@
-import { Badge } from "@/components/ui/badge";
-import { Chevrons } from "@/components/graphics/op-art";
+import { Network } from "@/components/graphics/illustrations";
 import { Reveal } from "@/components/motion/reveal";
 
 /**
- * PLACEHOLDER — Quiénes somos.
+ * PLACEHOLDER - Quiénes somos.
  * Pendiente de datos reales de la empresa. No redactar copy inventado.
  */
 export function About() {
@@ -12,11 +11,10 @@ export function About() {
             <Reveal>
                 <div className="grid items-center gap-12 lg:grid-cols-2">
                     <div>
-                        <Badge tone="neutral">Quiénes somos</Badge>
-                        <p className="mt-6 font-mono text-[11px] tracking-widest text-quaternary uppercase">
-                            Placeholder
+                        <p className="font-mono text-[11px] tracking-widest text-quaternary uppercase">
+                            Placeholder / quiénes somos
                         </p>
-                        <p className="mt-3 font-display text-3xl leading-tight font-medium text-balance text-primary sm:text-4xl">
+                        <p className="mt-4 font-display text-3xl leading-tight font-medium text-balance text-primary sm:text-4xl">
                             Texto pendiente de definir
                         </p>
                         <p className="mt-4 max-w-md text-lg leading-relaxed text-tertiary">
@@ -24,13 +22,8 @@ export function About() {
                         </p>
                     </div>
 
-                    {/* Bloque visual (op-art como placeholder de imagen) */}
-                    <div className="aspect-[4/3] overflow-hidden rounded-3xl">
-                        <Chevrons
-                            className="h-full w-full"
-                            stripe="var(--brand-ink)"
-                            bg="var(--brand-sage)"
-                        />
+                    <div className="flex aspect-[4/3] items-center justify-center rounded-3xl bg-[var(--brand-black)] text-[var(--brand-sage)]">
+                        <Network className="h-3/4 w-3/4" spin />
                     </div>
                 </div>
             </Reveal>

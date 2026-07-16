@@ -1,18 +1,16 @@
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input, Label, Textarea } from "@/components/ui/field";
 import { Reveal } from "@/components/motion/reveal";
 
-/** Cierre. Bloque sage. Última sección (sin footer). */
+/** Cierre full-height, sin eyebrow, sin footer. Última pantalla. */
 export function Contact() {
     return (
-        <section id="contacto" className="bg-[var(--brand-sage)]">
-            <div className="mx-auto max-w-container px-6 pt-24 pb-40 lg:pt-32 lg:pb-48">
+        <section id="contacto" className="flex min-h-screen items-center bg-[var(--brand-sage)]">
+            <div className="mx-auto w-full max-w-container px-6 pt-28 pb-40 lg:pb-32">
                 <Reveal>
-                    <div className="grid gap-14 lg:grid-cols-2">
+                    <div className="grid gap-14 lg:grid-cols-2 lg:items-center">
                         <div className="max-w-xl">
-                            <Badge tone="neutral">Cierre</Badge>
-                            <h2 className="mt-6 font-display text-5xl leading-[0.98] font-semibold tracking-tight text-balance text-primary sm:text-6xl">
+                            <h2 className="font-display text-5xl leading-[0.96] font-semibold tracking-tight text-balance text-primary sm:text-7xl">
                                 Transformemos ideas en impacto
                             </h2>
                             <p className="mt-6 text-lg leading-relaxed text-secondary">
@@ -28,13 +26,7 @@ export function Contact() {
                                 </div>
                                 <div>
                                     <Label htmlFor="email">Email</Label>
-                                    <Input
-                                        id="email"
-                                        name="email"
-                                        type="email"
-                                        placeholder="tu@email.com"
-                                        autoComplete="email"
-                                    />
+                                    <Input id="email" name="email" type="email" placeholder="tu@email.com" autoComplete="email" />
                                 </div>
                                 <div>
                                     <Label htmlFor="message">Mensaje</Label>
