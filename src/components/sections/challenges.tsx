@@ -1,8 +1,9 @@
 import { Badge } from "@/components/ui/badge";
+import { Reveal } from "@/components/motion/reveal";
 
 /**
  * Sección OPCIONAL — Desafíos.
- * Para quitarla, borrá <Challenges /> de src/app/page.tsx (o este archivo).
+ * Para quitarla, borrá <Challenges /> de src/app/page.tsx.
  */
 const challenges = [
     { problem: "Nuestra marca quedó desactualizada", answer: "Rebranding" },
@@ -11,30 +12,33 @@ const challenges = [
     { problem: "Queremos crecer", answer: "Growth" },
 ];
 
+/** Bloque olivo. */
 export function Challenges() {
     return (
-        <section id="desafios" className="border-t border-[var(--color-border-secondary)]">
-            <div className="mx-auto max-w-container px-6 py-20 lg:py-28">
-                <div className="max-w-2xl">
-                    <Badge>Desafíos</Badge>
-                    <h2 className="mt-6 font-display text-3xl font-semibold tracking-tight text-balance text-primary sm:text-4xl">
-                        Quizás te suene alguno de estos
-                    </h2>
-                </div>
+        <section id="desafios" className="bg-[var(--brand-olive)]">
+            <div className="mx-auto max-w-container px-6 py-24 lg:py-32">
+                <Reveal>
+                    <div className="max-w-2xl">
+                        <Badge tone="onDark">Desafíos</Badge>
+                        <h2 className="mt-6 font-display text-4xl leading-[1.02] font-semibold tracking-tight text-balance text-primary_on-brand sm:text-5xl">
+                            Quizás te suene
+                            <br /> alguno de estos
+                        </h2>
+                    </div>
+                </Reveal>
 
-                <div className="mt-14 grid gap-5 sm:grid-cols-2">
-                    {challenges.map((c) => (
-                        <div
-                            key={c.answer}
-                            className="flex items-center justify-between gap-6 rounded-2xl border border-[var(--color-border-secondary)] bg-[var(--color-bg-secondary)] p-7"
-                        >
-                            <p className="font-display text-lg font-medium text-primary">
-                                &ldquo;{c.problem}&rdquo;
-                            </p>
-                            <span className="shrink-0 rounded-full bg-[var(--color-bg-brand-secondary)] px-4 py-1.5 text-sm font-medium text-brand-secondary">
-                                {c.answer}
-                            </span>
-                        </div>
+                <div className="mt-16 grid gap-3 sm:grid-cols-2">
+                    {challenges.map((c, i) => (
+                        <Reveal key={c.answer} delay={i * 70}>
+                            <div className="flex items-center justify-between gap-5 rounded-2xl bg-[var(--brand-cream)] p-6">
+                                <p className="font-display text-lg font-medium text-primary">
+                                    &ldquo;{c.problem}&rdquo;
+                                </p>
+                                <span className="shrink-0 rounded-full bg-[var(--brand-ink)] px-4 py-1.5 font-mono text-[11px] tracking-wide text-primary_on-brand uppercase">
+                                    {c.answer}
+                                </span>
+                            </div>
+                        </Reveal>
                     ))}
                 </div>
             </div>

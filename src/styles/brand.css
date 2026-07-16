@@ -1,31 +1,32 @@
 /* ============================================================================
-   4HER — Marca cálida (Comunicación & Marketing)
+   4HER — Dirección visual "Aptos-inspired" (bloques de color + grotesque + mono)
    ----------------------------------------------------------------------------
-   ÚNICO lugar para reajustar la "temperatura" de la marca.
-   Sobrescribe los tokens semánticos de Untitled UI con la paleta cálida.
-   Cambiá acá los HEX/HSL y todo el sitio se reacomoda.
+   ÚNICO lugar para reajustar la piel de la marca.
+   Base crema + bloques sage/olivo/negro alternados, acento terracota cálido.
 
-   Paleta base:
-     Fondo (off-white cálido)  #FAF6F1
-     Texto                     #1A1512
-     Acento (terracota/coral)  #C96F4A
-     Secundario neutro         #8A8478
-     Cards / fondos suaves     #F2EBE3
+   Cambiá los HEX de acá y todo el sitio se reacomoda.
    ============================================================================ */
 
 :root {
-    /* --- Tokens de marca 4HER (referencia rápida) --- */
-    --brand-cream: #faf6f1;
-    --brand-surface: #f2ebe3;
-    --brand-surface-strong: #eadfd3;
-    --brand-ink: #1a1512;
-    --brand-muted: #8a8478;
-    --brand-accent: #c96f4a;
-    --brand-accent-strong: #b25d3a;
-    --brand-line: #e6ddd2;
+    /* --- Superficies / bloques de sección --- */
+    --brand-cream: #f2f0e8; /* base */
+    --brand-cream-2: #ece9df; /* crema un tono más profundo */
+    --brand-surface: #e7e3d7; /* cards sobre crema */
+    --brand-sage: #cbe9b4; /* bloque verde pistacho */
+    --brand-sage-deep: #b9dd9d;
+    --brand-olive: #847b69; /* bloque olivo/taupe (texto claro) */
+    --brand-olive-deep: #6f6757;
+    --brand-black: #0e0e0c; /* cards y op-art */
+    --brand-black-soft: #16150f;
 
-    /* --- Escala de acento (terracota), reemplaza el "brand" morado de Untitled --- */
-    --color-brand-25: #fdf8f5;
+    /* --- Tinta / acentos --- */
+    --brand-ink: #151512;
+    --brand-muted: #7c766a;
+    --brand-accent: #c96f4a; /* terracota — ADN 4HER */
+    --brand-accent-deep: #b25d3a;
+    --brand-line: #dcd7c9;
+
+    /* --- Escala "brand" de Untitled → terracota (acentos, focus, links) --- */
     --color-brand-50: #faf0e9;
     --color-brand-100: #f4ddd0;
     --color-brand-200: #e9bda4;
@@ -38,41 +39,42 @@
     --color-brand-900: #5a2e1e;
     --color-brand-950: #3a1e14;
 
-    /* --- Superficies --- */
+    /* --- Superficies (tokens semánticos Untitled) --- */
     --color-bg-primary: var(--brand-cream);
     --color-bg-primary_alt: var(--brand-cream);
-    --color-bg-primary_hover: var(--brand-surface);
+    --color-bg-primary_hover: var(--brand-cream-2);
     --color-bg-secondary: var(--brand-surface);
-    --color-bg-secondary_alt: var(--brand-surface);
-    --color-bg-secondary_hover: var(--brand-surface-strong);
-    --color-bg-active: var(--brand-surface);
-    --color-bg-tertiary: var(--brand-surface-strong);
+    --color-bg-secondary_alt: var(--brand-cream-2);
+    --color-bg-secondary_hover: var(--brand-line);
+    --color-bg-active: var(--brand-cream-2);
+    --color-bg-tertiary: var(--brand-line);
 
-    --color-bg-brand-primary: #faf0e9;
-    --color-bg-brand-primary_alt: #faf0e9;
-    --color-bg-brand-secondary: #f4ddd0;
-    --color-bg-brand-solid: var(--brand-accent);
-    --color-bg-brand-solid_hover: var(--brand-accent-strong);
-    --color-bg-brand-section: #2a211b;
-    --color-bg-brand-section_subtle: #362a22;
-    --color-bg-primary-solid: #1a1512;
+    --color-bg-brand-primary: #eef4e4;
+    --color-bg-brand-primary_alt: #eef4e4;
+    --color-bg-brand-secondary: var(--brand-sage);
+    /* Botón primario = pill NEGRO estilo Aptos */
+    --color-bg-brand-solid: var(--brand-ink);
+    --color-bg-brand-solid_hover: #33322c;
+    --color-bg-brand-section: var(--brand-black);
+    --color-bg-brand-section_subtle: var(--brand-black-soft);
+    --color-bg-primary-solid: var(--brand-ink);
 
     /* --- Texto --- */
     --color-text-primary: var(--brand-ink);
-    --color-text-secondary: #4a423b;
-    --color-text-secondary_hover: #362f29;
+    --color-text-secondary: #45413a;
+    --color-text-secondary_hover: #2c2925;
     --color-text-tertiary: var(--brand-muted);
-    --color-text-tertiary_hover: #6f6a60;
-    --color-text-quaternary: #a49d90;
-    --color-text-placeholder: #a49d90;
+    --color-text-tertiary_hover: #625c52;
+    --color-text-quaternary: #9a9384;
+    --color-text-placeholder: #9a9384;
     --color-text-brand-primary: #5a2e1e;
-    --color-text-brand-secondary: var(--brand-accent-strong);
+    --color-text-brand-secondary: var(--brand-accent-deep); /* acento terracota */
     --color-text-brand-secondary_hover: #934a2e;
     --color-text-brand-tertiary: var(--brand-accent);
     --color-text-brand-tertiary_alt: var(--brand-accent);
-    --color-text-primary_on-brand: #ffffff;
-    --color-text-secondary_on-brand: #f4ddd0;
-    --color-text-tertiary_on-brand: #e9bda4;
+    --color-text-primary_on-brand: #f2f0e8;
+    --color-text-secondary_on-brand: #d9d4c7;
+    --color-text-tertiary_on-brand: #b6b1a3;
     --color-text-white: #ffffff;
 
     /* --- Foreground / iconos --- */
@@ -82,16 +84,16 @@
 
     /* --- Bordes --- */
     --color-border-primary: var(--brand-line);
-    --color-border-secondary: #efe7dc;
-    --color-border-tertiary: #f4eee6;
+    --color-border-secondary: #e4dfd2;
+    --color-border-tertiary: #ece8dc;
     --color-border-brand: var(--brand-accent);
-    --color-border-brand-solid: var(--brand-accent);
+    --color-border-brand-solid: var(--brand-ink);
 
     /* --- Focus ring accesible --- */
     --color-focus-ring: var(--brand-accent);
 
-    /* --- Tipografía: serif elegante para títulos + sans legible para cuerpo --- */
-    /* Fraunces (serif) y Inter (sans) se cargan en layout.tsx vía next/font. */
-    --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+    /* --- Tipografía: grotesque para títulos + sans cuerpo + mono labels --- */
+    --font-display: var(--font-grotesk), "Helvetica Neue", Arial, sans-serif;
     --font-body: var(--font-inter), -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    --font-mono: var(--font-mono-label), ui-monospace, "SFMono-Regular", Menlo, monospace;
 }

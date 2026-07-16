@@ -1,10 +1,30 @@
 /* Entry stylesheet.
    1. Untitled UI base (tailwind + theme tokens + typography)
-   2. 4HER warm palette override — see src/styles/brand.css to retune. */
+   2. 4HER brand skin — see src/styles/brand.css to retune palette/fonts. */
 @import "../styles/globals.css";
 @import "../styles/brand.css";
 
 body {
     background: var(--color-bg-primary);
     color: var(--color-text-primary);
+}
+
+/* --- Marquee (banda de marca en scroll) --- */
+@keyframes marquee-scroll {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
+    }
+}
+.marquee-track {
+    animation: marquee-scroll 34s linear infinite;
+}
+
+/* --- Accesibilidad: respetar prefers-reduced-motion --- */
+@media (prefers-reduced-motion: reduce) {
+    .marquee-track {
+        animation: none;
+    }
 }

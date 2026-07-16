@@ -1,19 +1,25 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter } from "next/font/google";
+import { Schibsted_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
 // Tipografía centralizada — cambiar acá afecta todo el sitio.
-// Serif elegante para títulos:
-const fraunces = Fraunces({
-    variable: "--font-fraunces",
+// Grotesque neutro para títulos (estilo Aptos):
+const grotesk = Schibsted_Grotesk({
+    variable: "--font-grotesk",
     subsets: ["latin"],
     display: "swap",
-    axes: ["opsz"],
 });
 
 // Sans legible para cuerpo:
 const inter = Inter({
     variable: "--font-inter",
+    subsets: ["latin"],
+    display: "swap",
+});
+
+// Mono para labels / eyebrows:
+const mono = JetBrains_Mono({
+    variable: "--font-mono-label",
     subsets: ["latin"],
     display: "swap",
 });
@@ -30,7 +36,10 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="es" className={`${fraunces.variable} ${inter.variable} h-full antialiased`}>
+        <html
+            lang="es"
+            className={`${grotesk.variable} ${inter.variable} ${mono.variable} h-full antialiased`}
+        >
             <body className="min-h-full bg-primary font-body text-primary">{children}</body>
         </html>
     );

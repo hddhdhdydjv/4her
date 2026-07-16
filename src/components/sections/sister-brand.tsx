@@ -1,25 +1,37 @@
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Stripes } from "@/components/graphics/op-art";
+import { Reveal } from "@/components/motion/reveal";
 
+/** Bloque negro full-width con op-art. */
 export function SisterBrand() {
     return (
-        <section id="marca-hermana" className="px-6 py-20 lg:py-28">
-            <div className="mx-auto max-w-container overflow-hidden rounded-3xl bg-[var(--color-bg-brand-section)] px-6 py-16 text-center sm:px-16 lg:py-24">
-                <span className="text-xs font-semibold tracking-widest text-tertiary_on-brand uppercase">
-                    Marca hermana
-                </span>
-                <h2 className="mx-auto mt-5 max-w-3xl font-display text-3xl font-semibold tracking-tight text-balance text-white sm:text-4xl lg:text-5xl">
-                    Comunicación y tecnología, una sola casa
-                </h2>
-                <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-secondary_on-brand">
-                    4HER y 4HIS son parte del mismo grupo. Si tu desafío también es técnico —web,
-                    software, automatización—, lo resolvés con el mismo equipo, sin saltar entre
-                    proveedores.
-                </p>
-                <div className="mt-9 flex justify-center">
-                    <Button href="#contacto" size="lg">
-                        Conocer 4HIS
-                    </Button>
-                </div>
+        <section id="marca-hermana" className="bg-[var(--brand-black)]">
+            <div className="mx-auto max-w-container px-6 py-24 lg:py-32">
+                <Reveal>
+                    <div className="grid items-center gap-12 lg:grid-cols-[1.3fr_1fr]">
+                        <div>
+                            <Badge tone="onDark">Marca hermana</Badge>
+                            <h2 className="mt-6 font-display text-4xl leading-[1.02] font-semibold tracking-tight text-balance text-primary_on-brand sm:text-5xl lg:text-6xl">
+                                Comunicación y tecnología, una sola casa
+                            </h2>
+                            <p className="mt-6 max-w-xl text-lg leading-relaxed text-secondary_on-brand">
+                                4HER y 4HIS son parte del mismo grupo. Si tu desafío también es
+                                técnico —web, software, automatización—, lo resolvés con el mismo
+                                equipo, sin saltar entre proveedores.
+                            </p>
+                            <div className="mt-8">
+                                <Button href="#contacto" size="lg">
+                                    Conocer 4HIS
+                                </Button>
+                            </div>
+                        </div>
+
+                        <div className="hidden aspect-square overflow-hidden rounded-3xl lg:block">
+                            <Stripes className="h-full w-full" stripe="var(--brand-sage)" bg="var(--brand-black-soft)" />
+                        </div>
+                    </div>
+                </Reveal>
             </div>
         </section>
     );

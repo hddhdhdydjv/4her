@@ -1,39 +1,39 @@
 import { Badge } from "@/components/ui/badge";
+import { Chevrons } from "@/components/graphics/op-art";
+import { Reveal } from "@/components/motion/reveal";
 
 /**
  * PLACEHOLDER — Quiénes somos.
  * Pendiente de datos reales de la empresa. No redactar copy inventado.
- * Reemplazar el bloque de texto y el bloque visual cuando lleguen los datos.
  */
 export function About() {
     return (
-        <section id="quienes-somos" className="border-t border-[var(--color-border-secondary)]">
-            <div className="mx-auto grid max-w-container items-center gap-14 px-6 py-20 lg:grid-cols-2 lg:py-28">
-                <div>
-                    <Badge tone="neutral">Quiénes somos</Badge>
-                    <div className="mt-6 rounded-2xl border border-dashed border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)] p-8">
-                        <p className="text-xs font-semibold tracking-widest text-tertiary uppercase">
+        <section id="quienes-somos" className="mx-auto max-w-container px-6 py-24 lg:py-32">
+            <Reveal>
+                <div className="grid items-center gap-12 lg:grid-cols-2">
+                    <div>
+                        <Badge tone="neutral">Quiénes somos</Badge>
+                        <p className="mt-6 font-mono text-[11px] tracking-widest text-quaternary uppercase">
                             Placeholder
                         </p>
-                        <p className="mt-3 font-display text-2xl leading-snug font-medium text-primary">
+                        <p className="mt-3 font-display text-3xl leading-tight font-medium text-balance text-primary sm:text-4xl">
                             Texto pendiente de definir
                         </p>
-                        <p className="mt-3 text-base leading-relaxed text-secondary">
+                        <p className="mt-4 max-w-md text-lg leading-relaxed text-tertiary">
                             Se completa con datos reales de la empresa.
                         </p>
                     </div>
-                </div>
 
-                {/* Espacio para imagen / bloque visual */}
-                <div
-                    className="flex min-h-72 items-center justify-center rounded-2xl border border-dashed border-[var(--color-border-primary)] bg-[var(--color-bg-tertiary)]"
-                    aria-hidden="true"
-                >
-                    <span className="text-sm font-medium tracking-wide text-tertiary uppercase">
-                        Imagen / bloque visual
-                    </span>
+                    {/* Bloque visual (op-art como placeholder de imagen) */}
+                    <div className="aspect-[4/3] overflow-hidden rounded-3xl">
+                        <Chevrons
+                            className="h-full w-full"
+                            stripe="var(--brand-ink)"
+                            bg="var(--brand-sage)"
+                        />
+                    </div>
                 </div>
-            </div>
+            </Reveal>
         </section>
     );
 }
