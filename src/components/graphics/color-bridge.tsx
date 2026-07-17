@@ -16,7 +16,7 @@ export function ColorBridge({
     flip?: boolean;
 }) {
     return (
-        <div aria-hidden="true" className="relative h-[16vh] min-h-24" style={{ background: from }}>
+        <div aria-hidden="true" className="relative h-[8vh] min-h-14" style={{ background: from }}>
             <div
                 className="absolute inset-0"
                 style={{

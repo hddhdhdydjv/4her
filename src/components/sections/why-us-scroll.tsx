@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useScrollProgress } from "@/hooks/use-scroll-progress";
 import { cx } from "@/utils/cx";
 
@@ -16,11 +17,39 @@ const PANELS = pairs.length + 1;
 export function WhyUsScroll() {
     const { ref, progress, reduced } = useScrollProgress<HTMLDivElement>();
 
+    // Snap magnetico: al soltar el scroll, engancha al panel mas cercano
+    // para que nunca quede contenido cortado a mitad de camino.
+    useEffect(() => {
+        const el = ref.current;
+        if (!el || reduced) return;
+
+        let timer = 0;
+        const onScroll = () => {
+            window.clearTimeout(timer);
+            timer = window.setTimeout(() => {
+                const range = el.offsetHeight - window.innerHeight;
+                const p = (window.scrollY - el.offsetTop) / range;
+                if (p <= 0.01 || p >= 0.99) return;
+                const target = Math.round(p * (PANELS - 1)) / (PANELS - 1);
+                const top = el.offsetTop + target * range;
+                if (Math.abs(top - window.scrollY) > 6) {
+                    window.scrollTo({ top, behavior: "smooth" });
+                }
+            }, 180);
+        };
+
+        window.addEventListener("scroll", onScroll, { passive: true });
+        return () => {
+            window.removeEventListener("scroll", onScroll);
+            window.clearTimeout(timer);
+        };
+    }, [ref, reduced]);
+
     if (reduced) {
         return (
             <section id="por-que-nosotros" className="bg-[var(--brand-black)]">
                 <div className="mx-auto max-w-container px-6 py-24">
-                    <h2 className="font-display text-4xl font-semibold text-primary_on-brand">
+                    <h2 className="font-display text-4xl font-medium text-primary_on-brand">
                         Los valores no se anuncian, se demuestran
                     </h2>
                     <ul className="mt-12 flex flex-col gap-8">
@@ -51,7 +80,7 @@ export function WhyUsScroll() {
                             <p className="font-mono text-xs tracking-widest text-tertiary_on-brand uppercase">
                                 Nosotros / lo habitual
                             </p>
-                            <h2 className="mt-6 max-w-5xl font-display text-[clamp(3rem,7.5vw,7rem)] leading-[0.96] font-semibold tracking-[-0.03em] text-balance text-primary_on-brand">
+                            <h2 className="mt-6 max-w-5xl font-display text-[clamp(3rem,7.5vw,7rem)] leading-[0.96] font-medium tracking-[-0.03em] text-balance text-primary_on-brand">
                                 Los valores no se <em className="font-light italic">anuncian</em>, se{" "}
                                 <em className="font-light text-[var(--brand-sage)] italic">demuestran</em>
                             </h2>
@@ -63,11 +92,11 @@ export function WhyUsScroll() {
                     {pairs.map((p, i) => (
                         <div key={p.us} className="flex h-full w-screen shrink-0 items-center px-6">
                             <div className="mx-auto grid w-full max-w-container gap-8 lg:grid-cols-[auto_1fr] lg:items-center">
-                                <span className="font-display text-[7rem] leading-none font-semibold text-white/10 tabular-nums sm:text-[10rem]">
+                                <span className="font-display text-[7rem] leading-none font-medium text-white/10 tabular-nums sm:text-[10rem]">
                                     0{i + 1}
                                 </span>
                                 <div>
-                                    <p className="font-display text-3xl leading-tight font-semibold text-balance text-[var(--brand-sage)] sm:text-5xl">
+                                    <p className="font-display text-3xl leading-tight font-medium text-balance text-[var(--brand-sage)] sm:text-5xl">
                                         {p.us}
                                     </p>
                                     <div className="mt-6 inline-flex items-center gap-3 rounded-2xl border border-white/10 px-5 py-3">

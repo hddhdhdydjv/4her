@@ -21,21 +21,21 @@ export function ProcessScroll() {
             <div className="flex gap-6">
                 <div
                     className={cx(
-                        "flex h-14 w-14 shrink-0 items-center justify-center rounded-full border font-display text-lg font-semibold transition-colors duration-300",
+                        "mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full font-mono text-xs transition-all duration-500",
                         active
-                            ? "border-transparent bg-[var(--brand-accent)] text-white"
-                            : "border-[var(--brand-ink)]/20 text-[var(--brand-ink)]/40",
+                            ? "bg-[var(--brand-ink)] text-[var(--brand-cream)]"
+                            : "bg-transparent text-[var(--brand-ink)]/35 ring-1 ring-[var(--brand-ink)]/15 ring-inset",
                     )}
                 >
                     {s.number}
                 </div>
                 <div
                     className={cx(
-                        "pt-1 transition-all duration-300",
-                        active ? "opacity-100" : "opacity-40",
+                        "transition-all duration-500",
+                        active ? "translate-x-0 opacity-100" : "translate-x-1 opacity-35",
                     )}
                 >
-                    <h3 className="font-display text-2xl font-semibold text-primary sm:text-3xl">{s.title}</h3>
+                    <h3 className="font-display text-2xl font-medium text-primary sm:text-3xl">{s.title}</h3>
                     <p className="mt-2 max-w-md text-base leading-relaxed text-tertiary">{s.text}</p>
                 </div>
             </div>
@@ -45,7 +45,7 @@ export function ProcessScroll() {
     if (reduced) {
         return (
             <section id="proceso" className="mx-auto max-w-container px-6 py-24">
-                <h2 className="font-display text-4xl font-semibold text-primary">Cómo trabajamos</h2>
+                <h2 className="font-display text-4xl font-medium text-primary">Cómo trabajamos</h2>
                 <div className="mt-12 flex flex-col gap-10">
                     {steps.map((_, i) => (
                         <StepRow key={i} i={i} active />
@@ -60,7 +60,7 @@ export function ProcessScroll() {
             <div className="sticky top-0 flex h-screen items-center overflow-hidden">
                 <div className="mx-auto grid w-full max-w-container gap-12 px-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
                     <div>
-                        <h2 className="font-display text-[clamp(2.6rem,4.8vw,4.6rem)] leading-[0.98] font-semibold tracking-[-0.02em] text-balance text-primary">
+                        <h2 className="font-display text-[clamp(2.6rem,4.8vw,4.6rem)] leading-[0.98] font-medium tracking-[-0.02em] text-balance text-primary">
                             Un proceso <em className="font-light text-brand-secondary italic">simple</em>, sin cajas negras
                         </h2>
                         <p className="mt-6 max-w-sm text-lg text-tertiary">
@@ -68,22 +68,23 @@ export function ProcessScroll() {
                         </p>
                     </div>
 
-                    <div className="relative flex flex-col gap-9 pl-2">
-                        {/* Línea que se dibuja con el scroll */}
+                    <div className="relative flex flex-col gap-10 pl-2">
+                        {/* Linea fina que se dibuja con el scroll */}
                         <svg
-                            className="absolute top-7 bottom-7 left-[27px] w-1"
-                            viewBox="0 0 2 100"
+                            className="absolute top-6 bottom-6 left-[27px] w-px"
+                            viewBox="0 0 1 100"
                             preserveAspectRatio="none"
                             aria-hidden="true"
                         >
-                            <line x1="1" y1="0" x2="1" y2="100" stroke="var(--brand-ink)" strokeOpacity="0.12" strokeWidth="2" />
+                            <line x1="0.5" y1="0" x2="0.5" y2="100" stroke="var(--brand-ink)" strokeOpacity="0.1" strokeWidth="1" />
                             <line
-                                x1="1"
+                                x1="0.5"
                                 y1="0"
-                                x2="1"
+                                x2="0.5"
                                 y2="100"
-                                stroke="var(--brand-accent)"
-                                strokeWidth="2"
+                                stroke="var(--brand-ink)"
+                                strokeOpacity="0.55"
+                                strokeWidth="1"
                                 pathLength={1}
                                 strokeDasharray="1"
                                 strokeDashoffset={1 - progress}

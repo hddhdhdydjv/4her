@@ -13,7 +13,7 @@ export function SisterBrand() {
                 <Reveal>
                     <div className="grid items-center gap-12 lg:grid-cols-[1.3fr_1fr]">
                         <div>
-                            <h2 className="font-display text-[clamp(2.8rem,6vw,5.8rem)] leading-[0.96] font-semibold tracking-[-0.03em] text-balance text-primary_on-brand">
+                            <h2 className="font-display text-[clamp(2.8rem,6vw,5.8rem)] leading-[0.96] font-medium tracking-[-0.03em] text-balance text-primary_on-brand">
                                 Comunicación y tecnología, una sola{" "}
                                 <em className="font-light text-[var(--brand-sage)] italic">casa</em>
                             </h2>

@@ -54,10 +54,7 @@ export function LoopSeam() {
                     <Globe className="h-auto w-full" spin />
                 </div>
                 <div className="mx-auto w-full max-w-container px-6 pb-8">
-                    <p className="font-mono text-[10px] tracking-[0.2em] text-quaternary uppercase">
-                        Esto vuelve a empezar
-                    </p>
-                    <p className="font-display text-[clamp(5rem,18vw,17rem)] leading-[0.9] font-semibold tracking-[-0.04em] text-primary">
+                    <p className="font-display text-[clamp(5rem,18vw,17rem)] leading-[0.9] font-medium tracking-[-0.04em] text-primary">
                         4HER
                     </p>
                 </div>

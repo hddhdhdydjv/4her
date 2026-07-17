@@ -23,7 +23,7 @@ export function Hero({ isStatic = false }: { isStatic?: boolean }) {
         </>
     );
     const titleClass =
-        "mt-8 max-w-5xl font-display text-[clamp(3rem,9.5vw,8.75rem)] leading-[0.94] font-semibold tracking-[-0.03em] text-primary";
+        "mt-8 max-w-5xl font-display text-[clamp(3rem,9.5vw,8.75rem)] leading-[0.94] font-medium tracking-[-0.03em] text-primary";
 
     return (
         <section id={isStatic ? undefined : "inicio"} className="relative overflow-hidden">

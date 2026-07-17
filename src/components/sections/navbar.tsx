@@ -23,7 +23,7 @@ export function Navbar() {
                         <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--brand-ink)] font-display text-[13px] font-bold text-[var(--brand-sage)]">
                             4
                         </span>
-                        <span className="font-display text-base font-semibold tracking-tight text-primary">
+                        <span className="font-display text-base font-medium tracking-tight text-primary">
                             4HER
                         </span>
                     </Link>

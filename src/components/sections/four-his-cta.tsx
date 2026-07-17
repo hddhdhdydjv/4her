@@ -26,7 +26,7 @@ export function FourHisCta() {
                     <span className="font-mono text-[10px] tracking-widest text-tertiary_on-brand uppercase">
                         ¿Soluciones tecnológicas?
                     </span>
-                    <span className="flex items-center gap-1.5 font-display text-sm font-semibold text-primary_on-brand">
+                    <span className="flex items-center gap-1.5 font-display text-sm font-medium text-primary_on-brand">
                         Visitá 4HIS
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
                             <path d="M7 17L17 7M17 7H8M17 7v9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />

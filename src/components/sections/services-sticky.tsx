@@ -39,12 +39,12 @@ export function ServicesSticky() {
         return (
             <section id="servicios" className="bg-[var(--brand-sage)]">
                 <div className="mx-auto max-w-container px-6 py-32">
-                    <h2 className="font-display text-4xl font-semibold text-primary">Qué hacemos</h2>
+                    <h2 className="font-display text-4xl font-medium text-primary">Qué hacemos</h2>
                     <div className="mt-12 grid gap-8 sm:grid-cols-2">
                         {services.map((s) => (
                             <div key={s.number}>
-                                <span className="font-display text-4xl font-semibold text-[var(--brand-ink)]/25">{s.number}</span>
-                                <h3 className="mt-3 font-display text-2xl font-semibold text-primary">{s.title}</h3>
+                                <span className="font-display text-4xl font-medium text-[var(--brand-ink)]/25">{s.number}</span>
+                                <h3 className="mt-3 font-display text-2xl font-medium text-primary">{s.title}</h3>
                                 <ul className="mt-4 flex flex-wrap gap-2">
                                     {s.items.map((i) => (
                                         <li key={i} className="rounded-full border border-[var(--brand-ink)]/15 px-3 py-1.5 font-mono text-xs text-secondary">
@@ -76,7 +76,7 @@ export function ServicesSticky() {
                                     {services.map((s) => (
                                         <span
                                             key={s.number}
-                                            className="font-display text-[4.2rem] leading-none font-semibold text-[var(--brand-ink)] tabular-nums sm:text-[6rem]"
+                                            className="font-display text-[4.2rem] leading-none font-medium text-[var(--brand-ink)] tabular-nums sm:text-[6rem]"
                                         >
                                             {s.number}
                                         </span>
@@ -118,7 +118,7 @@ export function ServicesSticky() {
                                     )}
                                     aria-hidden={!active}
                                 >
-                                    <h3 className="font-display text-[clamp(2.6rem,5.5vw,5.2rem)] leading-[0.98] font-semibold tracking-[-0.02em] text-balance text-primary">
+                                    <h3 className="font-display text-[clamp(2.6rem,5.5vw,5.2rem)] leading-[0.98] font-medium tracking-[-0.02em] text-balance text-primary">
                                         {s.title}
                                     </h3>
                                     <ul className="mt-8 flex flex-wrap gap-2.5">

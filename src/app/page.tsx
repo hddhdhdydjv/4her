@@ -6,7 +6,6 @@ import { WhyUsScroll } from "@/components/sections/why-us-scroll";
 import { ProcessScroll } from "@/components/sections/process-scroll";
 import { SisterBrand } from "@/components/sections/sister-brand";
 import { Contact } from "@/components/sections/contact";
-import { SocialDock } from "@/components/sections/social-dock";
 import { FourHisCta } from "@/components/sections/four-his-cta";
 import { LoopSeam } from "@/components/sections/loop-seam";
 import { ExpandBlock } from "@/components/sections/expand-block";
@@ -17,7 +16,6 @@ export default function Home() {
         <>
             {/* Chrome fijo: nav (arriba), redes (abajo izq), CTA 4HIS (abajo der). Sin footer. */}
             <Navbar />
-            <SocialDock />
             <FourHisCta />
 
             <main>
