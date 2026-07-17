@@ -92,8 +92,8 @@
     /* --- Focus ring accesible --- */
     --color-focus-ring: var(--brand-accent);
 
-    /* --- Tipografía: Outfit para títulos + Lato cuerpo + mono labels --- */
+    /* --- Tipografía: Outfit (una sola familia, pesos variados) + mono labels --- */
     --font-display: var(--font-outfit), "Helvetica Neue", Arial, sans-serif;
-    --font-body: var(--font-lato), -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    --font-body: var(--font-outfit), "Helvetica Neue", Arial, sans-serif;
     --font-mono: var(--font-mono-label), ui-monospace, "SFMono-Regular", Menlo, monospace;
 }

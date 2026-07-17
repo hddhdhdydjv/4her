@@ -1,27 +1,18 @@
 import type { Metadata } from "next";
-import { Outfit, Lato, JetBrains_Mono } from "next/font/google";
+import { Outfit, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-// Tipografía centralizada - cambiar acá afecta todo el sitio.
-// Outfit para títulos:
 const outfit = Outfit({
     variable: "--font-outfit",
     subsets: ["latin"],
+    weight: ["300", "400", "500", "600"],
     display: "swap",
 });
 
-// Lato para cuerpo:
-const lato = Lato({
-    variable: "--font-lato",
-    subsets: ["latin"],
-    weight: ["300", "400", "700"],
-    display: "swap",
-});
-
-// Mono para labels / eyebrows:
 const mono = JetBrains_Mono({
     variable: "--font-mono-label",
     subsets: ["latin"],
+    weight: ["400", "500"],
     display: "swap",
 });
 
@@ -39,7 +30,7 @@ export default function RootLayout({
     return (
         <html
             lang="es"
-            className={`${outfit.variable} ${lato.variable} ${mono.variable} h-full antialiased`}
+            className={`${outfit.variable} ${mono.variable} h-full antialiased`}
         >
             <body className="min-h-full bg-primary font-body text-primary">{children}</body>
         </html>
