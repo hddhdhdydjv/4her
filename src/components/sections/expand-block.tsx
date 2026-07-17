@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useScrollProgress } from "@/hooks/use-scroll-progress";
 import { DotSphere } from "@/components/graphics/illustrations";
 
@@ -11,6 +12,15 @@ import { DotSphere } from "@/components/graphics/illustrations";
  */
 export function ExpandBlock() {
     const { ref, progress, reduced } = useScrollProgress<HTMLDivElement>();
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const mq = window.matchMedia("(max-width: 640px)");
+        const update = () => setIsMobile(mq.matches);
+        update();
+        mq.addEventListener("change", update);
+        return () => mq.removeEventListener("change", update);
+    }, []);
 
     if (reduced) {
         return (
@@ -23,9 +33,12 @@ export function ExpandBlock() {
     }
 
     // Easing suave del progreso para que el crecimiento no sea lineal.
+    // En mobile arranca mucho mas grande para no verse desproporcionado.
     const p = 1 - Math.pow(1 - progress, 2.2);
-    const w = 34 + p * 66; // 34vw -> 100vw
-    const h = 38 + p * 62; // 38vh -> 100vh
+    const w0 = isMobile ? 86 : 34; // vw inicial
+    const h0 = isMobile ? 30 : 38; // vh inicial
+    const w = w0 + p * (100 - w0);
+    const h = h0 + p * (100 - h0);
     const r = 28 * (1 - p); // 28px -> 0
 
     return (
@@ -34,7 +47,7 @@ export function ExpandBlock() {
                 <div
                     className="relative flex items-center justify-center overflow-hidden bg-[var(--brand-black)] will-change-[width,height]"
                     style={{
-                        width: `max(${w}vw, 300px)`,
+                        width: `${w}vw`,
                         height: `${h}vh`,
                         borderRadius: `${r}px`,
                     }}

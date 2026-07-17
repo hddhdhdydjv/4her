@@ -34,7 +34,7 @@ export function useScrollProgress<T extends HTMLElement = HTMLDivElement>() {
         };
 
         const tick = () => {
-            smooth += (target - smooth) * 0.14;
+            smooth += (target - smooth) * 0.22;
             if (Math.abs(target - smooth) < 0.0005) {
                 smooth = target;
                 setProgress(smooth);

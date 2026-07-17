@@ -21,7 +21,7 @@ export function ProcessScroll() {
             <div className="flex gap-6">
                 <div
                     className={cx(
-                        "mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full font-mono text-xs transition-all duration-500",
+                        "mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full font-mono text-xs transition-all duration-300",
                         active
                             ? "bg-[var(--brand-ink)] text-[var(--brand-cream)]"
                             : "bg-transparent text-[var(--brand-ink)]/35 ring-1 ring-[var(--brand-ink)]/15 ring-inset",
@@ -31,7 +31,7 @@ export function ProcessScroll() {
                 </div>
                 <div
                     className={cx(
-                        "transition-all duration-500",
+                        "transition-all duration-300",
                         active ? "translate-x-0 opacity-100" : "translate-x-1 opacity-35",
                     )}
                 >
@@ -91,7 +91,7 @@ export function ProcessScroll() {
                             />
                         </svg>
                         {steps.map((_, i) => (
-                            <StepRow key={i} i={i} active={progress * N >= i + 0.35} />
+                            <StepRow key={i} i={i} active={progress * N >= i + 0.18} />
                         ))}
                     </div>
                 </div>

@@ -35,7 +35,7 @@ export function WhyUsScroll() {
                 if (Math.abs(top - window.scrollY) > 6) {
                     window.scrollTo({ top, behavior: "smooth" });
                 }
-            }, 180);
+            }, 90);
         };
 
         window.addEventListener("scroll", onScroll, { passive: true });

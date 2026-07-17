@@ -9,7 +9,6 @@ import { Contact } from "@/components/sections/contact";
 import { FourHisCta } from "@/components/sections/four-his-cta";
 import { LoopSeam } from "@/components/sections/loop-seam";
 import { ExpandBlock } from "@/components/sections/expand-block";
-import { ColorBridge } from "@/components/graphics/color-bridge";
 
 export default function Home() {
     return (
@@ -23,10 +22,8 @@ export default function Home() {
                 <About />
                 {/* Placeholder de media: cuadrado que se expande con el scroll. */}
                 <ExpandBlock />
-                <ColorBridge from="var(--brand-cream)" to="var(--brand-sage)" />
                 <ServicesSticky />
                 <WhyUsScroll />
-                <ColorBridge from="var(--brand-black)" to="var(--brand-cream)" flip />
                 <ProcessScroll />
                 <SisterBrand />
                 <Contact />
