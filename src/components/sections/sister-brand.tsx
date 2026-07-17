@@ -9,7 +9,7 @@ import { Reveal } from "@/components/motion/reveal";
 export function SisterBrand() {
     return (
         <section id="marca-hermana" className="bg-[var(--brand-black)]">
-            <div className="mx-auto max-w-container px-6 py-24 lg:py-32">
+            <div className="mx-auto max-w-container px-6 py-32 lg:py-48">
                 <Reveal>
                     <div className="grid items-center gap-12 lg:grid-cols-[1.3fr_1fr]">
                         <div>

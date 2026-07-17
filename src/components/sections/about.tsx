@@ -1,4 +1,4 @@
-import { Network } from "@/components/graphics/illustrations";
+import { DotSphere } from "@/components/graphics/illustrations";
 import { Reveal } from "@/components/motion/reveal";
 
 /**
@@ -7,9 +7,9 @@ import { Reveal } from "@/components/motion/reveal";
  */
 export function About() {
     return (
-        <section id="quienes-somos" className="mx-auto max-w-container px-6 py-32 lg:py-44">
+        <section id="quienes-somos" className="mx-auto max-w-container px-6 py-40 lg:py-64">
             <Reveal>
-                <div className="grid gap-14 lg:grid-cols-12 lg:items-end">
+                <div className="grid gap-20 lg:grid-cols-12 lg:items-center">
                     {/* Offset asimétrico: el texto arranca en col 2 */}
                     <div className="lg:col-span-6 lg:col-start-2">
                         <p className="font-mono text-[10px] tracking-[0.2em] text-quaternary uppercase">
@@ -24,8 +24,8 @@ export function About() {
                     </div>
 
                     <div className="lg:col-span-4 lg:col-start-9">
-                        <div className="flex aspect-square items-center justify-center rounded-3xl bg-[var(--brand-black)] text-[var(--brand-sage)]">
-                            <Network className="h-3/4 w-3/4" spin />
+                        <div className="flex aspect-square items-center justify-center text-[var(--brand-ink)]">
+                            <DotSphere className="h-full w-full" spin />
                         </div>
                     </div>
                 </div>

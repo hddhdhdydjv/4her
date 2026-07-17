@@ -1,7 +1,7 @@
 "use client";
 
 import { useScrollProgress } from "@/hooks/use-scroll-progress";
-import { Network } from "@/components/graphics/illustrations";
+import { DotSphere } from "@/components/graphics/illustrations";
 
 /**
  * PLACEHOLDER de media: un cuadrado centrado que crece con el scroll
@@ -16,7 +16,7 @@ export function ExpandBlock() {
         return (
             <section className="bg-[var(--brand-cream)] px-6 py-24">
                 <div className="mx-auto flex aspect-video max-w-container items-center justify-center rounded-3xl bg-[var(--brand-black)] text-[var(--brand-sage)]">
-                    <Network className="h-1/2 w-1/2" />
+                    <DotSphere className="h-1/2 w-1/2" />
                 </div>
             </section>
         );
@@ -39,7 +39,7 @@ export function ExpandBlock() {
                         borderRadius: `${r}px`,
                     }}
                 >
-                    <Network className="h-2/3 w-2/3 text-[var(--brand-sage)]" spin />
+                    <DotSphere className="h-2/3 w-2/3 text-[var(--brand-sage)]" spin />
 
                     {/* Caption: aparece cuando el bloque llegó a full-bleed */}
                     <div

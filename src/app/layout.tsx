@@ -1,19 +1,20 @@
 import type { Metadata } from "next";
-import { Schibsted_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
+import { Outfit, Lato, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
 // Tipografía centralizada - cambiar acá afecta todo el sitio.
-// Grotesque neutro para títulos (estilo Aptos):
-const grotesk = Schibsted_Grotesk({
-    variable: "--font-grotesk",
+// Outfit para títulos:
+const outfit = Outfit({
+    variable: "--font-outfit",
     subsets: ["latin"],
     display: "swap",
 });
 
-// Sans legible para cuerpo:
-const inter = Inter({
-    variable: "--font-inter",
+// Lato para cuerpo:
+const lato = Lato({
+    variable: "--font-lato",
     subsets: ["latin"],
+    weight: ["300", "400", "700"],
     display: "swap",
 });
 
@@ -38,7 +39,7 @@ export default function RootLayout({
     return (
         <html
             lang="es"
-            className={`${grotesk.variable} ${inter.variable} ${mono.variable} h-full antialiased`}
+            className={`${outfit.variable} ${lato.variable} ${mono.variable} h-full antialiased`}
         >
             <body className="min-h-full bg-primary font-body text-primary">{children}</body>
         </html>

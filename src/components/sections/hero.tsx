@@ -10,24 +10,38 @@ const contrastCards = [
     { vs: "vs. Hacerlo in-house", title: "Mirada externa y experiencia" },
 ];
 
-export function Hero() {
+/**
+ * `isStatic`: renderiza la misma composicion sin animaciones de entrada.
+ * Lo usa el clon del scroll perpetuo para que ambos extremos sean identicos.
+ */
+export function Hero({ isStatic = false }: { isStatic?: boolean }) {
+    const title = (
+        <>
+            Más estratégico que una{" "}
+            <em className="font-light text-brand-secondary italic">agencia</em>, más cercano que un{" "}
+            <em className="font-light text-brand-secondary italic">freelance</em>
+        </>
+    );
+    const titleClass =
+        "mt-8 max-w-5xl font-display text-[clamp(3rem,9.5vw,8.75rem)] leading-[0.94] font-semibold tracking-[-0.03em] text-primary";
+
     return (
-        <section id="inicio" className="relative overflow-hidden">
+        <section id={isStatic ? undefined : "inicio"} className="relative overflow-hidden">
             {/* Globo gigante cortado por el borde derecho */}
             <div className="pointer-events-none absolute top-[6vh] right-[-24vw] hidden w-[52vw] text-[var(--brand-ink)] opacity-[0.55] lg:block">
-                <Globe className="h-auto w-full" draw spin />
+                <Globe className="h-auto w-full" draw={!isStatic} spin />
             </div>
 
-            <div className="relative mx-auto max-w-container px-6 pt-40 pb-24 sm:pt-48 lg:pt-56 lg:pb-32">
+            <div className="relative mx-auto max-w-container px-6 pt-44 pb-28 sm:pt-52 lg:pt-64 lg:pb-40">
                 <p className="font-mono text-xs tracking-[0.18em] text-brand-secondary uppercase">
-                    <Scramble text="Comunicación & Marketing" />
+                    {isStatic ? "Comunicación & Marketing" : <Scramble text="Comunicación & Marketing" />}
                 </p>
 
-                <CascadeTitle className="mt-8 max-w-5xl font-display text-[clamp(3rem,9.5vw,8.75rem)] leading-[0.94] font-semibold tracking-[-0.03em] text-primary">
-                    Más estratégico que una{" "}
-                    <em className="font-light text-brand-secondary italic">agencia</em>, más cercano
-                    que un <em className="font-light text-brand-secondary italic">freelance</em>
-                </CascadeTitle>
+                {isStatic ? (
+                    <h1 className={titleClass}>{title}</h1>
+                ) : (
+                    <CascadeTitle className={titleClass}>{title}</CascadeTitle>
+                )}
             </div>
 
             {/* Bloque olivo: bajada + CTAs + cards de contraste */}
@@ -56,8 +70,8 @@ export function Hero() {
                     </div>
 
                     <div className="flex flex-col gap-2.5 lg:col-span-5">
-                        {contrastCards.map((card, i) => (
-                            <Reveal key={card.vs} delay={i * 90} y={16}>
+                        {contrastCards.map((card, i) => {
+                            const inner = (
                                 <div className="rounded-2xl bg-[var(--brand-black)] p-5">
                                     <span className="font-mono text-[10px] tracking-[0.14em] text-brand-tertiary uppercase">
                                         {card.vs}
@@ -66,8 +80,15 @@ export function Hero() {
                                         {card.title}
                                     </p>
                                 </div>
-                            </Reveal>
-                        ))}
+                            );
+                            return isStatic ? (
+                                <div key={card.vs}>{inner}</div>
+                            ) : (
+                                <Reveal key={card.vs} delay={i * 90} y={16}>
+                                    {inner}
+                                </Reveal>
+                            );
+                        })}
                     </div>
                 </div>
             </div>

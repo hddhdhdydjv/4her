@@ -111,3 +111,40 @@ export function Network({ className, stroke = "currentColor", spin = false }: Pr
         </svg>
     );
 }
+
+/** Esfera halftone: puntos que crecen hacia el centro (estilo LumaCore). */
+export function DotSphere({ className, stroke = "currentColor", spin = false }: Props) {
+    const R = 88;
+    const c = 100;
+    const rows = 13;
+    const dots: Array<{ x: number; y: number; r: number }> = [];
+    for (let i = 0; i < rows; i++) {
+        const phi = (i / (rows - 1) - 0.5) * Math.PI; // -90..90
+        const y = Math.round((c + Math.sin(phi) * R) * 100) / 100;
+        const rowR = Math.cos(phi) * R;
+        const cols = Math.max(1, Math.round((rowR / R) * 15));
+        for (let j = 0; j < cols; j++) {
+            const theta = (j / cols) * Math.PI * 2;
+            const x = c + Math.cos(theta) * rowR;
+            // Tamaño: más grande hacia el centro visual de la esfera.
+            const depth = (Math.sin(theta) + 1) / 2;
+            const centrality = 1 - Math.abs(Math.sin(phi));
+            // Redondeo: evita mismatches de hidratacion por precision de floats.
+            const round = (v: number) => Math.round(v * 100) / 100;
+            dots.push({ x: round(x), y: round(y), r: round(0.7 + depth * centrality * 2.6) });
+        }
+    }
+    return (
+        <svg
+            viewBox="0 0 200 200"
+            className={cx(spin && "[animation:spin_90s_linear_infinite]", className)}
+            fill="none"
+            aria-hidden="true"
+            role="presentation"
+        >
+            {dots.map((d, i) => (
+                <circle key={i} cx={d.x} cy={d.y} r={d.r} fill={stroke} />
+            ))}
+        </svg>
+    );
+}

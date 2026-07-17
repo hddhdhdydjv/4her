@@ -38,7 +38,7 @@ export function ServicesSticky() {
     if (reduced) {
         return (
             <section id="servicios" className="bg-[var(--brand-sage)]">
-                <div className="mx-auto max-w-container px-6 py-24">
+                <div className="mx-auto max-w-container px-6 py-32">
                     <h2 className="font-display text-4xl font-semibold text-primary">Qué hacemos</h2>
                     <div className="mt-12 grid gap-8 sm:grid-cols-2">
                         {services.map((s) => (

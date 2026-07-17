@@ -6,7 +6,7 @@ import { Reveal } from "@/components/motion/reveal";
 export function Contact() {
     return (
         <section id="contacto" className="flex min-h-screen items-center bg-[var(--brand-sage)]">
-            <div className="mx-auto w-full max-w-container px-6 pt-28 pb-40 lg:pb-32">
+            <div className="mx-auto w-full max-w-container px-6 pt-36 pb-44 lg:pt-32 lg:pb-40">
                 <Reveal>
                     <div className="grid gap-14 lg:grid-cols-2 lg:items-center">
                         <div className="max-w-xl">
