@@ -3,45 +3,42 @@
 import { useEffect, useRef } from "react";
 import { Hero } from "@/components/sections/hero";
 import { Globe } from "@/components/graphics/illustrations";
+import { useLenisInstance } from "@/components/providers/lenis-provider";
+import type Lenis from "lenis";
 
 /**
  * Scroll perpetuo sin costura:
  * 1. Antesala en crema con el wordmark gigante.
- * 2. CLON estatico del hero a continuacion.
- * 3. Apenas el scroll entra al clon, se teletransporta a la posicion
- *    equivalente del hero real (que esta en scrollY=0). Como ambos son
- *    identicos pixel a pixel, el salto es imperceptible incluso con inercia.
+ * 2. CLON estático del hero a continuación.
+ * 3. Cuando el scroll alcanza el clon, Lenis teletransporta a la posición
+ *    equivalente del hero real. Ambos son idénticos pixel a pixel → salto imperceptible.
  */
 export function LoopSeam() {
     const cloneRef = useRef<HTMLDivElement>(null);
+    const lenis = useLenisInstance();
 
     useEffect(() => {
         const clone = cloneRef.current;
-        if (!clone) return;
+        if (!clone || !lenis) return;
 
-        let cloneTop = 0;
+        let cloneTop = clone.offsetTop;
         const measure = () => {
             cloneTop = clone.offsetTop;
         };
-        measure();
+        window.addEventListener("resize", measure, { passive: true });
 
-        const onScroll = () => {
-            if (window.scrollY >= cloneTop) {
-                window.scrollTo({
-                    top: window.scrollY - cloneTop,
-                    left: 0,
-                    behavior: "instant" as ScrollBehavior,
-                });
+        const onScroll = (l: Lenis) => {
+            if (l.scroll >= cloneTop) {
+                lenis.scrollTo(l.scroll - cloneTop, { immediate: true });
             }
         };
 
-        window.addEventListener("scroll", onScroll, { passive: true });
-        window.addEventListener("resize", measure, { passive: true });
+        lenis.on("scroll", onScroll);
         return () => {
-            window.removeEventListener("scroll", onScroll);
+            lenis.off("scroll", onScroll);
             window.removeEventListener("resize", measure);
         };
-    }, []);
+    }, [lenis]);
 
     return (
         <>
@@ -60,7 +57,7 @@ export function LoopSeam() {
                 </div>
             </section>
 
-            {/* Clon estatico del hero: la zona de teleport */}
+            {/* Clon estático del hero: zona de teleport */}
             <div ref={cloneRef} aria-hidden="true" className="pointer-events-none">
                 <Hero isStatic />
             </div>

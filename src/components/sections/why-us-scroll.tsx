@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useScrollProgress } from "@/hooks/use-scroll-progress";
+import { useLenisInstance } from "@/components/providers/lenis-provider";
 import { cx } from "@/utils/cx";
 
 const pairs = [
@@ -16,12 +17,14 @@ const PANELS = pairs.length + 1;
 
 export function WhyUsScroll() {
     const { ref, progress, reduced } = useScrollProgress<HTMLDivElement>();
+    const lenis = useLenisInstance();
 
-    // Snap magnetico: al soltar el scroll, engancha al panel mas cercano
-    // para que nunca quede contenido cortado a mitad de camino.
+    // Snap magnético: al soltar el scroll engancha al panel más cercano.
+    // Con Lenis: el snap usa lenis.scrollTo para que la inercia del smooth
+    // scroll se respete y no luche contra window.scrollTo.
     useEffect(() => {
         const el = ref.current;
-        if (!el || reduced) return;
+        if (!el || reduced || !lenis) return;
 
         let timer = 0;
         const onScroll = () => {
@@ -33,7 +36,7 @@ export function WhyUsScroll() {
                 const target = Math.round(p * (PANELS - 1)) / (PANELS - 1);
                 const top = el.offsetTop + target * range;
                 if (Math.abs(top - window.scrollY) > 6) {
-                    window.scrollTo({ top, behavior: "smooth" });
+                    lenis.scrollTo(top, { duration: 0.7, easing: (t) => 1 - Math.pow(1 - t, 3) });
                 }
             }, 90);
         };
@@ -43,7 +46,7 @@ export function WhyUsScroll() {
             window.removeEventListener("scroll", onScroll);
             window.clearTimeout(timer);
         };
-    }, [ref, reduced]);
+    }, [ref, reduced, lenis]);
 
     if (reduced) {
         return (

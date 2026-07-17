@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Outfit, JetBrains_Mono } from "next/font/google";
+import { LenisProvider } from "@/components/providers/lenis-provider";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -32,7 +33,9 @@ export default function RootLayout({
             lang="es"
             className={`${outfit.variable} ${mono.variable} h-full antialiased`}
         >
-            <body className="min-h-full bg-primary font-body text-primary">{children}</body>
+            <body className="min-h-full bg-primary font-body text-primary">
+                <LenisProvider>{children}</LenisProvider>
+            </body>
         </html>
     );
 }
