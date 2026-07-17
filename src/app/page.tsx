@@ -9,6 +9,7 @@ import { Contact } from "@/components/sections/contact";
 import { SocialDock } from "@/components/sections/social-dock";
 import { FourHisCta } from "@/components/sections/four-his-cta";
 import { LoopSeam } from "@/components/sections/loop-seam";
+import { ExpandBlock } from "@/components/sections/expand-block";
 
 export default function Home() {
     return (
@@ -21,6 +22,8 @@ export default function Home() {
             <main>
                 <Hero />
                 <About />
+                {/* Placeholder de media: cuadrado que se expande con el scroll. */}
+                <ExpandBlock />
                 <ServicesSticky />
                 <WhyUsScroll />
                 <ProcessScroll />

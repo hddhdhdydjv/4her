@@ -1,19 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Globe } from "@/components/graphics/illustrations";
 import { Reveal } from "@/components/motion/reveal";
+import { Scramble } from "@/components/motion/scramble";
+import { CascadeTitle } from "@/components/motion/cascade-title";
 
 const contrastCards = [
     { vs: "vs. Agencia tradicional", title: "Estrategia, no solo ejecución" },
     { vs: "vs. Freelance", title: "Un equipo con varias cabezas" },
     { vs: "vs. Hacerlo in-house", title: "Mirada externa y experiencia" },
-];
-
-/* Titular por líneas: cada una entra con máscara + subida escalonada. */
-const lines: Array<Array<{ t: string; accent?: boolean }>> = [
-    [{ t: "Más estratégico" }],
-    [{ t: "que una " }, { t: "agencia", accent: true }, { t: "," }],
-    [{ t: "más cercano" }],
-    [{ t: "que un " }, { t: "freelance", accent: true }],
 ];
 
 export function Hero() {
@@ -26,26 +20,14 @@ export function Hero() {
 
             <div className="relative mx-auto max-w-container px-6 pt-40 pb-24 sm:pt-48 lg:pt-56 lg:pb-32">
                 <p className="font-mono text-xs tracking-[0.18em] text-brand-secondary uppercase">
-                    Comunicación &amp; Marketing
+                    <Scramble text="Comunicación & Marketing" />
                 </p>
 
-                <h1 className="mt-8 font-display text-[clamp(3rem,9.5vw,8.75rem)] leading-[0.94] font-semibold tracking-[-0.03em] text-primary">
-                    {lines.map((parts, i) => (
-                        <span key={i} className="line-mask">
-                            <span className="line-rise" style={{ animationDelay: `${0.08 + i * 0.11}s` }}>
-                                {parts.map((p, j) =>
-                                    p.accent ? (
-                                        <em key={j} className="font-light text-brand-secondary italic">
-                                            {p.t}
-                                        </em>
-                                    ) : (
-                                        <span key={j}>{p.t}</span>
-                                    ),
-                                )}
-                            </span>
-                        </span>
-                    ))}
-                </h1>
+                <CascadeTitle className="mt-8 max-w-5xl font-display text-[clamp(3rem,9.5vw,8.75rem)] leading-[0.94] font-semibold tracking-[-0.03em] text-primary">
+                    Más estratégico que una{" "}
+                    <em className="font-light text-brand-secondary italic">agencia</em>, más cercano
+                    que un <em className="font-light text-brand-secondary italic">freelance</em>
+                </CascadeTitle>
             </div>
 
             {/* Bloque olivo: bajada + CTAs + cards de contraste */}

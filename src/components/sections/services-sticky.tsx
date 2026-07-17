@@ -122,10 +122,14 @@ export function ServicesSticky() {
                                         {s.title}
                                     </h3>
                                     <ul className="mt-8 flex flex-wrap gap-2.5">
-                                        {s.items.map((it) => (
+                                        {s.items.map((it, j) => (
                                             <li
                                                 key={it}
-                                                className="rounded-full border border-[var(--brand-ink)]/20 bg-[var(--brand-cream)]/40 px-4 py-2 font-mono text-sm text-secondary"
+                                                className={cx(
+                                                    "rounded-full border border-[var(--brand-ink)]/20 bg-[var(--brand-cream)]/40 px-4 py-2 font-mono text-sm text-secondary transition-all duration-500",
+                                                    active ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0",
+                                                )}
+                                                style={{ transitionDelay: active ? `${140 + j * 70}ms` : "0ms" }}
                                             >
                                                 {it}
                                             </li>
