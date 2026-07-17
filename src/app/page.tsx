@@ -8,6 +8,7 @@ import { SisterBrand } from "@/components/sections/sister-brand";
 import { Contact } from "@/components/sections/contact";
 import { SocialDock } from "@/components/sections/social-dock";
 import { FourHisCta } from "@/components/sections/four-his-cta";
+import { LoopSeam } from "@/components/sections/loop-seam";
 
 export default function Home() {
     return (
@@ -25,6 +26,8 @@ export default function Home() {
                 <ProcessScroll />
                 <SisterBrand />
                 <Contact />
+                {/* Empalme del scroll infinito: al fondo, vuelve al inicio sin costura. */}
+                <LoopSeam />
             </main>
         </>
     );

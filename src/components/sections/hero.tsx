@@ -8,38 +8,57 @@ const contrastCards = [
     { vs: "vs. Hacerlo in-house", title: "Mirada externa y experiencia" },
 ];
 
+/* Titular por líneas: cada una entra con máscara + subida escalonada. */
+const lines: Array<Array<{ t: string; accent?: boolean }>> = [
+    [{ t: "Más estratégico" }],
+    [{ t: "que una " }, { t: "agencia", accent: true }, { t: "," }],
+    [{ t: "más cercano" }],
+    [{ t: "que un " }, { t: "freelance", accent: true }],
+];
+
 export function Hero() {
     return (
-        <section id="inicio" className="relative">
-            <div className="mx-auto max-w-container px-6 pt-36 pb-16 sm:pt-44 lg:pt-52">
-                <div className="grid gap-10 lg:grid-cols-[1fr_auto] lg:items-center">
-                    <div className="max-w-4xl">
-                        <p className="font-mono text-xs tracking-[0.14em] text-brand-secondary uppercase">
-                            Comunicación &amp; Marketing
-                        </p>
-                        <h1 className="mt-6 font-display text-[2.6rem] leading-[0.98] font-semibold tracking-tight text-balance text-primary sm:text-6xl lg:text-7xl">
-                            Más estratégico que una <span className="text-brand-secondary">agencia</span>,
-                            <br className="hidden sm:block" /> más cercano que un{" "}
-                            <span className="text-brand-secondary">freelance</span>
-                        </h1>
-                    </div>
-
-                    <div className="hidden h-44 w-44 shrink-0 text-[var(--brand-ink)] lg:block">
-                        <Globe className="h-full w-full" spin />
-                    </div>
-                </div>
+        <section id="inicio" className="relative overflow-hidden">
+            {/* Globo gigante cortado por el borde derecho */}
+            <div className="pointer-events-none absolute top-[6vh] right-[-24vw] hidden w-[52vw] text-[var(--brand-ink)] opacity-[0.55] lg:block">
+                <Globe className="h-auto w-full" draw spin />
             </div>
 
+            <div className="relative mx-auto max-w-container px-6 pt-40 pb-24 sm:pt-48 lg:pt-56 lg:pb-32">
+                <p className="font-mono text-xs tracking-[0.18em] text-brand-secondary uppercase">
+                    Comunicación &amp; Marketing
+                </p>
+
+                <h1 className="mt-8 font-display text-[clamp(3rem,9.5vw,8.75rem)] leading-[0.94] font-semibold tracking-[-0.03em] text-primary">
+                    {lines.map((parts, i) => (
+                        <span key={i} className="line-mask">
+                            <span className="line-rise" style={{ animationDelay: `${0.08 + i * 0.11}s` }}>
+                                {parts.map((p, j) =>
+                                    p.accent ? (
+                                        <em key={j} className="font-light text-brand-secondary italic">
+                                            {p.t}
+                                        </em>
+                                    ) : (
+                                        <span key={j}>{p.t}</span>
+                                    ),
+                                )}
+                            </span>
+                        </span>
+                    ))}
+                </h1>
+            </div>
+
+            {/* Bloque olivo: bajada + CTAs + cards de contraste */}
             <div className="bg-[var(--brand-olive)]">
-                <div className="mx-auto grid max-w-container gap-10 px-6 py-16 lg:grid-cols-[1.4fr_1fr] lg:items-center lg:py-20">
-                    <div className="max-w-2xl">
-                        <p className="font-display text-2xl leading-snug font-medium text-primary_on-brand sm:text-3xl">
+                <div className="mx-auto grid max-w-container gap-12 px-6 py-20 lg:grid-cols-12 lg:items-center lg:py-28">
+                    <div className="lg:col-span-7">
+                        <p className="max-w-xl font-display text-[clamp(1.5rem,2.6vw,2.4rem)] leading-[1.15] font-medium text-primary_on-brand">
                             Marca y comunicación con criterio, no solo entregables lindos.
                         </p>
-                        <p className="mt-4 max-w-xl text-lg leading-relaxed text-secondary_on-brand">
+                        <p className="mt-5 max-w-md text-lg leading-relaxed text-secondary_on-brand">
                             Pensamos qué decir y por qué, no únicamente cómo se ve.
                         </p>
-                        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                        <div className="mt-9 flex flex-col gap-3 sm:flex-row">
                             <Button href="#contacto" size="lg">
                                 Hablemos
                             </Button>
@@ -54,11 +73,11 @@ export function Hero() {
                         </div>
                     </div>
 
-                    <div className="flex flex-col gap-2.5">
+                    <div className="flex flex-col gap-2.5 lg:col-span-5">
                         {contrastCards.map((card, i) => (
                             <Reveal key={card.vs} delay={i * 90} y={16}>
                                 <div className="rounded-2xl bg-[var(--brand-black)] p-5">
-                                    <span className="font-mono text-[11px] tracking-wide text-brand-tertiary uppercase">
+                                    <span className="font-mono text-[10px] tracking-[0.14em] text-brand-tertiary uppercase">
                                         {card.vs}
                                     </span>
                                     <p className="mt-1.5 font-display text-lg font-medium text-primary_on-brand">

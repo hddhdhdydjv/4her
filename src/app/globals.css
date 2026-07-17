@@ -9,22 +9,65 @@ body {
     color: var(--color-text-primary);
 }
 
-/* --- Marquee (banda de marca en scroll) --- */
-@keyframes marquee-scroll {
+/* --- Stroke draw (las ilustraciones se dibujan al entrar) --- */
+@keyframes stroke-draw {
     from {
-        transform: translateX(0);
+        stroke-dashoffset: 1;
     }
     to {
-        transform: translateX(-50%);
+        stroke-dashoffset: 0;
     }
 }
-.marquee-track {
-    animation: marquee-scroll 34s linear infinite;
+.draw-line {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: stroke-draw 1.6s cubic-bezier(0.6, 0, 0.2, 1) forwards;
+}
+
+/* --- Pulso sutil de nodos --- */
+@keyframes node-pulse {
+    0%,
+    100% {
+        opacity: 0.85;
+    }
+    50% {
+        opacity: 0.35;
+    }
+}
+.node-pulse {
+    animation: node-pulse 2.8s ease-in-out infinite;
+}
+
+/* --- Entrada por líneas del hero (máscara + subida) --- */
+@keyframes line-rise {
+    from {
+        transform: translateY(110%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+.line-mask {
+    display: block;
+    overflow: hidden;
+}
+.line-rise {
+    display: block;
+    transform: translateY(110%);
+    animation: line-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 /* --- Accesibilidad: respetar prefers-reduced-motion --- */
 @media (prefers-reduced-motion: reduce) {
-    .marquee-track {
+    .draw-line,
+    .node-pulse,
+    .line-rise {
         animation: none;
+    }
+    .draw-line {
+        stroke-dashoffset: 0;
+    }
+    .line-rise {
+        transform: none;
     }
 }

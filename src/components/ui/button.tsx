@@ -43,15 +43,30 @@ type ButtonAsButton = CommonProps & { href?: undefined } & Omit<
         "className" | "children"
     >;
 
+/** Si el contenido es texto plano, se duplica para el hover "texto que sube". */
+function label(children: React.ReactNode) {
+    if (typeof children !== "string") return children;
+    return (
+        <span className="relative block overflow-hidden">
+            <span className="block transition-transform duration-300 ease-out group-hover:-translate-y-full">
+                {children}
+            </span>
+            <span aria-hidden="true" className="absolute inset-0 block translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0">
+                {children}
+            </span>
+        </span>
+    );
+}
+
 export function Button(props: ButtonAsLink | ButtonAsButton) {
     const { variant = "primary", size = "md", className, children } = props;
-    const classes = cx(base, variants[variant], sizes[size], className);
+    const classes = cx("group", base, variants[variant], sizes[size], className);
 
     if (props.href !== undefined) {
         const { href, variant: _v, size: _s, className: _c, children: _ch, ...rest } = props;
         return (
             <Link href={href} className={classes} {...rest}>
-                {children}
+                {label(children)}
             </Link>
         );
     }
@@ -59,7 +74,7 @@ export function Button(props: ButtonAsLink | ButtonAsButton) {
     const { variant: _v, size: _s, className: _c, children: _ch, href: _h, ...rest } = props;
     return (
         <button className={classes} {...rest}>
-            {children}
+            {label(children)}
         </button>
     );
 }

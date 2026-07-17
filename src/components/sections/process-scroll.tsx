@@ -60,8 +60,8 @@ export function ProcessScroll() {
             <div className="sticky top-0 flex h-screen items-center overflow-hidden">
                 <div className="mx-auto grid w-full max-w-container gap-12 px-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
                     <div>
-                        <h2 className="font-display text-4xl leading-[1.02] font-semibold text-balance text-primary sm:text-5xl">
-                            Un proceso simple, sin cajas negras
+                        <h2 className="font-display text-[clamp(2.6rem,4.8vw,4.6rem)] leading-[0.98] font-semibold tracking-[-0.02em] text-balance text-primary">
+                            Un proceso <em className="font-light text-brand-secondary italic">simple</em>, sin cajas negras
                         </h2>
                         <p className="mt-6 max-w-sm text-lg text-tertiary">
                             Cuatro pasos. Te acompañamos en cada uno, sin desaparecer al entregar.

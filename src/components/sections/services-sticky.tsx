@@ -66,7 +66,7 @@ export function ServicesSticky() {
                 <div className="mx-auto grid w-full max-w-container gap-10 px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
                     {/* Columna izquierda: contador odómetro + título */}
                     <div>
-                        <h2 className="font-display text-2xl font-medium text-secondary">Qué hacemos</h2>
+                        <h2 className="font-mono text-[11px] tracking-[0.2em] text-secondary uppercase">Qué hacemos</h2>
                         <div className="mt-4 flex items-start gap-4">
                             <div className="h-[4.2rem] overflow-hidden sm:h-[6rem]">
                                 <div
@@ -118,7 +118,7 @@ export function ServicesSticky() {
                                     )}
                                     aria-hidden={!active}
                                 >
-                                    <h3 className="font-display text-4xl leading-[1.02] font-semibold text-balance text-primary sm:text-6xl">
+                                    <h3 className="font-display text-[clamp(2.6rem,5.5vw,5.2rem)] leading-[0.98] font-semibold tracking-[-0.02em] text-balance text-primary">
                                         {s.title}
                                     </h3>
                                     <ul className="mt-8 flex flex-wrap gap-2.5">

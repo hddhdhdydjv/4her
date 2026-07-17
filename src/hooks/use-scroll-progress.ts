@@ -3,9 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 
 /**
- * Devuelve el progreso (0..1) de scroll a través de un elemento "pineable":
- * 0 cuando su top toca el top del viewport, 1 cuando su bottom lo alcanza.
- * `reduced` es true si el usuario prefiere menos movimiento.
+ * Progreso (0..1) de scroll a través de un elemento "pineable",
+ * suavizado con lerp para que el motion no quede atado 1:1 al dedo.
+ * `reduced` respeta prefers-reduced-motion (progreso fijo en 1).
  */
 export function useScrollProgress<T extends HTMLElement = HTMLDivElement>() {
     const ref = useRef<T>(null);
@@ -24,23 +24,38 @@ export function useScrollProgress<T extends HTMLElement = HTMLDivElement>() {
         }
 
         let raf = 0;
-        const update = () => {
-            raf = 0;
+        let smooth = 0;
+        let target = 0;
+
+        const measure = () => {
             const rect = el.getBoundingClientRect();
             const range = el.offsetHeight - window.innerHeight;
-            const p = range > 0 ? -rect.top / range : 0;
-            setProgress(Math.min(1, Math.max(0, p)));
-        };
-        const onScroll = () => {
-            if (!raf) raf = window.requestAnimationFrame(update);
+            target = range > 0 ? Math.min(1, Math.max(0, -rect.top / range)) : 0;
         };
 
-        update();
-        window.addEventListener("scroll", onScroll, { passive: true });
-        window.addEventListener("resize", onScroll, { passive: true });
+        const tick = () => {
+            smooth += (target - smooth) * 0.14;
+            if (Math.abs(target - smooth) < 0.0005) {
+                smooth = target;
+                setProgress(smooth);
+                raf = 0;
+                return;
+            }
+            setProgress(smooth);
+            raf = window.requestAnimationFrame(tick);
+        };
+
+        const kick = () => {
+            measure();
+            if (!raf) raf = window.requestAnimationFrame(tick);
+        };
+
+        kick();
+        window.addEventListener("scroll", kick, { passive: true });
+        window.addEventListener("resize", kick, { passive: true });
         return () => {
-            window.removeEventListener("scroll", onScroll);
-            window.removeEventListener("resize", onScroll);
+            window.removeEventListener("scroll", kick);
+            window.removeEventListener("resize", kick);
             if (raf) cancelAnimationFrame(raf);
         };
     }, []);

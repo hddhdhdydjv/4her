@@ -51,8 +51,9 @@ export function WhyUsScroll() {
                             <p className="font-mono text-xs tracking-widest text-tertiary_on-brand uppercase">
                                 Nosotros / lo habitual
                             </p>
-                            <h2 className="mt-6 max-w-4xl font-display text-5xl leading-[1.0] font-semibold text-balance text-primary_on-brand sm:text-7xl">
-                                Los valores no se anuncian, se demuestran
+                            <h2 className="mt-6 max-w-5xl font-display text-[clamp(3rem,7.5vw,7rem)] leading-[0.96] font-semibold tracking-[-0.03em] text-balance text-primary_on-brand">
+                                Los valores no se <em className="font-light italic">anuncian</em>, se{" "}
+                                <em className="font-light text-[var(--brand-sage)] italic">demuestran</em>
                             </h2>
                             <p className="mt-8 font-mono text-sm text-tertiary_on-brand">Seguí scrolleando →</p>
                         </div>

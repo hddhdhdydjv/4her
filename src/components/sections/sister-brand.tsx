@@ -13,8 +13,9 @@ export function SisterBrand() {
                 <Reveal>
                     <div className="grid items-center gap-12 lg:grid-cols-[1.3fr_1fr]">
                         <div>
-                            <h2 className="font-display text-4xl leading-[1.02] font-semibold tracking-tight text-balance text-primary_on-brand sm:text-5xl lg:text-6xl">
-                                Comunicación y tecnología, una sola casa
+                            <h2 className="font-display text-[clamp(2.8rem,6vw,5.8rem)] leading-[0.96] font-semibold tracking-[-0.03em] text-balance text-primary_on-brand">
+                                Comunicación y tecnología, una sola{" "}
+                                <em className="font-light text-[var(--brand-sage)] italic">casa</em>
                             </h2>
                             <p className="mt-6 max-w-xl text-lg leading-relaxed text-secondary_on-brand">
                                 4HER y 4HIS son parte del mismo grupo. Si tu desafío también es

@@ -10,8 +10,9 @@ export function Contact() {
                 <Reveal>
                     <div className="grid gap-14 lg:grid-cols-2 lg:items-center">
                         <div className="max-w-xl">
-                            <h2 className="font-display text-5xl leading-[0.96] font-semibold tracking-tight text-balance text-primary sm:text-7xl">
-                                Transformemos ideas en impacto
+                            <h2 className="font-display text-[clamp(3rem,7vw,6.8rem)] leading-[0.94] font-semibold tracking-[-0.03em] text-balance text-primary">
+                                Transformemos ideas en{" "}
+                                <em className="font-light text-brand-secondary italic">impacto</em>
                             </h2>
                             <p className="mt-6 text-lg leading-relaxed text-secondary">
                                 Empecemos por una conversación.
