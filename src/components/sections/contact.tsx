@@ -8,15 +8,15 @@ export function Contact() {
         <section id="contacto" className="flex min-h-screen items-center bg-[var(--brand-sage)]">
             <div className="mx-auto w-full max-w-container px-6 pt-36 pb-44 lg:pt-32 lg:pb-40">
                 <Reveal>
-                    <div className="grid gap-14 lg:grid-cols-2 lg:items-center">
+                    <div className="grid gap-14 lg:grid-cols-2 lg:items-start">
                         <div className="max-w-xl">
-                            <h2 className="font-display text-[clamp(3rem,7vw,6.8rem)] leading-[0.94] font-medium tracking-[-0.03em] text-balance text-primary">
+                            <p className="font-mono text-xs tracking-[0.18em] text-brand-secondary uppercase">
+                                Empecemos por una conversación
+                            </p>
+                            <h2 className="mt-6 font-display text-[clamp(2.4rem,4.6vw,4.4rem)] leading-[1.0] font-medium tracking-[-0.02em] text-balance text-primary">
                                 Transformemos ideas en{" "}
                                 <em className="font-light text-brand-secondary italic">impacto</em>
                             </h2>
-                            <p className="mt-6 text-lg leading-relaxed text-secondary">
-                                Empecemos por una conversación.
-                            </p>
                         </div>
 
                         <form className="rounded-3xl bg-[var(--brand-cream)] p-8">
