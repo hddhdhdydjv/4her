@@ -1,8 +1,8 @@
 import { Navbar } from "@/components/sections/navbar";
 import { Hero } from "@/components/sections/hero";
 import { About } from "@/components/sections/about";
-import { ServicesSticky } from "@/components/sections/services-sticky";
-import { WhyUsScroll } from "@/components/sections/why-us-scroll";
+import { Services } from "@/components/sections/services";
+import { WhyUs } from "@/components/sections/why-us";
 import { ProcessScroll } from "@/components/sections/process-scroll";
 import { SisterBrand } from "@/components/sections/sister-brand";
 import { Contact } from "@/components/sections/contact";
@@ -22,8 +22,8 @@ export default function Home() {
                 <About />
                 {/* Placeholder de media: cuadrado que se expande con el scroll. */}
                 <ExpandBlock />
-                <ServicesSticky />
-                <WhyUsScroll />
+                <Services />
+                <WhyUs />
                 <ProcessScroll />
                 <SisterBrand />
                 <Contact />

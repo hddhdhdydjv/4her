@@ -57,6 +57,15 @@ body {
     animation: line-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
+/* --- Scrollbar oculta para los carruseles (mantiene el scroll táctil) --- */
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
 /* --- Accesibilidad: respetar prefers-reduced-motion --- */
 @media (prefers-reduced-motion: reduce) {
     .draw-line,
