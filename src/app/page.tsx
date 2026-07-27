@@ -2,32 +2,29 @@ import { Navbar } from "@/components/sections/navbar";
 import { Hero } from "@/components/sections/hero";
 import { About } from "@/components/sections/about";
 import { Services } from "@/components/sections/services";
-import { WhyUs } from "@/components/sections/why-us";
-import { ProcessScroll } from "@/components/sections/process-scroll";
-import { SisterBrand } from "@/components/sections/sister-brand";
+import { CaseWePiper } from "@/components/sections/case-wepiper";
+import { Values } from "@/components/sections/values";
+import { Process } from "@/components/sections/process";
 import { Contact } from "@/components/sections/contact";
 import { FourHisCta } from "@/components/sections/four-his-cta";
 import { LoopSeam } from "@/components/sections/loop-seam";
-import { ExpandBlock } from "@/components/sections/expand-block";
 
 export default function Home() {
     return (
         <>
-            {/* Chrome fijo: nav (arriba), redes (abajo izq), CTA 4HIS (abajo der). Sin footer. */}
+            {/* Chrome fijo: nav (arriba) y CTA 4HIS (abajo der). Sin footer. */}
             <Navbar />
             <FourHisCta />
 
             <main>
                 <Hero />
                 <About />
-                {/* Placeholder de media: cuadrado que se expande con el scroll. */}
-                <ExpandBlock />
                 <Services />
-                <WhyUs />
-                <ProcessScroll />
-                <SisterBrand />
+                <CaseWePiper />
+                <Values />
+                <Process />
                 <Contact />
-                {/* Empalme del scroll infinito: al fondo, vuelve al inicio sin costura. */}
+                {/* Empalme del scroll infinito: vuelve al inicio sin costura. */}
                 <LoopSeam />
             </main>
         </>

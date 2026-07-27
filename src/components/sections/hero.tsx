@@ -1,14 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Globe } from "@/components/graphics/illustrations";
-import { Reveal } from "@/components/motion/reveal";
 import { Scramble } from "@/components/motion/scramble";
 import { CascadeTitle } from "@/components/motion/cascade-title";
-
-const contrastCards = [
-    { vs: "vs. Agencia tradicional", title: "Estrategia, no solo ejecución" },
-    { vs: "vs. Freelance", title: "Un equipo con varias cabezas" },
-    { vs: "vs. Hacerlo in-house", title: "Mirada externa y experiencia" },
-];
 
 /**
  * `isStatic`: renderiza la misma composicion sin animaciones de entrada.
@@ -42,54 +35,18 @@ export function Hero({ isStatic = false }: { isStatic?: boolean }) {
                 ) : (
                     <CascadeTitle className={titleClass}>{title}</CascadeTitle>
                 )}
-            </div>
 
-            {/* Bloque olivo: bajada + CTAs + cards de contraste */}
-            <div className="bg-[var(--brand-olive)]">
-                <div className="mx-auto grid max-w-container gap-12 px-6 py-20 lg:grid-cols-12 lg:items-center lg:py-28">
-                    <div className="lg:col-span-7">
-                        <p className="max-w-xl font-display text-[clamp(1.5rem,2.6vw,2.4rem)] leading-[1.15] font-medium text-primary_on-brand">
-                            Marca y comunicación con criterio, no solo entregables lindos.
-                        </p>
-                        <p className="mt-5 max-w-md text-lg leading-relaxed text-secondary_on-brand">
-                            Pensamos qué decir y por qué, no únicamente cómo se ve.
-                        </p>
-                        <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-                            <Button href="#contacto" size="lg">
-                                Hablemos
-                            </Button>
-                            <Button
-                                href="#servicios"
-                                size="lg"
-                                variant="secondary"
-                                className="text-primary_on-brand ring-white/30 hover:bg-white/10"
-                            >
-                                Ver servicios
-                            </Button>
-                        </div>
-                    </div>
+                <p className="mt-8 max-w-xl text-lg leading-relaxed text-secondary">
+                    Pensamos qué decir y por qué, no únicamente cómo se ve.
+                </p>
 
-                    <div className="flex flex-col gap-2.5 lg:col-span-5">
-                        {contrastCards.map((card, i) => {
-                            const inner = (
-                                <div className="rounded-2xl bg-[var(--brand-black)] p-5">
-                                    <span className="font-mono text-[10px] tracking-[0.14em] text-brand-tertiary uppercase">
-                                        {card.vs}
-                                    </span>
-                                    <p className="mt-1.5 font-display text-lg font-medium text-primary_on-brand">
-                                        {card.title}
-                                    </p>
-                                </div>
-                            );
-                            return isStatic ? (
-                                <div key={card.vs}>{inner}</div>
-                            ) : (
-                                <Reveal key={card.vs} delay={i * 90} y={16}>
-                                    {inner}
-                                </Reveal>
-                            );
-                        })}
-                    </div>
+                <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+                    <Button href="#contacto" size="lg">
+                        Hablemos
+                    </Button>
+                    <Button href="#servicios" size="lg" variant="secondary">
+                        Ver servicios
+                    </Button>
                 </div>
             </div>
         </section>

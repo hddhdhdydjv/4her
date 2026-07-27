@@ -1,99 +1,132 @@
 /* ============================================================================
-   4HER - Dirección visual "Aptos-inspired" (bloques de color + grotesque + mono)
+   4HER — Design tokens
    ----------------------------------------------------------------------------
-   ÚNICO lugar para reajustar la piel de la marca.
-   Base crema + bloques sage/olivo/negro alternados, acento terracota cálido.
+   Espejo del sistema de variables de Figma (colecciones Primitives / Color /
+   Typography). ÚNICO lugar para reajustar la piel de la marca.
 
-   Cambiá los HEX de acá y todo el sitio se reacomoda.
+   Figma            ->  CSS
+   neutral/900      ->  --neutral-900
+   text/primary     ->  --text-primary
+   bg/secondary     ->  --bg-secondary
    ============================================================================ */
 
 :root {
-    /* --- Superficies / bloques de sección --- */
-    --brand-cream: #f2f2f1; /* base */
-    --brand-cream-2: #e9e9e7; /* crema un tono más profundo */
-    --brand-surface: #e2e2e0; /* cards sobre crema */
-    --brand-sage: #d9d9d7; /* bloque verde pistacho */
-    --brand-sage-deep: #c9c9c7;
-    --brand-olive: #7c7c7a; /* bloque olivo/taupe (texto claro) */
-    --brand-olive-deep: #696967;
-    --brand-black: #0e0e0e; /* cards y op-art */
-    --brand-black-soft: #161616;
+    /* --- Primitives: escala neutral --------------------------------------- */
+    --neutral-50: #f7f7f6;
+    --neutral-100: #ececea;
+    --neutral-200: #d9d9d7;
+    --neutral-300: #c2c2c0;
+    --neutral-400: #a3a3a1;
+    --neutral-500: #7c7c7a;
+    --neutral-600: #5f5f5d;
+    --neutral-700: #434341;
+    --neutral-800: #2b2b2a;
+    --neutral-900: #161616;
+    --neutral-950: #0e0e0e;
 
-    /* --- Tinta / acentos --- */
-    --brand-ink: #141414;
-    --brand-muted: #757573;
-    --brand-accent: #8a8a88; /* acento (gris por ahora) */
-    --brand-accent-deep: #6f6f6d;
-    --brand-line: #d7d7d5;
+    /* Acento: placeholder gris. Cambiar acá cuando exista el color de marca. */
+    --accent-subtle: #e2e2e0;
+    --accent-default: #141414;
+    --accent-hover: #333333;
 
-    /* --- Escala "brand" de Untitled → terracota (acentos, focus, links) --- */
-    --color-brand-50: #f5f5f5;
-    --color-brand-100: #e8e8e8;
-    --color-brand-200: #d1d1d1;
-    --color-brand-300: #b0b0b0;
-    --color-brand-400: #9a9a9a;
-    --color-brand-500: #8a8a8a;
-    --color-brand-600: #6f6f6f;
-    --color-brand-700: #575757;
-    --color-brand-800: #424242;
-    --color-brand-900: #333333;
-    --color-brand-950: #1f1f1f;
+    /* --- Semánticos (modo claro) ------------------------------------------ */
+    --bg-primary: var(--neutral-50);
+    --bg-secondary: var(--neutral-100);
+    --bg-tertiary: var(--neutral-200);
+    --bg-inverse: var(--neutral-950);
 
-    /* --- Superficies (tokens semánticos Untitled) --- */
-    --color-bg-primary: var(--brand-cream);
-    --color-bg-primary_alt: var(--brand-cream);
-    --color-bg-primary_hover: var(--brand-cream-2);
-    --color-bg-secondary: var(--brand-surface);
-    --color-bg-secondary_alt: var(--brand-cream-2);
-    --color-bg-secondary_hover: var(--brand-line);
-    --color-bg-active: var(--brand-cream-2);
-    --color-bg-tertiary: var(--brand-line);
+    --text-primary: var(--neutral-900);
+    --text-secondary: var(--neutral-700);
+    --text-tertiary: var(--neutral-500);
+    --text-inverse: var(--neutral-50);
 
-    --color-bg-brand-primary: #ececea;
-    --color-bg-brand-primary_alt: #ececea;
-    --color-bg-brand-secondary: var(--brand-sage);
-    /* Botón primario = pill NEGRO estilo Aptos */
-    --color-bg-brand-solid: var(--brand-ink);
-    --color-bg-brand-solid_hover: #323232;
-    --color-bg-brand-section: var(--brand-black);
-    --color-bg-brand-section_subtle: var(--brand-black-soft);
-    --color-bg-primary-solid: var(--brand-ink);
+    --border-default: var(--neutral-200);
+    --border-strong: var(--neutral-300);
 
-    /* --- Texto --- */
-    --color-text-primary: var(--brand-ink);
-    --color-text-secondary: #434341;
-    --color-text-secondary_hover: #2b2b2b;
-    --color-text-tertiary: var(--brand-muted);
-    --color-text-tertiary_hover: #5f5f5d;
-    --color-text-quaternary: #979795;
-    --color-text-placeholder: #979795;
-    --color-text-brand-primary: #333333;
-    --color-text-brand-secondary: var(--brand-accent-deep); /* acento terracota */
-    --color-text-brand-secondary_hover: #575757;
-    --color-text-brand-tertiary: var(--brand-accent);
-    --color-text-brand-tertiary_alt: var(--brand-accent);
-    --color-text-primary_on-brand: #f2f2f1;
-    --color-text-secondary_on-brand: #d6d6d4;
-    --color-text-tertiary_on-brand: #b3b3b1;
+    --accent-on-accent: var(--neutral-50);
+
+    /* --- Alias legacy (componentes que aún usan los nombres viejos) -------- */
+    --brand-cream: var(--bg-primary);
+    --brand-cream-2: var(--bg-secondary);
+    --brand-surface: var(--bg-secondary);
+    --brand-sage: var(--neutral-200);
+    --brand-sage-deep: var(--neutral-300);
+    --brand-olive: var(--neutral-500);
+    --brand-olive-deep: var(--neutral-600);
+    --brand-black: var(--bg-inverse);
+    --brand-black-soft: var(--neutral-900);
+    --brand-ink: var(--text-primary);
+    --brand-muted: var(--text-tertiary);
+    --brand-accent: var(--accent-default);
+    --brand-accent-deep: var(--accent-hover);
+    --brand-line: var(--border-default);
+
+    /* --- Escala "brand" de Untitled UI ------------------------------------ */
+    --color-brand-50: var(--neutral-50);
+    --color-brand-100: var(--neutral-100);
+    --color-brand-200: var(--neutral-200);
+    --color-brand-300: var(--neutral-300);
+    --color-brand-400: var(--neutral-400);
+    --color-brand-500: var(--neutral-500);
+    --color-brand-600: var(--neutral-600);
+    --color-brand-700: var(--neutral-700);
+    --color-brand-800: var(--neutral-800);
+    --color-brand-900: var(--neutral-900);
+    --color-brand-950: var(--neutral-950);
+
+    /* --- Superficies (tokens semánticos Untitled UI) ---------------------- */
+    --color-bg-primary: var(--bg-primary);
+    --color-bg-primary_alt: var(--bg-primary);
+    --color-bg-primary_hover: var(--bg-secondary);
+    --color-bg-secondary: var(--bg-secondary);
+    --color-bg-secondary_alt: var(--bg-secondary);
+    --color-bg-secondary_hover: var(--bg-tertiary);
+    --color-bg-active: var(--bg-secondary);
+    --color-bg-tertiary: var(--bg-tertiary);
+
+    --color-bg-brand-primary: var(--bg-secondary);
+    --color-bg-brand-primary_alt: var(--bg-secondary);
+    --color-bg-brand-secondary: var(--bg-tertiary);
+    --color-bg-brand-solid: var(--accent-default);
+    --color-bg-brand-solid_hover: var(--accent-hover);
+    --color-bg-brand-section: var(--bg-inverse);
+    --color-bg-brand-section_subtle: var(--neutral-900);
+    --color-bg-primary-solid: var(--text-primary);
+
+    /* --- Texto ------------------------------------------------------------ */
+    --color-text-primary: var(--text-primary);
+    --color-text-secondary: var(--text-secondary);
+    --color-text-secondary_hover: var(--neutral-800);
+    --color-text-tertiary: var(--text-tertiary);
+    --color-text-tertiary_hover: var(--neutral-600);
+    --color-text-quaternary: var(--neutral-400);
+    --color-text-placeholder: var(--neutral-400);
+    --color-text-brand-primary: var(--text-primary);
+    --color-text-brand-secondary: var(--text-secondary);
+    --color-text-brand-secondary_hover: var(--neutral-800);
+    --color-text-brand-tertiary: var(--text-tertiary);
+    --color-text-brand-tertiary_alt: var(--text-tertiary);
+    --color-text-primary_on-brand: var(--text-inverse);
+    --color-text-secondary_on-brand: var(--neutral-200);
+    --color-text-tertiary_on-brand: var(--neutral-400);
     --color-text-white: #ffffff;
 
-    /* --- Foreground / iconos --- */
-    --color-fg-brand-primary: var(--brand-accent);
-    --color-fg-brand-primary_alt: var(--brand-accent);
-    --color-fg-brand-secondary: var(--brand-accent);
+    /* --- Foreground / iconos ---------------------------------------------- */
+    --color-fg-brand-primary: var(--accent-default);
+    --color-fg-brand-primary_alt: var(--accent-default);
+    --color-fg-brand-secondary: var(--accent-default);
 
-    /* --- Bordes --- */
-    --color-border-primary: var(--brand-line);
-    --color-border-secondary: #e0e0de;
-    --color-border-tertiary: #eaeae8;
-    --color-border-brand: var(--brand-accent);
-    --color-border-brand-solid: var(--brand-ink);
+    /* --- Bordes ----------------------------------------------------------- */
+    --color-border-primary: var(--border-default);
+    --color-border-secondary: var(--neutral-100);
+    --color-border-tertiary: var(--neutral-100);
+    --color-border-brand: var(--border-strong);
+    --color-border-brand-solid: var(--accent-default);
 
-    /* --- Focus ring accesible --- */
-    --color-focus-ring: var(--brand-accent);
+    --color-focus-ring: var(--accent-default);
 
-    /* --- Tipografía: Outfit (una sola familia, pesos variados) + mono labels --- */
-    --font-display: var(--font-outfit), "Helvetica Neue", Arial, sans-serif;
-    --font-body: var(--font-outfit), "Helvetica Neue", Arial, sans-serif;
-    --font-mono: var(--font-mono-label), ui-monospace, "SFMono-Regular", Menlo, monospace;
+    /* --- Tipografía: Funnel Display (títulos) + Funnel Sans (cuerpo) ------- */
+    --font-display: var(--font-funnel-display), "Helvetica Neue", Arial, sans-serif;
+    --font-body: var(--font-funnel-sans), -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    --font-mono: var(--font-funnel-sans), -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 }

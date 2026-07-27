@@ -1,35 +1,32 @@
-import { DotSphere } from "@/components/graphics/illustrations";
-import { Reveal } from "@/components/motion/reveal";
+import { SectionIntro } from "@/components/ui/section";
+import { FeatureSplit } from "@/components/sections/feature-split";
 
-/**
- * PLACEHOLDER - Quiénes somos.
- * Pendiente de datos reales de la empresa. No redactar copy inventado.
- */
 export function About() {
     return (
-        <section id="quienes-somos" className="mx-auto max-w-container px-6 py-40 lg:py-64">
-            <Reveal>
-                <div className="grid gap-20 lg:grid-cols-12 lg:items-center">
-                    {/* Offset asimétrico: el texto arranca en col 2 */}
-                    <div className="lg:col-span-6 lg:col-start-2">
-                        <p className="font-mono text-[10px] tracking-[0.2em] text-quaternary uppercase">
-                            Placeholder / quiénes somos
-                        </p>
-                        <p className="mt-6 font-display text-[clamp(2.2rem,4.5vw,4.2rem)] leading-[1.02] font-medium tracking-[-0.02em] text-balance text-primary">
-                            Texto pendiente de definir
-                        </p>
-                        <p className="mt-6 max-w-md text-lg leading-relaxed text-tertiary">
-                            Se completa con datos reales de la empresa.
-                        </p>
-                    </div>
+        <>
+            <SectionIntro
+                id="quienes-somos"
+                eyebrow="Quiénes somos"
+                title={
+                    <>
+                        Más estratégicos que una agencia,
+                        <br className="hidden sm:block" /> más cerca que un freelance
+                    </>
+                }
+                lead="No entregamos piezas lindas y desaparecemos. Pensamos qué decir y por qué, trabajamos con vos en cada paso y medimos si de verdad comunica. Somos la cara de comunicación de 4HIS, [fundada/liderada por + nombre / breve historia de quién está detrás], aplicando la misma forma de trabajar a tu marca."
+            />
 
-                    <div className="lg:col-span-4 lg:col-start-9">
-                        <div className="flex aspect-square items-center justify-center text-[var(--brand-ink)]">
-                            <DotSphere className="h-full w-full" spin />
-                        </div>
-                    </div>
-                </div>
-            </Reveal>
-        </section>
+            <FeatureSplit
+                tight
+                title={
+                    <>
+                        De la estrategia a la ejecución,
+                        <br className="hidden sm:block" /> sin intermediarios
+                    </>
+                }
+                body="No tercerizamos ni fragmentamos tu marca entre proveedores sueltos. Un mismo equipo piensa, produce y mide."
+                imageLabel="Ilustración isométrica"
+            />
+        </>
     );
 }
