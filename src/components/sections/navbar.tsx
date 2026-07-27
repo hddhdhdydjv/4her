@@ -1,79 +1,85 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { Logo } from "@/components/ui/logo";
+import { type } from "@/components/ui/section";
 import { cx } from "@/utils/cx";
 
+/** Figma `Header 1` (40:3870) — pill centrada de 640px, py-24. */
 const links = [
+    { label: "Quiénes somos", href: "#quienes-somos" },
     { label: "Servicios", href: "#servicios" },
+    { label: "Valores", href: "#valores" },
     { label: "Proceso", href: "#proceso" },
-    { label: "4HIS", href: "#marca-hermana" },
 ];
 
-/** Nav pill compacta (ancho al contenido), con círculo para el logo. */
 export function Navbar() {
     const [open, setOpen] = useState(false);
 
     return (
-        <div className="pointer-events-none fixed inset-x-0 top-4 z-50 flex justify-center px-4">
-            <nav className="pointer-events-auto">
-                <div className="flex items-center gap-5 rounded-full border border-[var(--color-border-primary)] bg-[var(--brand-cream)]/90 py-1.5 pr-1.5 pl-2 shadow-[0_8px_30px_rgba(20,21,18,0.10)] backdrop-blur-md">
-                    <Link href="#inicio" className="flex items-center gap-2.5">
-                        {/* Círculo del logo (placeholder hasta tener el isotipo real) */}
-                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--brand-ink)] font-display text-[13px] font-bold text-[var(--brand-sage)]">
-                            4
-                        </span>
-                        <span className="font-display text-base font-medium tracking-tight text-primary">
-                            4HER
-                        </span>
-                    </Link>
+        <header className="fixed inset-x-0 top-0 z-50 px-4 py-4 sm:px-6 lg:py-6">
+            <div className="mx-auto w-full max-w-[640px]">
+                {/* Menu (40:3871) */}
+                <div className="flex items-center justify-between rounded-[48px] border border-[var(--border-strong)] bg-[var(--bg-primary)]/80 py-2 pr-2 pl-4 backdrop-blur-[35px]">
+                    <Logo />
 
-                    <div className="hidden items-center gap-5 md:flex">
+                    {/* Buttons (40:3875) */}
+                    <nav className="hidden items-center gap-6 lg:flex">
                         {links.map((link) => (
                             <a
                                 key={link.href}
                                 href={link.href}
-                                className="font-mono text-[11px] tracking-wide text-secondary uppercase transition-colors hover:text-primary"
+                                className={cx(
+                                    type.body,
+                                    "text-center text-[var(--text-primary)] transition-opacity hover:opacity-60",
+                                )}
                             >
                                 {link.label}
                             </a>
                         ))}
-                    </div>
-
-                    <a
-                        href="#contacto"
-                        className="hidden h-9 items-center rounded-full bg-[var(--brand-ink)] px-4 text-sm font-medium text-[var(--brand-cream)] transition-colors hover:bg-[#33322c] sm:flex"
-                    >
-                        Hablemos
-                    </a>
+                        <a
+                            href="#contacto"
+                            className={cx(
+                                type.body,
+                                "rounded-[31px] bg-[var(--bg-inverse)] px-3 py-2 text-center text-[var(--text-inverse)] transition-opacity hover:opacity-85",
+                            )}
+                        >
+                            Hablemos
+                        </a>
+                    </nav>
 
                     <button
                         type="button"
-                        aria-label="Abrir menú"
+                        aria-label={open ? "Cerrar menú" : "Abrir menú"}
                         aria-expanded={open}
                         onClick={() => setOpen((v) => !v)}
-                        className="flex h-9 w-9 items-center justify-center rounded-full text-primary md:hidden"
+                        className="flex size-[34px] items-center justify-center rounded-full text-[var(--text-primary)] lg:hidden"
                     >
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                             <path
-                                d={open ? "M6 6l12 12M6 18L18 6" : "M4 7h16M4 12h16M4 17h16"}
+                                d={open ? "M6 6l12 12M6 18L18 6" : "M4 8h16M4 16h16"}
                                 stroke="currentColor"
-                                strokeWidth="2"
+                                strokeWidth="1.5"
                                 strokeLinecap="round"
                             />
                         </svg>
                     </button>
                 </div>
 
-                {/* Menú mobile */}
-                <div className={cx("overflow-hidden transition-all md:hidden", open ? "mt-2 max-h-96" : "max-h-0")}>
-                    <div className="flex flex-col gap-1 rounded-3xl border border-[var(--color-border-primary)] bg-[var(--brand-cream)]/95 p-3 backdrop-blur-md">
+                {/* Menú desplegable (solo mobile/tablet) */}
+                <div
+                    className={cx(
+                        "overflow-hidden transition-[max-height,opacity] duration-300 lg:hidden",
+                        open ? "mt-2 max-h-96 opacity-100" : "max-h-0 opacity-0",
+                    )}
+                >
+                    <div className="flex flex-col gap-1 rounded-[24px] border border-[var(--border-strong)] bg-[var(--bg-primary)]/95 p-2 backdrop-blur-[35px]">
                         {links.map((link) => (
                             <a
                                 key={link.href}
                                 href={link.href}
                                 onClick={() => setOpen(false)}
-                                className="rounded-2xl px-4 py-3 font-mono text-xs tracking-wide text-secondary uppercase hover:bg-[var(--brand-surface)]"
+                                className={cx(type.body, "rounded-[18px] px-4 py-3 text-[var(--text-primary)]")}
                             >
                                 {link.label}
                             </a>
@@ -81,13 +87,16 @@ export function Navbar() {
                         <a
                             href="#contacto"
                             onClick={() => setOpen(false)}
-                            className="flex h-11 items-center justify-center rounded-full bg-[var(--brand-ink)] text-sm font-medium text-[var(--brand-cream)]"
+                            className={cx(
+                                type.body,
+                                "rounded-[31px] bg-[var(--bg-inverse)] px-4 py-3 text-center text-[var(--text-inverse)]",
+                            )}
                         >
                             Hablemos
                         </a>
                     </div>
                 </div>
-            </nav>
-        </div>
+            </div>
+        </header>
     );
 }

@@ -1,46 +1,53 @@
-import { Button } from "@/components/ui/button";
+import { Section, type, tone } from "@/components/ui/section";
 import { Input, Label, Textarea } from "@/components/ui/field";
 import { Reveal } from "@/components/motion/reveal";
+import { cx } from "@/utils/cx";
 
-/** Cierre full-height, sin eyebrow, sin footer. Última pantalla. */
+/**
+ * Cierre y destino de todos los CTA ("Hablemos", "Hacé tu consulta").
+ * No está en el wireframe de Figma: se construye con la misma rampa
+ * tipográfica y los mismos tokens que el resto de la página.
+ */
 export function Contact() {
     return (
-        <section id="contacto" className="flex min-h-screen items-center bg-[var(--brand-sage)]">
-            <div className="mx-auto w-full max-w-container px-6 pt-36 pb-44 lg:pt-32 lg:pb-40">
-                <Reveal>
-                    <div className="grid gap-14 lg:grid-cols-2 lg:items-start">
-                        <div className="max-w-xl">
-                            <p className="font-mono text-xs tracking-[0.18em] text-brand-secondary uppercase">
-                                Empecemos por una conversación
-                            </p>
-                            <h2 className="mt-6 font-display text-[clamp(2.4rem,4.6vw,4.4rem)] leading-[1.0] font-medium tracking-[-0.02em] text-balance text-primary">
-                                Transformemos ideas en{" "}
-                                <em className="font-light text-brand-secondary italic">impacto</em>
-                            </h2>
-                        </div>
-
-                        <form className="rounded-3xl bg-[var(--brand-cream)] p-8">
-                            <div className="flex flex-col gap-5">
-                                <div>
-                                    <Label htmlFor="name">Nombre</Label>
-                                    <Input id="name" name="name" type="text" placeholder="Tu nombre" autoComplete="name" />
-                                </div>
-                                <div>
-                                    <Label htmlFor="email">Email</Label>
-                                    <Input id="email" name="email" type="email" placeholder="tu@email.com" autoComplete="email" />
-                                </div>
-                                <div>
-                                    <Label htmlFor="message">Mensaje</Label>
-                                    <Textarea id="message" name="message" rows={4} placeholder="Contanos qué tenés en mente" />
-                                </div>
-                                <Button size="lg" type="submit" className="mt-1 w-full">
-                                    Contactanos
-                                </Button>
-                            </div>
-                        </form>
+        <Section id="contacto" className="bg-[var(--bg-secondary)]">
+            <Reveal>
+                <div className="flex flex-col gap-10 lg:flex-row lg:gap-16">
+                    <div className="flex flex-col gap-4 lg:flex-1">
+                        <p className={cx(type.title, tone.secondary)}>Contacto</p>
+                        <h2 className={cx(type.h1, tone.primary, "text-balance")}>
+                            Contanos qué querés lograr
+                        </h2>
+                        <p className={cx(type.bodyLg, tone.secondary)}>
+                            Escribinos y arrancamos por una conversación, sin compromiso.
+                        </p>
                     </div>
-                </Reveal>
-            </div>
-        </section>
+
+                    <form className="flex w-full flex-col gap-5 rounded-2xl bg-[var(--bg-primary)] p-8 lg:flex-1">
+                        <div>
+                            <Label htmlFor="name">Nombre</Label>
+                            <Input id="name" name="name" type="text" placeholder="Tu nombre" autoComplete="name" />
+                        </div>
+                        <div>
+                            <Label htmlFor="email">Email</Label>
+                            <Input id="email" name="email" type="email" placeholder="tu@email.com" autoComplete="email" />
+                        </div>
+                        <div>
+                            <Label htmlFor="message">Mensaje</Label>
+                            <Textarea id="message" name="message" rows={4} placeholder="Contanos qué tenés en mente" />
+                        </div>
+                        <button
+                            type="submit"
+                            className={cx(
+                                type.bodyLg,
+                                "mt-1 w-full rounded-[45px] bg-[var(--bg-inverse)] px-4 py-3 text-center text-[var(--text-inverse)] transition-opacity hover:opacity-85",
+                            )}
+                        >
+                            Enviar
+                        </button>
+                    </form>
+                </div>
+            </Reveal>
+        </Section>
     );
 }

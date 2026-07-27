@@ -6,15 +6,13 @@ import { CaseWePiper } from "@/components/sections/case-wepiper";
 import { Values } from "@/components/sections/values";
 import { Process } from "@/components/sections/process";
 import { Contact } from "@/components/sections/contact";
-import { FourHisCta } from "@/components/sections/four-his-cta";
-import { LoopSeam } from "@/components/sections/loop-seam";
+import { Footer } from "@/components/sections/footer";
 
+/** Orden del wireframe Desktop de Figma (40:3764). */
 export default function Home() {
     return (
         <>
-            {/* Chrome fijo: nav (arriba) y CTA 4HIS (abajo der). Sin footer. */}
             <Navbar />
-            <FourHisCta />
 
             <main>
                 <Hero />
@@ -24,9 +22,9 @@ export default function Home() {
                 <Values />
                 <Process />
                 <Contact />
-                {/* Empalme del scroll infinito: vuelve al inicio sin costura. */}
-                <LoopSeam />
             </main>
+
+            <Footer />
         </>
     );
 }

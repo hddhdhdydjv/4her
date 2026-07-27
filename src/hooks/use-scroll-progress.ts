@@ -3,9 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 
 /**
- * Progreso (0..1) de scroll a través de un elemento "pineable",
- * suavizado con lerp para que el motion no quede atado 1:1 al dedo.
- * `reduced` respeta prefers-reduced-motion (progreso fijo en 1).
+ * Progreso (0..1) del scroll a través de un elemento "pineable":
+ * 0 cuando su borde superior toca el viewport, 1 cuando termina de recorrerlo.
+ *
+ * Con `prefers-reduced-motion` se sigue midiendo — el progreso es la posición
+ * real del scroll, no una animación añadida — pero sin suavizado. `reduced`
+ * queda expuesto para que cada sección decida si aplica el efecto continuo.
  */
 export function useScrollProgress<T extends HTMLElement = HTMLDivElement>() {
     const ref = useRef<T>(null);
@@ -16,13 +19,10 @@ export function useScrollProgress<T extends HTMLElement = HTMLDivElement>() {
         const el = ref.current;
         if (!el) return;
 
-        const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-        if (mq.matches) {
-            setReduced(true);
-            setProgress(1);
-            return;
-        }
+        const isReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        setReduced(isReduced);
 
+        const lerp = isReduced ? 1 : 0.22;
         let raf = 0;
         let smooth = 0;
         let target = 0;
@@ -34,7 +34,7 @@ export function useScrollProgress<T extends HTMLElement = HTMLDivElement>() {
         };
 
         const tick = () => {
-            smooth += (target - smooth) * 0.22;
+            smooth += (target - smooth) * lerp;
             if (Math.abs(target - smooth) < 0.0005) {
                 smooth = target;
                 setProgress(smooth);
