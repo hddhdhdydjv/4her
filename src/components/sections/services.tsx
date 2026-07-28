@@ -118,7 +118,7 @@ export function Services() {
             />
 
             {/* Pista de scroll: un tramo de viewport por servicio. */}
-            <div ref={ref} style={{ height: `${n * 100}vh` }} className="relative">
+            <div ref={ref} style={{ height: `${n * 100}vh` }} className="relative snap-start scroll-mt-28">
                 <div className="sticky top-0 flex h-screen items-center overflow-hidden">
                     <div
                         ref={stageRef}
