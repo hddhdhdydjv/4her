@@ -11,8 +11,8 @@ import { cx } from "@/utils/cx";
 export function About() {
     return (
         <Screen id="quienes-somos" className="justify-center">
-            <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
-                <Reveal delay={0} className="flex flex-col gap-4">
+            <div className="grid items-center gap-6 lg:grid-cols-2 lg:gap-14">
+                <Reveal delay={0} className="flex flex-col gap-3 lg:gap-4">
                     <p className={cx(screenType.title, tone.secondary)}>Quiénes somos</p>
                     <h1 className={cx(screenType.h1, tone.primary, "text-balance")}>
                         Más estratégicos que una agencia, más cerca que un freelance
@@ -24,8 +24,8 @@ export function About() {
                     </p>
                 </Reveal>
 
-                <Reveal delay={160} className="flex flex-col gap-4">
-                    <div className="aspect-[16/10] w-full max-w-[380px]">
+                <Reveal delay={160} className="flex flex-col gap-3 lg:gap-4">
+                    <div className="aspect-[16/10] w-full max-w-[260px] lg:max-w-[380px]">
                         <IsoCluster className="h-full w-full" />
                     </div>
                     <div className="flex flex-col gap-1.5">

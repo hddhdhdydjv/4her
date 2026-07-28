@@ -53,12 +53,12 @@ export function Values() {
                     </h2>
                 </Reveal>
 
-                <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+                <ul className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4 lg:gap-6">
                     {values.map((v, i) => (
                         <li key={v.title}>
                             <Reveal delay={i * 100} y={24}>
-                                <article className="flex h-full flex-col gap-4 rounded-2xl bg-[var(--bg-secondary)] p-5">
-                                    <div className="relative h-[110px] w-full overflow-hidden rounded-xl">
+                                <article className="flex h-full flex-col gap-3 rounded-2xl bg-[var(--bg-secondary)] p-4 sm:gap-4 sm:p-5">
+                                    <div className="relative h-[80px] w-full overflow-hidden rounded-xl sm:h-[110px]">
                                         {v.image ? (
                                             // eslint-disable-next-line @next/next/no-img-element
                                             <img

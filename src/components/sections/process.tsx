@@ -77,7 +77,7 @@ function StepCard({ step, index }: { step: (typeof steps)[number]; index: number
             ref={ref}
             style={{ transitionDelay: inView ? cardDelay : "0ms" }}
             className={cx(
-                "flex min-w-0 flex-col gap-2 rounded-2xl bg-[var(--bg-secondary)] p-4",
+                "flex min-w-0 flex-col gap-1.5 rounded-2xl bg-[var(--bg-secondary)] p-3 sm:gap-2 sm:p-4",
                 "transition-all duration-700 ease-out",
                 inView ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0",
             )}
@@ -121,8 +121,9 @@ export function Process() {
                     </Reveal>
                 </div>
 
-                {/* List (40:3829) */}
-                <ol className="flex flex-col gap-3 lg:flex-1">
+                {/* List (40:3829): 2×2 en mobile para que entre junto al header;
+                    vuelve a ser una lista vertical desde lg. */}
+                <ol className="grid grid-cols-2 gap-2 sm:gap-3 lg:flex-1 lg:grid-cols-1">
                     {steps.map((s, i) => (
                         <StepCard key={s.title} step={s} index={i} />
                     ))}

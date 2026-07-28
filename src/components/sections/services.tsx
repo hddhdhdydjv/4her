@@ -73,8 +73,8 @@ export function Services() {
 
     return (
         <Screen id="servicios" className="justify-center">
-            <div className="flex flex-col gap-8">
-                <Reveal delay={0} className="flex flex-col gap-3">
+            <div className="flex flex-col gap-5 lg:gap-8">
+                <Reveal delay={0} className="flex flex-col gap-2 lg:gap-3">
                     <p className={cx(screenType.title, tone.secondary)}>Nuestros servicios</p>
                     <h2 className={cx(screenType.h1, tone.primary, "text-balance")}>
                         Servicios que se combinan según lo que tu marca necesita
@@ -82,8 +82,8 @@ export function Services() {
                     <p className={cx(screenType.body, tone.tertiary)}>Vos elegís por dónde empezar</p>
                 </Reveal>
 
-                <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
-                    <div className="flex flex-col gap-6">
+                <div className="grid items-center gap-6 lg:grid-cols-2 lg:gap-14">
+                    <div className="flex flex-col gap-4 lg:gap-6">
                         <BarIndicator count={n} active={active} onSelect={setActive} />
 
                         <div className="relative min-h-[130px] sm:min-h-[110px]">
@@ -115,7 +115,7 @@ export function Services() {
                         </a>
                     </div>
 
-                    <div className="relative w-full max-w-[420px] justify-self-center lg:max-w-none">
+                    <div className="relative w-full max-w-[240px] justify-self-center sm:max-w-[320px] lg:max-w-none">
                         {services.map((s, i) => (
                             <div
                                 key={s.title}

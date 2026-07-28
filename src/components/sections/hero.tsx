@@ -33,7 +33,7 @@ export function Hero() {
     return (
         <section
             id="inicio"
-            className="relative min-h-screen overflow-hidden bg-[var(--neutral-200)] lg:h-screen lg:snap-start lg:snap-always"
+            className="relative min-h-screen snap-start snap-always overflow-hidden bg-[var(--neutral-200)] lg:h-screen"
         >
             {/* Mobile: la textura pasa del costado a una franja abajo (estilo Aptos, a pedido). */}
             <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[22%] bg-[var(--neutral-300)] sm:hidden" />

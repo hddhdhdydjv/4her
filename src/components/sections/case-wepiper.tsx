@@ -37,7 +37,7 @@ export function CaseWePiper() {
             <div
                 ref={ref}
                 className={cx(
-                    "relative min-h-[280px] flex-1 overflow-hidden rounded-2xl bg-[var(--bg-inverse)] transition-all duration-700 ease-out sm:min-h-[360px] lg:min-h-0",
+                    "relative min-h-0 flex-1 overflow-hidden rounded-2xl bg-[var(--bg-inverse)] transition-all duration-700 ease-out",
                     inView ? "scale-100 opacity-100" : "scale-[0.97] opacity-0",
                 )}
             >

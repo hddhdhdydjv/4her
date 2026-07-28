@@ -61,10 +61,12 @@ export const screenType = {
 export const screenNavClearance = "pt-28 lg:pt-32";
 
 /**
- * Sección que ocupa exactamente un viewport y engancha por scroll-snap —
- * pero solo en desktop (`lg:`): el ruler de "1 viewport" de Figma anota
- * únicamente el frame Desktop, así que en mobile la sección fluye a su alto
- * natural (sin recortar contenido ni forzar el snap).
+ * Sección que engancha por scroll-snap y apunta a ocupar un viewport.
+ * En desktop (`lg:`) es exacto: `h-screen` + `overflow-hidden`, tal cual
+ * marca el ruler de "1 viewport" de Figma (solo anota el frame Desktop).
+ * En mobile se acerca a lo mismo con `min-h-screen` (sin recortar): el
+ * contenido en una sola columna suele pesar más, así que si no entra
+ * entero se deja crecer un poco en vez de tapar texto.
  *
  * Para las 6 pantallas del flujo principal (Hero, Quiénes somos, Servicios,
  * WePiper, Valores, Proceso) — cada una debe entrar entera en desktop, sin
@@ -85,7 +87,7 @@ export function Screen({
         <section
             id={id}
             className={cx(
-                "relative flex flex-col pb-10 lg:h-screen lg:snap-start lg:snap-always lg:overflow-hidden lg:pb-14",
+                "relative flex min-h-screen snap-start snap-always flex-col pb-10 lg:h-screen lg:overflow-hidden lg:pb-14",
                 screenNavClearance,
                 gutter,
                 className,
