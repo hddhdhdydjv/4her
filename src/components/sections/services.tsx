@@ -129,8 +129,27 @@ export function Services() {
                         )}
                     >
                         <div className="mx-auto flex w-full max-w-[1152px] flex-col items-center gap-8 lg:flex-row lg:gap-16">
+                            {/* Image (74:7023) — en mobile va arriba del texto y el indicador */}
+                            <div className="relative order-1 w-full max-w-[544px] lg:order-2 lg:flex-1">
+                                {services.map((s, i) => (
+                                    <div
+                                        key={s.title}
+                                        aria-hidden="true"
+                                        className={cx(
+                                            i === 0 ? "relative" : "absolute inset-0",
+                                            "transition-all duration-700 ease-out",
+                                            i === active
+                                                ? "scale-100 opacity-100 blur-none"
+                                                : "scale-[0.98] opacity-0 blur-sm",
+                                        )}
+                                    >
+                                        <ServiceCanvas letter={s.letter} offset={i} />
+                                    </div>
+                                ))}
+                            </div>
+
                             {/* Content (40:3788) */}
-                            <div className="flex w-full flex-col gap-8 lg:flex-1 lg:gap-12">
+                            <div className="order-2 flex w-full flex-col gap-8 lg:order-1 lg:flex-1 lg:gap-12">
                                 <BarIndicator count={n} active={active} onSelect={goTo} />
 
                                 {/* Text (40:3789) — los paneles se cruzan en el mismo lugar */}
@@ -166,25 +185,6 @@ export function Services() {
                                 >
                                     Hacé tu consulta
                                 </a>
-                            </div>
-
-                            {/* Image (74:7023) */}
-                            <div className="relative w-full max-w-[544px] lg:flex-1">
-                                {services.map((s, i) => (
-                                    <div
-                                        key={s.title}
-                                        aria-hidden="true"
-                                        className={cx(
-                                            i === 0 ? "relative" : "absolute inset-0",
-                                            "transition-all duration-700 ease-out",
-                                            i === active
-                                                ? "scale-100 opacity-100 blur-none"
-                                                : "scale-[0.98] opacity-0 blur-sm",
-                                        )}
-                                    >
-                                        <ServiceCanvas letter={s.letter} offset={i} />
-                                    </div>
-                                ))}
                             </div>
                         </div>
                     </div>

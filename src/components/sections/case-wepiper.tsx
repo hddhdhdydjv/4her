@@ -8,8 +8,10 @@ import { cx } from "@/utils/cx";
 /**
  * Figma `Feature 3` (40:3795): texto + `WePiper visual` (77:7620, 1152×648).
  *
- * El bloque no es estático: arranca grande (62vw) y termina de agrandarse
- * hasta ocupar el ancho completo de la pantalla a medida que se scrollea.
+ * El bloque no es estático: arranca grande y termina de agrandarse hasta
+ * ocupar el ancho completo de la pantalla a medida que se scrollea. En
+ * mobile usa una proporción propia (más vertical, acorde a un viewport
+ * angosto) en vez de la panorámica 1152:648 pensada para desktop.
  *
  * La composición original (logo + mockup + cards) no se puede exportar desde
  * este entorno. Apenas exista el archivo, basta con dejarlo en
@@ -44,9 +46,9 @@ export function CaseWePiper() {
             <div ref={ref} className="relative h-[160vh]">
                 <div className="sticky top-0 flex h-screen items-center justify-center overflow-hidden">
                     <div
-                        className="relative aspect-[1152/648] overflow-hidden bg-[var(--bg-inverse)] will-change-[width]"
+                        className="relative aspect-[3/4] overflow-hidden bg-[var(--bg-inverse)] will-change-[width] sm:aspect-[1152/648]"
                         style={{
-                            width: `${62 + 38 * p}vw`,
+                            width: `${78 + 22 * p}vw`,
                             borderRadius: `${24 - 24 * p}px`,
                         }}
                     >

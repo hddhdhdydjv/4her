@@ -52,31 +52,52 @@ export function Navbar() {
                         </a>
                     </nav>
 
-                    <button
-                        type="button"
-                        aria-label={open ? "Cerrar menú" : "Abrir menú"}
-                        aria-expanded={open}
-                        onClick={() => setOpen((v) => !v)}
-                        className="flex size-[34px] items-center justify-center rounded-full text-[var(--text-primary)] lg:hidden"
-                    >
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                            <path
-                                d={open ? "M6 6l12 12M6 18L18 6" : "M4 8h16M4 16h16"}
-                                stroke="currentColor"
-                                strokeWidth="1.5"
-                                strokeLinecap="round"
-                            />
-                        </svg>
-                    </button>
+                    {/* Mobile/tablet: "Hablemos" queda visible en la pill cerrada (Header 2, 82:11761) */}
+                    <nav className="flex items-center lg:hidden">
+                        <a
+                            href="#contacto"
+                            onClick={scrollTo}
+                            className={cx(
+                                type.body,
+                                "rounded-[31px] bg-[var(--bg-inverse)] px-3 py-2 text-center text-[var(--text-inverse)] transition-opacity hover:opacity-85",
+                            )}
+                        >
+                            Hablemos
+                        </a>
+                        <button
+                            type="button"
+                            aria-label={open ? "Cerrar menú" : "Abrir menú"}
+                            aria-expanded={open}
+                            onClick={() => setOpen((v) => !v)}
+                            className="flex size-10 shrink-0 items-center justify-center rounded-full text-[var(--text-primary)]"
+                        >
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                <path
+                                    d={open ? "M6 6l12 12M6 18L18 6" : "M4 8h16M4 16h16"}
+                                    stroke="currentColor"
+                                    strokeWidth="1.5"
+                                    strokeLinecap="round"
+                                    className="transition-all duration-300 ease-out"
+                                />
+                            </svg>
+                        </button>
+                    </nav>
                 </div>
 
-                {/* Menú desplegable (solo mobile/tablet) */}
+                {/* Menú desplegable (solo mobile/tablet): easing suave, sin corte de max-height */}
                 <div
                     className={cx(
-                        "overflow-hidden transition-[max-height,opacity] duration-300 lg:hidden",
-                        open ? "mt-2 max-h-96 opacity-100" : "max-h-0 opacity-0",
+                        "overflow-hidden transition-[grid-template-rows] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] lg:hidden",
+                        "grid",
+                        open ? "grid-rows-[1fr] mt-2" : "grid-rows-[0fr]",
                     )}
                 >
+                    <div
+                        className={cx(
+                            "min-h-0 transition-[opacity,transform] duration-[400ms] ease-out",
+                            open ? "translate-y-0 opacity-100 delay-100" : "-translate-y-1 opacity-0",
+                        )}
+                    >
                     <div className="flex flex-col gap-1 rounded-[24px] border border-[var(--border-strong)] bg-[var(--bg-primary)]/95 p-2 backdrop-blur-[35px]">
                         {links.map((link) => (
                             <a
@@ -104,6 +125,7 @@ export function Navbar() {
                         >
                             Hablemos
                         </a>
+                    </div>
                     </div>
                 </div>
             </div>

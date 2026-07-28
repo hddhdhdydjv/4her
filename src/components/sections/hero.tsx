@@ -32,14 +32,24 @@ const HEADLINE = "font-display font-medium leading-none tracking-[-0.02em] text-
 export function Hero() {
     return (
         <section id="inicio" className="relative min-h-screen overflow-hidden bg-[var(--neutral-200)]">
-            {/* Rectangle 2 / 3 (61:6591-2): franjas que cortan el borde derecho */}
-            <div aria-hidden="true" className="absolute inset-y-0 right-0 w-[26.17%] bg-[var(--neutral-300)]" />
-            <div aria-hidden="true" className="absolute inset-y-0 right-0 w-[7.27%] bg-[var(--neutral-400)]" />
+            {/* Mobile: la textura pasa del costado a una franja abajo (estilo Aptos, a pedido). */}
+            <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[22%] bg-[var(--neutral-300)] sm:hidden" />
+            <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[7%] bg-[var(--neutral-400)] sm:hidden" />
+            <div
+                aria-hidden="true"
+                className="absolute inset-x-0 bottom-0 top-[calc(70%-70px)] opacity-[0.26] sm:hidden"
+            >
+                <IsoCluster className="h-full w-full" />
+            </div>
+
+            {/* Desktop/tablet: franjas que cortan el borde derecho (61:6591-2) */}
+            <div aria-hidden="true" className="absolute inset-y-0 right-0 hidden w-[26.17%] bg-[var(--neutral-300)] sm:block" />
+            <div aria-hidden="true" className="absolute inset-y-0 right-0 hidden w-[7.27%] bg-[var(--neutral-400)] sm:block" />
 
             {/* Imagen (61:6593): campo isométrico al 26% */}
             <div
                 aria-hidden="true"
-                className="absolute inset-y-0 right-0 left-[calc(25%+70px)] opacity-[0.26]"
+                className="absolute inset-y-0 right-0 left-[calc(25%+70px)] hidden opacity-[0.26] sm:block"
             >
                 <IsoCluster className="h-full w-full" />
             </div>
