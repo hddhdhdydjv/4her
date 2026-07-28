@@ -43,7 +43,7 @@ export function CaseWePiper() {
             </Section>
 
             {/* Pista de scroll: el bloque arranca grande y termina de ocupar la pantalla. */}
-            <div ref={ref} className="relative h-[160vh] snap-start scroll-mt-28">
+            <div ref={ref} className="relative h-[160vh]">
                 <div className="sticky top-0 flex h-screen items-center justify-center overflow-hidden">
                     <div
                         className="relative aspect-[3/4] overflow-hidden bg-[var(--bg-inverse)] will-change-[width] sm:aspect-[1152/648]"

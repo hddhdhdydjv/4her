@@ -32,7 +32,7 @@ export default function RootLayout({
     return (
         <html
             lang="es"
-            className={`${funnelDisplay.variable} ${funnelSans.variable} h-full snap-y snap-proximity antialiased`}
+            className={`${funnelDisplay.variable} ${funnelSans.variable} h-full antialiased`}
         >
             <body className="min-h-full bg-primary font-body text-primary">
                 <LenisProvider>{children}</LenisProvider>

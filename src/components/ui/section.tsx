@@ -62,7 +62,7 @@ export function Section({
     as?: "section" | "div" | "footer";
 }) {
     return (
-        <Tag id={id} className={cx(gutter, pad, "snap-start scroll-mt-28", className)}>
+        <Tag id={id} className={cx(gutter, pad, className)}>
             <div className="mx-auto w-full max-w-[1152px]">{children}</div>
         </Tag>
     );
