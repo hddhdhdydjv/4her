@@ -78,7 +78,7 @@ function StepCard({ step, index }: { step: (typeof steps)[number]; index: number
             style={{ transitionDelay: inView ? cardDelay : "0ms" }}
             className={cx(
                 "flex min-w-0 flex-col gap-1.5 rounded-2xl bg-[var(--bg-secondary)] p-3 sm:gap-2 sm:p-4",
-                "transition-all duration-700 ease-out",
+                "transition-all duration-[850ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
                 inView ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0",
             )}
         >
@@ -106,24 +106,25 @@ export function Process() {
                 {/* Header (40:3827): la frase entra primero; eyebrow y bajada la
                     acompañan después, aunque el eyebrow quede arriba en el layout. */}
                 <div className="flex flex-col gap-4 lg:flex-1">
-                    <Reveal delay={260}>
+                    <Reveal delay={260} variant="side" x={-28}>
                         <p className={cx(screenType.title, tone.secondary)}>Nuestro proceso</p>
                     </Reveal>
-                    <Reveal delay={0}>
+                    <Reveal delay={0} variant="side" x={-28}>
                         <h2 className={cx(screenType.h1, tone.primary, "text-balance")}>
                             Un proceso simple, sin cajas negras
                         </h2>
                     </Reveal>
-                    <Reveal delay={420}>
+                    <Reveal delay={420} variant="side" x={-28}>
                         <p className={cx(screenType.body, tone.secondary)}>
                             Nada de plantillas: cada paso se adapta a cómo trabaja tu marca.
                         </p>
                     </Reveal>
                 </div>
 
-                {/* List (40:3829): 2×2 en mobile para que entre junto al header;
-                    vuelve a ser una lista vertical desde lg. */}
-                <ol className="grid grid-cols-2 gap-2 sm:gap-3 lg:flex-1 lg:grid-cols-1">
+                {/* List (40:3829): 2×2, en mobile y desde lg también — misma
+                    grilla que Valores para que las dos secciones compartan
+                    el mismo lenguaje visual (texto | tarjetas). */}
+                <ol className="grid grid-cols-2 gap-2 sm:gap-3 lg:flex-1 lg:gap-5">
                     {steps.map((s, i) => (
                         <StepCard key={s.title} step={s} index={i} />
                     ))}

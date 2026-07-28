@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Screen, screenType, tone } from "@/components/ui/section";
 import { ServiceCanvas } from "@/components/sections/service-canvas";
 import { Reveal } from "@/components/motion/reveal";
@@ -8,9 +8,11 @@ import { cx } from "@/utils/cx";
 
 /**
  * Figma `Intro — Servicios` (74:6992) + `Feature 2` (40:3787), en una sola
- * pantalla: ya no hay pista de scroll de varias pantallas — se ve un
- * servicio a la vez y se cambia clickeando el indicador de barras
- * verticales (74:7016 — activa 16px #646464, inactivas 8px #b4b8b4).
+ * pantalla: se ve un servicio a la vez, y se cambia clickeando el indicador
+ * de barras verticales (74:7016 — activa 16px #646464, inactivas 8px
+ * #b4b8b4) o con la rueda del mouse: mientras queden servicios por recorrer,
+ * el scroll cambia de servicio en vez de avanzar de sección; al llegar al
+ * primero/último, un scroll más ya navega a la sección vecina.
  */
 const services = [
     {
@@ -56,7 +58,7 @@ function BarIndicator({
                     aria-label={services[i].title}
                     onClick={() => onSelect(i)}
                     className={cx(
-                        "relative w-px cursor-pointer transition-all duration-500 ease-out",
+                        "relative w-px cursor-pointer transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]",
                         "before:absolute before:-inset-x-2 before:-inset-y-3 before:content-['']",
                         i === active ? "h-4 bg-[#646464]" : "h-2 bg-[#b4b8b4]",
                     )}
@@ -69,11 +71,41 @@ function BarIndicator({
 export function Services() {
     const [active, setActive] = useState(0);
     const n = services.length;
-    const current = services[active];
+    const rootRef = useRef<HTMLDivElement>(null);
+    const lockRef = useRef(false);
+
+    // El wheel cicla los servicios mientras queden por mostrar; recién
+    // cuando estás en el primero/último deja pasar el scroll nativo para
+    // que la sección snapee a la vecina.
+    useEffect(() => {
+        const el = rootRef.current;
+        if (!el) return;
+
+        function onWheel(e: WheelEvent) {
+            if (Math.abs(e.deltaY) < 4) return;
+            const dir = e.deltaY > 0 ? 1 : -1;
+
+            setActive((prev) => {
+                const next = prev + dir;
+                if (next < 0 || next > n - 1) return prev;
+
+                e.preventDefault();
+                if (lockRef.current) return prev;
+                lockRef.current = true;
+                window.setTimeout(() => {
+                    lockRef.current = false;
+                }, 650);
+                return next;
+            });
+        }
+
+        el.addEventListener("wheel", onWheel, { passive: false });
+        return () => el.removeEventListener("wheel", onWheel);
+    }, [n]);
 
     return (
         <Screen id="servicios" className="justify-center">
-            <div className="flex flex-col gap-5 lg:gap-8">
+            <div ref={rootRef} className="flex flex-col gap-5 lg:gap-8">
                 <Reveal delay={0} className="flex flex-col gap-2 lg:gap-3">
                     <p className={cx(screenType.title, tone.secondary)}>Nuestros servicios</p>
                     <h2 className={cx(screenType.h1, tone.primary, "text-balance")}>
@@ -92,10 +124,10 @@ export function Services() {
                                     key={s.title}
                                     aria-hidden={i !== active}
                                     className={cx(
-                                        "absolute inset-x-0 top-0 flex flex-col gap-3 transition-all duration-500 ease-out",
+                                        "absolute inset-x-0 top-0 flex flex-col gap-3 transition-all duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
                                         i === active
                                             ? "translate-y-0 opacity-100 blur-none"
-                                            : "pointer-events-none translate-y-2 opacity-0 blur-sm",
+                                            : "pointer-events-none translate-y-3 opacity-0 blur-sm",
                                     )}
                                 >
                                     <h3 className={cx(screenType.h2, tone.primary, "text-balance")}>{s.title}</h3>
@@ -122,8 +154,8 @@ export function Services() {
                                 aria-hidden="true"
                                 className={cx(
                                     i === 0 ? "relative" : "absolute inset-0",
-                                    "transition-all duration-500 ease-out",
-                                    i === active ? "scale-100 opacity-100 blur-none" : "scale-[0.98] opacity-0 blur-sm",
+                                    "transition-all duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
+                                    i === active ? "scale-100 opacity-100 blur-none" : "scale-[0.96] opacity-0 blur-sm",
                                 )}
                             >
                                 <ServiceCanvas letter={s.letter} offset={i} />

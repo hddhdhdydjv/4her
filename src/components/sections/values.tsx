@@ -45,18 +45,18 @@ const GRAIN =
 export function Values() {
     return (
         <Screen id="valores" className="justify-center">
-            <div className="flex flex-col gap-8 lg:gap-10">
-                <Reveal delay={0} className="flex flex-col gap-3">
+            <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-14">
+                <Reveal delay={0} variant="side" x={-28} className="flex flex-col gap-3 lg:flex-1">
                     <p className={cx(screenType.title, tone.secondary)}>Nuestros valores</p>
                     <h2 className={cx(screenType.h1, tone.primary, "text-balance")}>
                         Los valores no se anuncian, se demuestran
                     </h2>
                 </Reveal>
 
-                <ul className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4 lg:gap-6">
+                <ul className="grid grid-cols-2 gap-3 sm:gap-5 lg:flex-1 lg:gap-5">
                     {values.map((v, i) => (
                         <li key={v.title}>
-                            <Reveal delay={i * 100} y={24}>
+                            <Reveal delay={160 + i * 110} y={22}>
                                 <article className="flex h-full flex-col gap-3 rounded-2xl bg-[var(--bg-secondary)] p-4 sm:gap-4 sm:p-5">
                                     <div className="relative h-[80px] w-full overflow-hidden rounded-xl sm:h-[110px]">
                                         {v.image ? (

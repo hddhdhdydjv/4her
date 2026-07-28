@@ -10,7 +10,7 @@ import { cx } from "@/utils/cx";
  */
 export function Contact() {
     return (
-        <Section id="contacto" pad="pb-16 lg:pb-30">
+        <Section id="contacto" pad="pb-16 lg:pb-30" className="snap-start">
             <Reveal>
                 {/* Mobile: un único panel que ocupa el viewport completo, sin la tarjeta
                     del form (inputs sueltos sobre el fondo). Desktop: layout de dos columnas. */}
