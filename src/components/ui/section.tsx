@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Reveal } from "@/components/motion/reveal";
 import { cx } from "@/utils/cx";
 
 /**
@@ -99,14 +100,24 @@ export function SectionIntro({
         <Section id={id} pad={pad}>
             <div className="flex flex-col gap-8">
                 <div className="flex flex-col gap-4">
-                    <p className={cx(type.title, tone.secondary)}>{eyebrow}</p>
-                    <h2 className={cx(type[size], tone.primary, "text-balance")}>{title}</h2>
+                    <Reveal delay={0}>
+                        <p className={cx(type.title, tone.secondary)}>{eyebrow}</p>
+                    </Reveal>
+                    <Reveal delay={120}>
+                        <h2 className={cx(type[size], tone.primary, "text-balance")}>{title}</h2>
+                    </Reveal>
                 </div>
 
                 {subtitle && (
-                    <p className={cx(type.h1, tone[subtitleTone], "text-balance")}>{subtitle}</p>
+                    <Reveal delay={260}>
+                        <p className={cx(type.h1, tone[subtitleTone], "text-balance")}>{subtitle}</p>
+                    </Reveal>
                 )}
-                {lead && <p className={cx(type.bodyLg, tone.secondary)}>{lead}</p>}
+                {lead && (
+                    <Reveal delay={subtitle ? 380 : 260}>
+                        <p className={cx(type.bodyLg, tone.secondary)}>{lead}</p>
+                    </Reveal>
+                )}
             </div>
         </Section>
     );

@@ -58,7 +58,7 @@ export function Values() {
                 <ul className="grid gap-8 sm:grid-cols-2">
                     {values.map((v, i) => (
                         <li key={v.title}>
-                            <Reveal delay={i * 80}>
+                            <Reveal delay={i * 140} y={40}>
                                 {/* La imagen asoma por abajo: la card recorta el sobrante. */}
                                 <article className="relative h-[384px] overflow-hidden rounded-2xl bg-[var(--bg-secondary)]">
                                     <div className="flex flex-col gap-2 p-8">

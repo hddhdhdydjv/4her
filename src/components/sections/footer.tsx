@@ -1,5 +1,8 @@
+"use client";
+
 import { Logo } from "@/components/ui/logo";
 import { Section, type } from "@/components/ui/section";
+import { useAnchorScroll } from "@/hooks/use-anchor-scroll";
 import { cx } from "@/utils/cx";
 
 /** Figma `Footer 1` (40:3854) — border-top, p-64, logo + nav | redes. */
@@ -49,6 +52,8 @@ const socials = [
 ];
 
 export function Footer() {
+    const scrollTo = useAnchorScroll();
+
     return (
         <Section
             as="footer"
@@ -64,6 +69,7 @@ export function Footer() {
                             <a
                                 key={link.href}
                                 href={link.href}
+                                onClick={scrollTo}
                                 className={cx(
                                     type.body,
                                     "text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]",

@@ -17,7 +17,7 @@ type RevealProps = {
  * Revela su contenido con un fade + subida suave al entrar en viewport.
  * Motion cálido (ease-out), una sola vez, con fallback prefers-reduced-motion.
  */
-export function Reveal({ children, className, delay = 0, y = 24, as: Tag = "div" }: RevealProps) {
+export function Reveal({ children, className, delay = 0, y = 32, as: Tag = "div" }: RevealProps) {
     const ref = useRef<HTMLElement>(null);
 
     useEffect(() => {
@@ -28,6 +28,7 @@ export function Reveal({ children, className, delay = 0, y = 24, as: Tag = "div"
         if (reduce) {
             el.style.opacity = "1";
             el.style.transform = "none";
+            el.style.filter = "none";
             return;
         }
 
@@ -37,12 +38,20 @@ export function Reveal({ children, className, delay = 0, y = 24, as: Tag = "div"
             done = true;
             import("animejs")
                 .then(({ animate }) => {
-                    animate(el, { opacity: [0, 1], translateY: [y, 0], duration: 760, delay, ease: "out(3)" });
+                    animate(el, {
+                        opacity: [0, 1],
+                        translateY: [y, 0],
+                        filter: ["blur(8px)", "blur(0px)"],
+                        duration: 900,
+                        delay,
+                        ease: "out(3)",
+                    });
                 })
                 .catch(() => {
                     // Fallback si anime.js no carga: mostrar sin animar.
                     el.style.opacity = "1";
                     el.style.transform = "none";
+                    el.style.filter = "none";
                 });
         };
 
@@ -61,14 +70,14 @@ export function Reveal({ children, className, delay = 0, y = 24, as: Tag = "div"
                     }
                 }
             },
-            { threshold: 0.12, rootMargin: "0px 0px -6% 0px" },
+            { threshold: 0.15, rootMargin: "0px 0px -8% 0px" },
         );
         io.observe(el);
         return () => io.disconnect();
     }, [delay, y]);
 
     return (
-        <Tag ref={ref} className={className} style={{ opacity: 0 }}>
+        <Tag ref={ref} className={className} style={{ opacity: 0, filter: "blur(8px)" }}>
             {children}
         </Tag>
     );

@@ -20,29 +20,28 @@ export function About() {
                     </>
                 }
                 lead="No entregamos piezas lindas y desaparecemos. Pensamos qué decir y por qué, trabajamos con vos en cada paso y medimos si de verdad comunica. Somos la cara de comunicación de 4HIS, aplicando la misma forma de trabajar a tu marca."
+                pad="pt-20 pb-8 lg:pt-30 lg:pb-16"
             />
 
-            <Section>
-                <Reveal>
-                    <div className="flex flex-col items-center gap-10 lg:flex-row lg:gap-16">
-                        {/* Image (73:6758) */}
-                        <div className="aspect-[544/432] w-full lg:flex-1">
-                            <IsoCluster className="h-full w-full" />
-                        </div>
+            <Section pad="pb-20 lg:pb-30">
+                <div className="flex flex-col items-center gap-10 lg:flex-row lg:gap-16">
+                    {/* Image (73:6758) */}
+                    <Reveal delay={0} className="aspect-[544/432] w-full lg:flex-1">
+                        <IsoCluster className="h-full w-full" />
+                    </Reveal>
 
-                        {/* Content (40:3778) */}
-                        <div className="flex w-full flex-col gap-6 lg:flex-1">
-                            <h3 className={cx(type.h2, tone.primary, "text-balance")}>
-                                De la estrategia a la ejecución,
-                                <br className="hidden sm:block" /> sin intermediarios
-                            </h3>
-                            <p className={cx(type.bodyLg, tone.secondary)}>
-                                No tercerizamos ni fragmentamos tu marca entre proveedores sueltos. Un mismo
-                                equipo piensa, produce y mide.
-                            </p>
-                        </div>
-                    </div>
-                </Reveal>
+                    {/* Content (40:3778) */}
+                    <Reveal delay={160} className="flex w-full flex-col gap-6 lg:flex-1">
+                        <h3 className={cx(type.h2, tone.primary, "text-balance")}>
+                            De la estrategia a la ejecución,
+                            <br className="hidden sm:block" /> sin intermediarios
+                        </h3>
+                        <p className={cx(type.bodyLg, tone.secondary)}>
+                            No tercerizamos ni fragmentamos tu marca entre proveedores sueltos. Un mismo
+                            equipo piensa, produce y mide.
+                        </p>
+                    </Reveal>
+                </div>
             </Section>
         </>
     );

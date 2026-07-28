@@ -4,6 +4,7 @@ import { useCallback } from "react";
 import { SectionIntro, type, tone, gutter } from "@/components/ui/section";
 import { ServiceCanvas } from "@/components/sections/service-canvas";
 import { useScrollProgress } from "@/hooks/use-scroll-progress";
+import { useInViewOnce } from "@/hooks/use-in-view-once";
 import { cx } from "@/utils/cx";
 
 /**
@@ -81,6 +82,9 @@ function BarIndicator({
 
 export function Services() {
     const { ref, progress } = useScrollProgress<HTMLDivElement>();
+    // El contenido pinneado hace un fade-in la primera vez que se engancha:
+    // evita el "corte brusco" de aparecer ya armado apenas entra la sección.
+    const { ref: stageRef, inView: staged } = useInViewOnce<HTMLDivElement>(0.35, "0px");
     const n = services.length;
     const active = Math.min(n - 1, Math.max(0, Math.floor(progress * n)));
 
@@ -116,7 +120,14 @@ export function Services() {
             {/* Pista de scroll: un tramo de viewport por servicio. */}
             <div ref={ref} style={{ height: `${n * 100}vh` }} className="relative">
                 <div className="sticky top-0 flex h-screen items-center overflow-hidden">
-                    <div className={cx(gutter, "w-full")}>
+                    <div
+                        ref={stageRef}
+                        className={cx(
+                            gutter,
+                            "w-full transition-all duration-1000 ease-out",
+                            staged ? "translate-y-0 opacity-100 blur-none" : "translate-y-6 opacity-0 blur-sm",
+                        )}
+                    >
                         <div className="mx-auto flex w-full max-w-[1152px] flex-col items-center gap-8 lg:flex-row lg:gap-16">
                             {/* Content (40:3788) */}
                             <div className="flex w-full flex-col gap-8 lg:flex-1 lg:gap-12">
@@ -129,10 +140,10 @@ export function Services() {
                                             key={s.title}
                                             aria-hidden={i !== active}
                                             className={cx(
-                                                "absolute inset-x-0 top-0 flex flex-col gap-6 transition-all duration-500 ease-out",
+                                                "absolute inset-x-0 top-0 flex flex-col gap-6 transition-all duration-700 ease-out",
                                                 i === active
-                                                    ? "translate-y-0 opacity-100"
-                                                    : "pointer-events-none translate-y-3 opacity-0",
+                                                    ? "translate-y-0 opacity-100 blur-none"
+                                                    : "pointer-events-none translate-y-4 opacity-0 blur-sm",
                                             )}
                                         >
                                             <h3 className={cx(type.h2, tone.primary, "text-balance")}>{s.title}</h3>
@@ -165,8 +176,10 @@ export function Services() {
                                         aria-hidden="true"
                                         className={cx(
                                             i === 0 ? "relative" : "absolute inset-0",
-                                            "transition-opacity duration-500 ease-out",
-                                            i === active ? "opacity-100" : "opacity-0",
+                                            "transition-all duration-700 ease-out",
+                                            i === active
+                                                ? "scale-100 opacity-100 blur-none"
+                                                : "scale-[0.98] opacity-0 blur-sm",
                                         )}
                                     >
                                         <ServiceCanvas letter={s.letter} offset={i} />

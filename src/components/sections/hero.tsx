@@ -31,7 +31,7 @@ const HEADLINE = "font-display font-medium leading-none tracking-[-0.02em] text-
 
 export function Hero() {
     return (
-        <section id="inicio" className="relative overflow-hidden bg-[var(--neutral-200)]">
+        <section id="inicio" className="relative min-h-screen overflow-hidden bg-[var(--neutral-200)]">
             {/* Rectangle 2 / 3 (61:6591-2): franjas que cortan el borde derecho */}
             <div aria-hidden="true" className="absolute inset-y-0 right-0 w-[26.17%] bg-[var(--neutral-300)]" />
             <div aria-hidden="true" className="absolute inset-y-0 right-0 w-[7.27%] bg-[var(--neutral-400)]" />
@@ -44,7 +44,7 @@ export function Hero() {
                 <IsoCluster className="h-full w-full" />
             </div>
 
-            <div className="relative mx-auto w-full max-w-[1280px] px-6 pt-40 pb-24 sm:px-10 lg:h-[880px] lg:px-16 lg:py-45">
+            <div className="relative mx-auto flex min-h-screen w-full max-w-[1280px] flex-col px-6 pt-40 pb-24 sm:px-10 lg:justify-center lg:px-16 lg:py-24">
                 {/* ---------- Heading 1 (61:6610) — composición exacta en desktop ---------- */}
                 <div
                     className="relative hidden h-[4.03em] w-full max-w-[1152px] lg:block"

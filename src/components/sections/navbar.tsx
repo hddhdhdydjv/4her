@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Logo } from "@/components/ui/logo";
 import { type } from "@/components/ui/section";
+import { useAnchorScroll } from "@/hooks/use-anchor-scroll";
 import { cx } from "@/utils/cx";
 
 /** Figma `Header 1` (40:3870) — pill centrada de 640px, py-24. */
@@ -15,6 +16,7 @@ const links = [
 
 export function Navbar() {
     const [open, setOpen] = useState(false);
+    const scrollTo = useAnchorScroll();
 
     return (
         <header className="fixed inset-x-0 top-0 z-50 px-4 py-4 sm:px-6 lg:py-6">
@@ -29,6 +31,7 @@ export function Navbar() {
                             <a
                                 key={link.href}
                                 href={link.href}
+                                onClick={scrollTo}
                                 className={cx(
                                     type.body,
                                     "text-center text-[var(--text-primary)] transition-opacity hover:opacity-60",
@@ -39,6 +42,7 @@ export function Navbar() {
                         ))}
                         <a
                             href="#contacto"
+                            onClick={scrollTo}
                             className={cx(
                                 type.body,
                                 "rounded-[31px] bg-[var(--bg-inverse)] px-3 py-2 text-center text-[var(--text-inverse)] transition-opacity hover:opacity-85",
@@ -78,7 +82,10 @@ export function Navbar() {
                             <a
                                 key={link.href}
                                 href={link.href}
-                                onClick={() => setOpen(false)}
+                                onClick={(e) => {
+                                    setOpen(false);
+                                    scrollTo(e);
+                                }}
                                 className={cx(type.body, "rounded-[18px] px-4 py-3 text-[var(--text-primary)]")}
                             >
                                 {link.label}
@@ -86,7 +93,10 @@ export function Navbar() {
                         ))}
                         <a
                             href="#contacto"
-                            onClick={() => setOpen(false)}
+                            onClick={(e) => {
+                                setOpen(false);
+                                scrollTo(e);
+                            }}
                             className={cx(
                                 type.body,
                                 "rounded-[31px] bg-[var(--bg-inverse)] px-4 py-3 text-center text-[var(--text-inverse)]",
