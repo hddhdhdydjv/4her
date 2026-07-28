@@ -78,22 +78,31 @@ export function Screen({
     children,
     id,
     className,
+    inset = cx(gutter, "pb-10 lg:pb-14"),
+    content = "mx-auto flex w-full max-w-[1152px] flex-1 flex-col",
 }: {
     children: ReactNode;
     id?: string;
     className?: string;
+    /**
+     * Padding lateral e inferior. Se reemplaza entero (no se mergea) para las
+     * secciones que van casi a sangre, como el caso WePiper.
+     */
+    inset?: string;
+    /** Contenedor interno. Se reemplaza entero para soltar el tope de 1152px. */
+    content?: string;
 }) {
     return (
         <section
             id={id}
             className={cx(
-                "relative flex min-h-screen snap-start snap-always flex-col pb-10 lg:h-screen lg:overflow-hidden lg:pb-14",
+                "relative flex min-h-screen snap-start snap-always flex-col lg:h-screen lg:overflow-hidden",
                 screenNavClearance,
-                gutter,
+                inset,
                 className,
             )}
         >
-            <div className="mx-auto flex w-full max-w-[1152px] flex-1 flex-col">{children}</div>
+            <div className={content}>{children}</div>
         </section>
     );
 }

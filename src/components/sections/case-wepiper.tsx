@@ -23,8 +23,14 @@ export function CaseWePiper() {
     const { ref, inView } = useInViewOnce<HTMLDivElement>(0.3);
 
     return (
-        <Screen id="caso-wepiper">
-            <div className="flex flex-col gap-3 pb-6">
+        // Padding lateral e inferior reducidos: el recuadro llega más cerca
+        // de los bordes de la pantalla que en el resto de las secciones.
+        <Screen
+            id="caso-wepiper"
+            inset="px-4 sm:px-6 lg:px-8 pb-6 lg:pb-8"
+            content="flex w-full flex-1 flex-col"
+        >
+            <div className="flex flex-col gap-2 pb-4">
                 <Reveal delay={0} variant="side" x={-28}>
                     <h3 className={cx(screenType.h1, tone.primary, "text-balance")}>
                         De la idea a una marca que se entiende
@@ -46,12 +52,32 @@ export function CaseWePiper() {
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={IMAGE_SRC} alt="Caso WePiper" className="absolute inset-0 h-full w-full object-cover" />
                 ) : (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-8 text-center">
-                        <span className="font-display text-[clamp(1.75rem,4vw,3rem)] leading-none font-medium tracking-[-0.02em] text-[var(--text-inverse)]">
-                            WePiper
+                    // Cada línea vive en una máscara `overflow-hidden` y sube
+                    // desde abajo (como si el scroll la fuera descubriendo),
+                    // encadenada a que el recuadro ya haya terminado de crecer.
+                    <div className="absolute inset-0 flex flex-col items-center justify-center px-8 text-center">
+                        <span className="block overflow-hidden pb-2">
+                            <span
+                                className={cx(
+                                    "block font-display text-[clamp(1.75rem,4vw,3rem)] leading-none font-medium tracking-[-0.02em] text-[var(--text-inverse)]",
+                                    "transition-transform delay-[520ms] duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
+                                    inView ? "translate-y-0" : "translate-y-full",
+                                )}
+                            >
+                                WePiper
+                            </span>
                         </span>
-                        <span className={cx(screenType.body, "text-[var(--neutral-400)]")}>
-                            Identidad, sistema visual y producto
+                        <span className="block overflow-hidden">
+                            <span
+                                className={cx(
+                                    screenType.body,
+                                    "block text-[var(--neutral-400)]",
+                                    "transition-transform delay-[660ms] duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
+                                    inView ? "translate-y-0" : "translate-y-full",
+                                )}
+                            >
+                                Identidad, sistema visual y producto
+                            </span>
                         </span>
                     </div>
                 )}

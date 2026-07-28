@@ -102,7 +102,7 @@ function StepCard({ step, index }: { step: (typeof steps)[number]; index: number
 export function Process() {
     return (
         <Screen id="proceso" className="justify-center">
-            <div className="flex flex-col gap-8 lg:flex-row lg:gap-12">
+            <div className="flex flex-col gap-8 lg:my-auto lg:flex-row lg:items-start lg:gap-12">
                 {/* Header (40:3827): la frase entra primero; eyebrow y bajada la
                     acompañan después, aunque el eyebrow quede arriba en el layout. */}
                 <div className="flex flex-col gap-4 lg:flex-1">
@@ -121,10 +121,9 @@ export function Process() {
                     </Reveal>
                 </div>
 
-                {/* List (40:3829): 2×2, en mobile y desde lg también — misma
-                    grilla que Valores para que las dos secciones compartan
-                    el mismo lenguaje visual (texto | tarjetas). */}
-                <ol className="grid grid-cols-2 gap-2 sm:gap-3 lg:flex-1 lg:gap-5">
+                {/* List (40:3829): los 4 pasos apilados, uno debajo del otro —
+                    se leen como una secuencia y entran en orden con el scroll. */}
+                <ol className="flex flex-col gap-2 sm:gap-3 lg:flex-1 lg:gap-4">
                     {steps.map((s, i) => (
                         <StepCard key={s.title} step={s} index={i} />
                     ))}

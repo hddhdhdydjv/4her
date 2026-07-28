@@ -107,8 +107,9 @@ export function Services() {
         <Screen id="servicios">
             {/* flex-1 para que la tarjeta del canvas llene el alto disponible en desktop */}
             <div ref={rootRef} className="flex flex-1 flex-col gap-6 lg:flex-row lg:items-stretch lg:gap-10">
-                {/* LEFT: columna angosta con texto y controles */}
-                <div className="flex flex-col gap-5 lg:w-[38%] lg:max-w-[380px] lg:shrink-0 lg:justify-center">
+                {/* LEFT: columna angosta con texto y controles, alineada al top
+                    igual que la tarjeta de la derecha */}
+                <div className="flex flex-col gap-5 lg:w-[38%] lg:max-w-[380px] lg:shrink-0">
                     <Reveal delay={0} className="flex flex-col gap-2 lg:gap-3">
                         <p className={cx(screenType.title, tone.secondary)}>Nuestros servicios</p>
                         <h2 className={cx(screenType.h1, tone.primary, "text-balance")}>
@@ -120,7 +121,7 @@ export function Services() {
                     <div className="flex flex-col gap-4 lg:gap-5">
                         <BarIndicator count={n} active={active} onSelect={setActive} />
 
-                        <div className="relative min-h-[130px] sm:min-h-[110px]">
+                        <div className="relative min-h-[175px] sm:min-h-[165px] lg:min-h-[195px]">
                             {services.map((s, i) => (
                                 <div
                                     key={s.title}
@@ -132,7 +133,8 @@ export function Services() {
                                             : "pointer-events-none translate-y-3 opacity-0 blur-sm",
                                     )}
                                 >
-                                    <h3 className={cx(screenType.h2, tone.primary, "text-balance")}>{s.title}</h3>
+                                    {/* Mismo cuerpo tipográfico que el titular de la sección. */}
+                                    <h3 className={cx(screenType.h1, tone.primary, "text-balance")}>{s.title}</h3>
                                     <p className={cx(screenType.body, tone.secondary)}>{s.body}</p>
                                 </div>
                             ))}

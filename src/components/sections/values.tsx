@@ -45,7 +45,9 @@ const GRAIN =
 export function Values() {
     return (
         <Screen id="valores" className="justify-center">
-            <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-14">
+            {/* `my-auto` centra el bloque en la pantalla; `items-start` mantiene
+                texto y cards alineados entre sí por el top. */}
+            <div className="flex flex-col gap-8 lg:my-auto lg:flex-row lg:items-start lg:gap-14">
                 <Reveal delay={0} variant="side" x={-28} className="flex flex-col gap-3 lg:flex-1">
                     <p className={cx(screenType.title, tone.secondary)}>Nuestros valores</p>
                     <h2 className={cx(screenType.h1, tone.primary, "text-balance")}>
@@ -53,10 +55,12 @@ export function Values() {
                     </h2>
                 </Reveal>
 
-                <ul className="grid grid-cols-2 gap-3 sm:gap-5 lg:flex-1 lg:gap-5">
+                {/* `auto-rows-fr` + `h-full` en toda la cadena: las 4 cards miden
+                    exactamente lo mismo, aunque el texto de cada una varíe. */}
+                <ul className="grid auto-rows-fr grid-cols-2 gap-3 sm:gap-5 lg:flex-1 lg:gap-5">
                     {values.map((v, i) => (
-                        <li key={v.title}>
-                            <Reveal delay={160 + i * 110} y={22}>
+                        <li key={v.title} className="h-full">
+                            <Reveal delay={160 + i * 110} y={22} className="h-full">
                                 <article className="flex h-full flex-col gap-3 rounded-2xl bg-[var(--bg-secondary)] p-4 sm:gap-4 sm:p-5">
                                     <div className="relative h-[80px] w-full overflow-hidden rounded-xl sm:h-[110px]">
                                         {v.image ? (
