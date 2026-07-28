@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/sections/navbar";
 import { Hero } from "@/components/sections/hero";
+import { PixelTransition } from "@/components/motion/pixel-transition";
 import { About } from "@/components/sections/about";
 import { Services } from "@/components/sections/services";
 import { CaseWePiper } from "@/components/sections/case-wepiper";
@@ -16,6 +17,7 @@ export default function Home() {
 
             <main>
                 <Hero />
+                <PixelTransition targetId="quienes-somos" color="var(--neutral-200)" />
                 <About />
                 <Services />
                 <CaseWePiper />
