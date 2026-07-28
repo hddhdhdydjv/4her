@@ -31,7 +31,10 @@ const HEADLINE = "font-display font-medium leading-none tracking-[-0.02em] text-
 
 export function Hero() {
     return (
-        <section id="inicio" className="relative min-h-screen overflow-hidden bg-[var(--neutral-200)]">
+        <section
+            id="inicio"
+            className="relative min-h-screen overflow-hidden bg-[var(--neutral-200)] lg:h-screen lg:snap-start lg:snap-always"
+        >
             {/* Mobile: la textura pasa del costado a una franja abajo (estilo Aptos, a pedido). */}
             <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[22%] bg-[var(--neutral-300)] sm:hidden" />
             <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[7%] bg-[var(--neutral-400)] sm:hidden" />

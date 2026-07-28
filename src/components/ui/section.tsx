@@ -44,6 +44,59 @@ export const tone = {
 export const gutter = "px-6 sm:px-10 lg:px-16";
 
 /**
+ * Rampa tipográfica reducida para las secciones de "una pantalla" (Quiénes
+ * somos, Servicios, WePiper, Valores, Proceso): la escala de arriba está
+ * pensada para un scroll normal con mucho aire; acá el contenido tiene que
+ * entrar entero en el alto real del viewport, así que todo baja un escalón.
+ */
+export const screenType = {
+    h1: "font-display font-medium text-[clamp(1.5rem,2.6vw,2.25rem)] leading-[1.08] tracking-[-0.01em]",
+    h2: "font-display font-medium text-[clamp(1.25rem,1.9vw,1.625rem)] leading-[1.15] tracking-[-0.008em]",
+    h3: "font-display font-semibold text-[clamp(1.0625rem,1.5vw,1.25rem)] leading-[1.2]",
+    body: "font-body text-[clamp(0.875rem,1.1vw,1rem)] leading-[1.55]",
+    title: "font-display font-semibold text-[clamp(0.9375rem,1.3vw,1.0625rem)] leading-[1.3]",
+} as const;
+
+/** Espacio reservado arriba para que el pill del navbar fijo nunca tape contenido. */
+export const screenNavClearance = "pt-28 lg:pt-32";
+
+/**
+ * Sección que ocupa exactamente un viewport y engancha por scroll-snap —
+ * pero solo en desktop (`lg:`): el ruler de "1 viewport" de Figma anota
+ * únicamente el frame Desktop, así que en mobile la sección fluye a su alto
+ * natural (sin recortar contenido ni forzar el snap).
+ *
+ * Para las 6 pantallas del flujo principal (Hero, Quiénes somos, Servicios,
+ * WePiper, Valores, Proceso) — cada una debe entrar entera en desktop, sin
+ * scroll interno. `pb` da un respiro abajo; el resto del alto lo reparte el
+ * contenido según cómo lo organice cada sección (con `justify-center` si
+ * quiere centrarse, o `flex-1` en un hijo si quiere ocupar el resto).
+ */
+export function Screen({
+    children,
+    id,
+    className,
+}: {
+    children: ReactNode;
+    id?: string;
+    className?: string;
+}) {
+    return (
+        <section
+            id={id}
+            className={cx(
+                "relative flex flex-col pb-10 lg:h-screen lg:snap-start lg:snap-always lg:overflow-hidden lg:pb-14",
+                screenNavClearance,
+                gutter,
+                className,
+            )}
+        >
+            <div className="mx-auto flex w-full max-w-[1152px] flex-1 flex-col">{children}</div>
+        </section>
+    );
+}
+
+/**
  * Sección con el ancho de contenido del diseño (1152px).
  * `pad` permite reproducir los paddings verticales exactos de cada frame
  * (120px arriba/abajo por defecto; 64px cuando encadena con un intro).

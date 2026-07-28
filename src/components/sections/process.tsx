@@ -1,14 +1,15 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { Section, type, tone } from "@/components/ui/section";
+import { Screen, screenType, tone } from "@/components/ui/section";
 import { Reveal } from "@/components/motion/reveal";
 import { useInViewOnce } from "@/hooks/use-in-view-once";
 import { cx } from "@/utils/cx";
 
 /**
- * Figma `Text list 1` (40:3826) — Header a la izquierda, lista a la derecha
- * (filas bg/secondary, rounded-16, p-24, gap-16).
+ * Figma `Text list 1` (40:3826) — Header a la izquierda, lista a la derecha,
+ * en una sola pantalla: filas más compactas (p-4 en vez de p-6) para que las
+ * 4 entren junto al header sin scroll interno.
  *
  * Los marcadores de paso NO son números: son los iconos de puntos del
  * diseño (1, 2, 3 y 4 puntos sobre una grilla de 2×2).
@@ -76,7 +77,7 @@ function StepCard({ step, index }: { step: (typeof steps)[number]; index: number
             ref={ref}
             style={{ transitionDelay: inView ? cardDelay : "0ms" }}
             className={cx(
-                "flex min-w-0 flex-col gap-4 rounded-2xl bg-[var(--bg-secondary)] p-6",
+                "flex min-w-0 flex-col gap-2 rounded-2xl bg-[var(--bg-secondary)] p-4",
                 "transition-all duration-700 ease-out",
                 inView ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0",
             )}
@@ -86,47 +87,47 @@ function StepCard({ step, index }: { step: (typeof steps)[number]; index: number
                     count={step.dots}
                     style={{ transitionDelay: inView ? dotDelay : "0ms" }}
                     className={cx(
-                        "size-6 shrink-0 text-[var(--text-primary)]",
+                        "size-5 shrink-0 text-[var(--text-primary)]",
                         "transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
                         inView ? "scale-100 opacity-100" : "scale-50 opacity-0",
                     )}
                 />
-                <h3 className={cx(type.h3, tone.primary)}>{step.title}</h3>
+                <h3 className={cx(screenType.h3, tone.primary)}>{step.title}</h3>
             </div>
-            <p className={cx(type.bodyLg, tone.primary)}>{step.body}</p>
+            <p className={cx(screenType.body, tone.primary)}>{step.body}</p>
         </li>
     );
 }
 
 export function Process() {
     return (
-        <Section id="proceso" pad="pb-20 lg:pb-30">
-            <div className="flex flex-col gap-10 lg:flex-row lg:gap-12">
+        <Screen id="proceso" className="justify-center">
+            <div className="flex flex-col gap-8 lg:flex-row lg:gap-12">
                 {/* Header (40:3827): la frase entra primero; eyebrow y bajada la
                     acompañan después, aunque el eyebrow quede arriba en el layout. */}
                 <div className="flex flex-col gap-4 lg:flex-1">
                     <Reveal delay={260}>
-                        <p className={cx(type.title, tone.secondary)}>Nuestro proceso</p>
+                        <p className={cx(screenType.title, tone.secondary)}>Nuestro proceso</p>
                     </Reveal>
                     <Reveal delay={0}>
-                        <h2 className={cx(type.h1, tone.primary, "text-balance")}>
+                        <h2 className={cx(screenType.h1, tone.primary, "text-balance")}>
                             Un proceso simple, sin cajas negras
                         </h2>
                     </Reveal>
                     <Reveal delay={420}>
-                        <p className={cx(type.bodyLg, tone.secondary)}>
+                        <p className={cx(screenType.body, tone.secondary)}>
                             Nada de plantillas: cada paso se adapta a cómo trabaja tu marca.
                         </p>
                     </Reveal>
                 </div>
 
                 {/* List (40:3829) */}
-                <ol className="flex flex-col gap-4 lg:flex-1">
+                <ol className="flex flex-col gap-3 lg:flex-1">
                     {steps.map((s, i) => (
                         <StepCard key={s.title} step={s} index={i} />
                     ))}
                 </ol>
             </div>
-        </Section>
+        </Screen>
     );
 }

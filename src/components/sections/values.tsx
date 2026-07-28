@@ -1,11 +1,12 @@
-import { Section, SectionIntro, type, tone } from "@/components/ui/section";
+import { Screen, screenType, tone } from "@/components/ui/section";
 import { Reveal } from "@/components/motion/reveal";
 import { cx } from "@/utils/cx";
 
 /**
- * Figma `Intro — Valores` (78:8288) + `Feature cards 1` (40:3805).
- * Card: 384px de alto, rounded-16, bg/secondary; la imagen (240×234,
- * rounded-32, borde de 8px) asoma por el borde inferior (-48px).
+ * Figma `Intro — Valores` (78:8288) + `Feature cards 1` (40:3805), en una sola
+ * pantalla: la card ya no puede llevar la foto de 384px asomando por el
+ * borde (no entra en un viewport junto a las otras tres) — pasa a una franja
+ * de imagen dentro de la card, en una fila de 4.
  *
  * Las texturas del diseño son imágenes; hasta tenerlas exportadas van los
  * mismos degradados en CSS. Para reemplazarlas alcanza con pasar `image`.
@@ -43,30 +44,21 @@ const GRAIN =
 
 export function Values() {
     return (
-        <>
-            <SectionIntro
-                id="valores"
-                eyebrow="Nuestros valores"
-                size="displaySm"
-                title="Los valores no se anuncian, se demuestran"
-                subtitle="Y se ven en cómo trabajamos."
-                subtitleTone="secondary"
-                pad="pt-20 pb-8 lg:pt-30 lg:pb-16"
-            />
+        <Screen id="valores" className="justify-center">
+            <div className="flex flex-col gap-8 lg:gap-10">
+                <Reveal delay={0} className="flex flex-col gap-3">
+                    <p className={cx(screenType.title, tone.secondary)}>Nuestros valores</p>
+                    <h2 className={cx(screenType.h1, tone.primary, "text-balance")}>
+                        Los valores no se anuncian, se demuestran
+                    </h2>
+                </Reveal>
 
-            <Section pad="pb-20 lg:pb-30">
-                <ul className="grid gap-8 sm:grid-cols-2">
+                <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
                     {values.map((v, i) => (
                         <li key={v.title}>
-                            <Reveal delay={i * 140} y={40}>
-                                {/* La imagen asoma por abajo: la card recorta el sobrante. */}
-                                <article className="relative h-[384px] overflow-hidden rounded-2xl bg-[var(--bg-secondary)]">
-                                    <div className="flex flex-col gap-2 p-8">
-                                        <h3 className={cx(type.h3, tone.primary)}>{v.title}</h3>
-                                        <p className={cx(type.bodyLg, tone.primary)}>{v.body}</p>
-                                    </div>
-
-                                    <div className="absolute bottom-[-48px] left-1/2 h-[234px] w-[240px] -translate-x-1/2 overflow-hidden rounded-[32px] border-8 border-[var(--border-default)] shadow-[0_0_4.4px_rgba(0,0,0,0.06),0_5px_19px_rgba(0,0,0,0.08)]">
+                            <Reveal delay={i * 100} y={24}>
+                                <article className="flex h-full flex-col gap-4 rounded-2xl bg-[var(--bg-secondary)] p-5">
+                                    <div className="relative h-[110px] w-full overflow-hidden rounded-xl">
                                         {v.image ? (
                                             // eslint-disable-next-line @next/next/no-img-element
                                             <img
@@ -89,12 +81,16 @@ export function Values() {
                                             </>
                                         )}
                                     </div>
+                                    <div className="flex flex-col gap-1.5">
+                                        <h3 className={cx(screenType.h3, tone.primary)}>{v.title}</h3>
+                                        <p className={cx(screenType.body, tone.secondary)}>{v.body}</p>
+                                    </div>
                                 </article>
                             </Reveal>
                         </li>
                     ))}
                 </ul>
-            </Section>
-        </>
+            </div>
+        </Screen>
     );
 }
