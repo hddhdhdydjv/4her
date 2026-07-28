@@ -5,7 +5,7 @@ import { Section, type } from "@/components/ui/section";
 import { useAnchorScroll } from "@/hooks/use-anchor-scroll";
 import { cx } from "@/utils/cx";
 
-/** Figma `Footer 1` (40:3854) — border-top, p-64, logo + nav | redes. */
+/** Figma `Footer 1` (40:3854) — logo + nav | redes, sin línea divisoria arriba. */
 const links = [
     { label: "Quiénes somos", href: "#quienes-somos" },
     { label: "Servicios", href: "#servicios" },
@@ -55,11 +55,7 @@ export function Footer() {
     const scrollTo = useAnchorScroll();
 
     return (
-        <Section
-            as="footer"
-            pad="py-10 lg:py-16"
-            className="border-t border-[var(--border-default)]"
-        >
+        <Section as="footer" pad="py-10 lg:py-16">
             <div className="flex flex-col items-start gap-8 lg:flex-row lg:items-center lg:justify-between">
                 {/* Text (40:3855) */}
                 <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:gap-8">

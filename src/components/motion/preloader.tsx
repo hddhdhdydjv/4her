@@ -1,29 +1,34 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { IsoMark } from "@/components/graphics/iso";
 import { cx } from "@/utils/cx";
 
-const COLS = 10;
-const ROWS = 6;
+const COLUMNS = 9;
 
-const HOLD_MS = 550;
-const TILE_MAX_DELAY = 420;
-const TILE_DURATION = 620;
-const TOTAL_MS = HOLD_MS + TILE_MAX_DELAY + TILE_DURATION + 120;
+const HOLD_MS = 1000;
+const COL_STAGGER = 55;
+const COL_DURATION = 750;
+const TOTAL_MS = HOLD_MS + COLUMNS * COL_STAGGER + COL_DURATION + 150;
 
 type Phase = "hold" | "leaving" | "done";
 
 /**
- * Pantalla de carga básica: un velo con la marca centrada que, después de
- * un instante, se desarma en un mosaico calmo (cada tile se disuelve con
- * su propio delay) para dar paso al sitio. Puramente temporal — no depende
- * del scroll — así que no hereda los problemas de la cortina de píxeles
- * anterior (esa sí estaba atada al scroll y se sentía brusca/rota).
+ * Pantalla de carga básica: un velo oscuro con la marca y un contador de
+ * 0 a 100 en la esquina inferior derecha; al llegar a 100 se disuelve en
+ * columnas — cada barra colapsa verticalmente desde arriba o desde abajo,
+ * alternado, con un pequeño desfasaje entre una y la siguiente — para dar
+ * paso al sitio. Es puramente temporal (un timer, no está atada al scroll),
+ * así que no hereda los problemas de la cortina de píxeles anterior.
+ *
+ * El velo es oscuro (bg/inverse) a propósito: si compartiera el fondo claro
+ * del Hero, el barrido de columnas casi no se notaría (mismo color a los
+ * dos lados del corte). El contraste oscuro→claro es lo que hace legible
+ * la disolución.
  */
 export function Preloader() {
     const [phase, setPhase] = useState<Phase>("hold");
-    const seeds = useMemo(() => Array.from({ length: COLS * ROWS }, () => Math.random()), []);
+    const [pct, setPct] = useState(0);
 
     useEffect(() => {
         const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -33,6 +38,16 @@ export function Preloader() {
         }
 
         document.documentElement.style.overflow = "hidden";
+
+        let raf = 0;
+        const start = performance.now();
+        const tick = (now: number) => {
+            const t = Math.min(1, (now - start) / HOLD_MS);
+            setPct(Math.round(t * 100));
+            if (t < 1) raf = requestAnimationFrame(tick);
+        };
+        raf = requestAnimationFrame(tick);
+
         const t1 = window.setTimeout(() => setPhase("leaving"), HOLD_MS);
         const t2 = window.setTimeout(() => {
             setPhase("done");
@@ -40,6 +55,7 @@ export function Preloader() {
         }, TOTAL_MS);
 
         return () => {
+            cancelAnimationFrame(raf);
             window.clearTimeout(t1);
             window.clearTimeout(t2);
             document.documentElement.style.overflow = "";
@@ -51,40 +67,50 @@ export function Preloader() {
     const leaving = phase === "leaving";
 
     return (
-        <div aria-hidden="true" className="fixed inset-0 z-[100] bg-[var(--neutral-200)]">
+        <div aria-hidden="true" className="fixed inset-0 z-[100]">
             <div
                 className={cx(
-                    "absolute inset-0 z-10 flex items-center justify-center gap-2.5 transition-opacity duration-400 ease-out",
+                    "absolute inset-0 z-10 flex items-center justify-center gap-2.5 transition-opacity duration-500 ease-out",
                     leaving ? "opacity-0" : "opacity-100",
                 )}
             >
-                <span className="flex size-9 items-center justify-center rounded-full bg-[var(--bg-tertiary)]">
+                <span className="flex size-9 items-center justify-center rounded-full bg-[var(--neutral-700)]">
                     <IsoMark className="h-[12.3px] w-[8.3px]" />
                 </span>
-                <span className="font-display text-2xl font-normal text-[var(--text-primary)]">4her</span>
+                <span className="font-display text-2xl font-normal text-[var(--text-inverse)]">4her</span>
             </div>
 
+            {/* Contador — esquina inferior derecha, tipografía grande. */}
             <div
-                className="absolute inset-0 z-0 grid"
-                style={{
-                    gridTemplateColumns: `repeat(${COLS}, 1fr)`,
-                    gridTemplateRows: `repeat(${ROWS}, 1fr)`,
-                }}
+                className={cx(
+                    "absolute right-6 bottom-6 z-10 transition-opacity duration-500 ease-out sm:right-10 sm:bottom-10",
+                    leaving ? "opacity-0" : "opacity-100",
+                )}
             >
-                {seeds.map((seed, i) => {
-                    const delay = Math.round(seed * TILE_MAX_DELAY);
-                    return (
-                        <div
-                            key={i}
-                            style={{
-                                background: "var(--neutral-200)",
-                                transition: `opacity ${TILE_DURATION}ms cubic-bezier(0.4,0,0.2,1) ${delay}ms, transform ${TILE_DURATION}ms cubic-bezier(0.4,0,0.2,1) ${delay}ms`,
-                                opacity: leaving ? 0 : 1,
-                                transform: leaving ? "scale(0.82)" : "scale(1)",
-                            }}
-                        />
-                    );
-                })}
+                <span
+                    className="font-display tabular-nums leading-none font-medium text-[var(--text-inverse)]"
+                    style={{ fontSize: "clamp(2.5rem, 8vw, 6rem)" }}
+                >
+                    {pct}
+                    <span className="text-[0.4em] align-top">%</span>
+                </span>
+            </div>
+
+            {/* Disolución por columnas: cada barra colapsa desde arriba o desde
+                abajo, alternando, con un desfasaje que arma un barrido lateral. */}
+            <div className="absolute inset-0 z-0 flex">
+                {Array.from({ length: COLUMNS }, (_, i) => (
+                    <div
+                        key={i}
+                        className="h-full flex-1"
+                        style={{
+                            background: "var(--bg-inverse)",
+                            transformOrigin: i % 2 === 0 ? "top" : "bottom",
+                            transform: leaving ? "scaleY(0)" : "scaleY(1)",
+                            transition: `transform ${COL_DURATION}ms cubic-bezier(0.65,0,0.35,1) ${i * COL_STAGGER}ms`,
+                        }}
+                    />
+                ))}
             </div>
         </div>
     );
