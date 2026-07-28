@@ -1,43 +1,54 @@
-import { Screen, screenType, tone } from "@/components/ui/section";
+import { Screen, screenType, type, tone } from "@/components/ui/section";
 import { IsoCluster } from "@/components/graphics/iso";
 import { Reveal } from "@/components/motion/reveal";
 import { cx } from "@/utils/cx";
 
 /**
- * Figma `Intro — Quiénes somos` (40:3782) + `Feature 1` (40:3776), fusionados
- * en una sola pantalla (marcada así en el wireframe de referencia): el
- * segundo titular queda como pie de imagen en vez de su propia sección.
+ * Desktop: ilustración grande a la izquierda (~44% ancho), columna derecha con
+ * dos párrafos cortos arriba y un titular display grande abajo — copiando el
+ * ritmo de texto/imagen de la referencia.
+ * Mobile: ilustración arriba (altura fija), texto y titular debajo apilados.
  */
 export function About() {
     return (
-        <Screen id="quienes-somos" className="justify-center">
-            <div className="grid items-center gap-6 lg:grid-cols-2 lg:gap-14">
-                <Reveal delay={0} variant="side" x={-28} className="flex flex-col gap-3 lg:gap-4">
-                    <p className={cx(screenType.title, tone.secondary)}>Quiénes somos</p>
-                    <h1 className={cx(screenType.h1, tone.primary, "text-balance")}>
-                        Más estratégicos que una agencia, más cerca que un freelance
-                    </h1>
-                    <p className={cx(screenType.body, tone.secondary)}>
-                        No entregamos piezas lindas y desaparecemos. Pensamos qué decir y por qué,
-                        trabajamos con vos en cada paso y medimos si de verdad comunica. Somos la cara de
-                        comunicación de 4HIS, aplicando la misma forma de trabajar a tu marca.
-                    </p>
+        <Screen id="quienes-somos">
+            {/* flex-1 para ocupar el alto disponible en desktop */}
+            <div className="flex flex-1 flex-col gap-8 lg:flex-row lg:gap-14">
+                {/* Ilustración: altura fija mobile, ocupa todo el alto del row en desktop */}
+                <Reveal
+                    delay={0}
+                    variant="scale"
+                    className="flex h-52 shrink-0 items-center justify-center sm:h-64 lg:h-auto lg:w-[44%] lg:flex-none lg:self-stretch"
+                >
+                    <IsoCluster className="h-full w-full max-w-[320px] lg:max-w-none" />
                 </Reveal>
 
-                <Reveal delay={160} variant="scale" className="flex flex-col gap-3 lg:gap-4">
-                    <div className="aspect-[16/10] w-full max-w-[260px] lg:max-w-[380px]">
-                        <IsoCluster className="h-full w-full" />
+                {/* Columna derecha: cuerpo arriba, titular grande abajo */}
+                <div className="flex flex-col gap-6 lg:flex-1 lg:justify-between lg:py-1">
+                    <div className="flex flex-col gap-3 lg:gap-4">
+                        <Reveal delay={80}>
+                            <p className={cx(screenType.title, tone.secondary)}>Quiénes somos</p>
+                        </Reveal>
+                        <Reveal delay={160}>
+                            <p className={cx(screenType.body, tone.secondary)}>
+                                Somos la rama de comunicación y marketing de 4HIS Technology. Antes de producir
+                                cualquier pieza, pensamos qué decir, a quién y por qué.
+                            </p>
+                        </Reveal>
+                        <Reveal delay={240}>
+                            <p className={cx(screenType.body, tone.secondary)}>
+                                No tercerizamos ni fragmentamos tu marca entre proveedores sueltos. Un mismo
+                                equipo piensa, produce y mide — con vos, en cada paso.
+                            </p>
+                        </Reveal>
                     </div>
-                    <div className="flex flex-col gap-1.5">
-                        <h3 className={cx(screenType.h3, tone.primary)}>
-                            De la estrategia a la ejecución, sin intermediarios
-                        </h3>
-                        <p className={cx(screenType.body, tone.secondary)}>
-                            No tercerizamos ni fragmentamos tu marca entre proveedores sueltos. Un mismo
-                            equipo piensa, produce y mide.
-                        </p>
-                    </div>
-                </Reveal>
+
+                    <Reveal delay={360} variant="side" x={28}>
+                        <h1 className={cx(type.displaySm, tone.primary, "text-balance")}>
+                            Más estratégicos que una agencia, más cerca que un freelance
+                        </h1>
+                    </Reveal>
+                </div>
             </div>
         </Screen>
     );

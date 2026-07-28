@@ -104,18 +104,20 @@ export function Services() {
     }, [n]);
 
     return (
-        <Screen id="servicios" className="justify-center">
-            <div ref={rootRef} className="flex flex-col gap-5 lg:gap-8">
-                <Reveal delay={0} className="flex flex-col gap-2 lg:gap-3">
-                    <p className={cx(screenType.title, tone.secondary)}>Nuestros servicios</p>
-                    <h2 className={cx(screenType.h1, tone.primary, "text-balance")}>
-                        Servicios que se combinan según lo que tu marca necesita
-                    </h2>
-                    <p className={cx(screenType.body, tone.tertiary)}>Vos elegís por dónde empezar</p>
-                </Reveal>
+        <Screen id="servicios">
+            {/* flex-1 para que la tarjeta del canvas llene el alto disponible en desktop */}
+            <div ref={rootRef} className="flex flex-1 flex-col gap-6 lg:flex-row lg:items-stretch lg:gap-10">
+                {/* LEFT: columna angosta con texto y controles */}
+                <div className="flex flex-col gap-5 lg:w-[38%] lg:max-w-[380px] lg:shrink-0 lg:justify-center">
+                    <Reveal delay={0} className="flex flex-col gap-2 lg:gap-3">
+                        <p className={cx(screenType.title, tone.secondary)}>Nuestros servicios</p>
+                        <h2 className={cx(screenType.h1, tone.primary, "text-balance")}>
+                            Servicios que se combinan según lo que tu marca necesita
+                        </h2>
+                        <p className={cx(screenType.body, tone.tertiary)}>Vos elegís por dónde empezar</p>
+                    </Reveal>
 
-                <div className="grid items-center gap-6 lg:grid-cols-2 lg:gap-14">
-                    <div className="flex flex-col gap-4 lg:gap-6">
+                    <div className="flex flex-col gap-4 lg:gap-5">
                         <BarIndicator count={n} active={active} onSelect={setActive} />
 
                         <div className="relative min-h-[130px] sm:min-h-[110px]">
@@ -146,22 +148,23 @@ export function Services() {
                             Hacé tu consulta
                         </a>
                     </div>
+                </div>
 
-                    <div className="relative w-full max-w-[240px] justify-self-center sm:max-w-[320px] lg:max-w-none">
-                        {services.map((s, i) => (
-                            <div
-                                key={s.title}
-                                aria-hidden="true"
-                                className={cx(
-                                    i === 0 ? "relative" : "absolute inset-0",
-                                    "transition-all duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
-                                    i === active ? "scale-100 opacity-100 blur-none" : "scale-[0.96] opacity-0 blur-sm",
-                                )}
-                            >
-                                <ServiceCanvas letter={s.letter} offset={i} />
-                            </div>
-                        ))}
-                    </div>
+                {/* RIGHT: tarjeta grande con el canvas */}
+                <div className="relative min-h-[260px] overflow-hidden rounded-2xl bg-[var(--bg-secondary)] sm:min-h-[320px] lg:min-h-0 lg:flex-1">
+                    {services.map((s, i) => (
+                        <div
+                            key={s.title}
+                            aria-hidden="true"
+                            className={cx(
+                                "absolute inset-0 flex items-center",
+                                "transition-all duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
+                                i === active ? "scale-100 opacity-100 blur-none" : "scale-[0.96] opacity-0 blur-sm",
+                            )}
+                        >
+                            <ServiceCanvas letter={s.letter} offset={i} />
+                        </div>
+                    ))}
                 </div>
             </div>
         </Screen>
