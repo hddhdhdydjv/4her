@@ -29,7 +29,7 @@ export function CaseWePiper() {
     return (
         <>
             {/* Text (40:3796): título y bajada entran con una pequeña narrativa propia. */}
-            <Section id="caso-wepiper" pad="pt-20 pb-10 lg:pt-30 lg:pb-16">
+            <Section id="caso-wepiper" pad="pt-12 pb-8 lg:pt-20 lg:pb-16">
                 <div className="flex flex-col gap-4">
                     <Reveal delay={0}>
                         <h3 className={cx(type.h1, tone.primary, "text-balance")}>

@@ -10,11 +10,11 @@ import { cx } from "@/utils/cx";
  */
 export function Contact() {
     return (
-        <Section id="contacto" className="bg-[var(--bg-secondary)]" pad="py-16 lg:py-30">
+        <Section id="contacto" className="bg-[var(--bg-secondary)]" pad="pb-16 lg:pb-30">
             <Reveal>
                 {/* Mobile: un único panel que ocupa el viewport completo, sin la tarjeta
                     del form (inputs sueltos sobre el fondo). Desktop: layout de dos columnas. */}
-                <div className="flex min-h-[calc(100svh-8rem)] flex-col justify-center gap-10 lg:min-h-0 lg:flex-row lg:gap-16">
+                <div className="flex min-h-[calc(100svh-4rem)] flex-col justify-center gap-10 lg:min-h-0 lg:flex-row lg:gap-16">
                     <div className="flex flex-col gap-4 lg:flex-1">
                         <p className={cx(type.title, tone.secondary)}>Contacto</p>
                         <h2 className={cx(type.h1, tone.primary, "text-balance")}>
@@ -25,7 +25,7 @@ export function Contact() {
                         </p>
                     </div>
 
-                    <form className="flex w-full flex-col gap-5 lg:flex-1 lg:rounded-2xl lg:bg-[var(--bg-primary)] lg:p-8">
+                    <form className="flex w-full flex-col gap-5 lg:flex-1">
                         <div>
                             <Label htmlFor="name">Nombre</Label>
                             <Input id="name" name="name" type="text" placeholder="Tu nombre" autoComplete="name" />

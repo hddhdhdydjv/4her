@@ -100,7 +100,7 @@ function StepCard({ step, index }: { step: (typeof steps)[number]; index: number
 
 export function Process() {
     return (
-        <Section id="proceso">
+        <Section id="proceso" pad="pb-20 lg:pb-30">
             <div className="flex flex-col gap-10 lg:flex-row lg:gap-12">
                 {/* Header (40:3827): la frase entra primero; eyebrow y bajada la
                     acompañan después, aunque el eyebrow quede arriba en el layout. */}

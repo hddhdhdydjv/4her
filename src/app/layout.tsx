@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Funnel_Display, Funnel_Sans } from "next/font/google";
 import { LenisProvider } from "@/components/providers/lenis-provider";
+import { Preloader } from "@/components/motion/preloader";
 import "./globals.css";
 
 // Funnel Display: titulares. Funnel Sans: cuerpo y labels.
@@ -35,6 +36,7 @@ export default function RootLayout({
             className={`${funnelDisplay.variable} ${funnelSans.variable} h-full antialiased`}
         >
             <body className="min-h-full bg-primary font-body text-primary">
+                <Preloader />
                 <LenisProvider>{children}</LenisProvider>
             </body>
         </html>

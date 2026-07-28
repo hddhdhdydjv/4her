@@ -114,7 +114,7 @@ export function Services() {
                 }
                 subtitle="Vos elegís por dónde empezar"
                 subtitleTone="tertiary"
-                pad="pt-20 pb-8 lg:pt-30 lg:pb-16"
+                pad="pb-8 lg:pb-16"
             />
 
             {/* Pista de scroll: un tramo de viewport por servicio. */}
