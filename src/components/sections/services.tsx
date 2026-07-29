@@ -72,16 +72,20 @@ function BarIndicator({
     );
 }
 
-// On mobile the first (n+1) viewports are for the header fade, then n viewports
-// for service cycling — one full viewport per service.
-// Track total on mobile = (n+2)*100vh; on desktop = n*100vh (unchanged).
-const FADE_RATIO = 1 / (services.length + 1); // fraction of mobile scroll for fade
+// On mobile the first viewport of scroll is the header exit phase; after that
+// each service gets its own viewport. Total track = (n+2)*100vh.
+const FADE_RATIO = 1 / (services.length + 1); // 0.2 for n=4
+// Header is fully gone at this fraction of the fade viewport; service panel
+// starts entering only after — fully sequential, zero overlap.
+const HDR_EXIT = 0.7;
 
 export function Services() {
     const [active, setActive] = useState(0);
-    const [headerOpacity, setHeaderOpacity] = useState(1);
     const n = services.length;
     const trackRef = useRef<HTMLElement>(null);
+    // Direct DOM refs so the mobile fade runs without React re-renders per frame.
+    const mobileHdrRef = useRef<HTMLDivElement>(null);
+    const mobileSvcRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const track = trackRef.current;
@@ -102,18 +106,35 @@ export function Services() {
             const isDesktop = window.innerWidth >= 1024;
 
             if (isDesktop) {
-                setHeaderOpacity(1);
+                if (mobileHdrRef.current) mobileHdrRef.current.style.opacity = "1";
+                if (mobileSvcRef.current) mobileSvcRef.current.style.opacity = "1";
                 setActive(Math.round(clamped * (n - 1)));
-            } else {
-                if (clamped < FADE_RATIO) {
-                    const t = clamped / FADE_RATIO;
-                    setHeaderOpacity(1 - t);
-                    setActive(0);
-                } else {
-                    setHeaderOpacity(0);
-                    const sp = (clamped - FADE_RATIO) / (1 - FADE_RATIO);
-                    setActive(Math.min(n - 1, Math.floor(sp * n)));
+            } else if (clamped < FADE_RATIO) {
+                // t: 0→1 within the fade viewport.
+                const t = clamped / FADE_RATIO;
+
+                // Header exits upward — fully gone at t = HDR_EXIT.
+                const hOpacity = Math.max(0, 1 - t / HDR_EXIT);
+                if (mobileHdrRef.current) {
+                    mobileHdrRef.current.style.opacity = String(hOpacity);
+                    mobileHdrRef.current.style.transform = `translateY(${-(t * 48)}px)`;
+                    mobileHdrRef.current.style.pointerEvents = hOpacity < 0.05 ? "none" : "auto";
                 }
+                // Service panel enters only after header is fully gone.
+                const sOpacity = Math.max(0, (t - HDR_EXIT) / (1 - HDR_EXIT));
+                if (mobileSvcRef.current) mobileSvcRef.current.style.opacity = String(sOpacity);
+
+                setActive(0);
+            } else {
+                // Past the fade viewport: header hidden, services locked at full opacity.
+                if (mobileHdrRef.current) {
+                    mobileHdrRef.current.style.opacity = "0";
+                    mobileHdrRef.current.style.pointerEvents = "none";
+                }
+                if (mobileSvcRef.current) mobileSvcRef.current.style.opacity = "1";
+
+                const sp = (clamped - FADE_RATIO) / (1 - FADE_RATIO);
+                setActive(Math.min(n - 1, Math.floor(sp * n)));
             }
         }
 
@@ -167,17 +188,15 @@ export function Services() {
 
                     {/* ═══ MOBILE LAYOUT (< lg) ═══
                         Two absolute layers share the same space:
-                        - Layer A: intro header  → fades out during first scroll viewport
-                        - Layer B: image+service → fades in as A fades out            */}
+                        - Layer A: intro header  → exits upward, fully gone before B appears
+                        - Layer B: image+service → enters only after A is completely gone  */}
                     <div className="relative flex flex-1 flex-col lg:hidden">
 
-                        {/* Layer A — intro header */}
+                        {/* Layer A — intro header (opacity/transform driven by scroll via ref) */}
                         <div
-                            className="absolute inset-0 z-10 flex flex-col gap-6 justify-center transition-opacity duration-300"
-                            style={{
-                                opacity: headerOpacity,
-                                pointerEvents: headerOpacity < 0.05 ? "none" : "auto",
-                            }}
+                            ref={mobileHdrRef}
+                            className="absolute inset-0 z-10 flex flex-col justify-center gap-6"
+                            style={{ opacity: 1, willChange: "opacity, transform" }}
                         >
                             <div className="flex flex-col gap-4">
                                 <Reveal delay={0}>
@@ -192,10 +211,11 @@ export function Services() {
                             </Reveal>
                         </div>
 
-                        {/* Layer B — image (top) + service detail (bottom) */}
+                        {/* Layer B — image (top) + service detail (opacity driven by ref) */}
                         <div
-                            className="absolute inset-0 flex flex-col gap-4 transition-opacity duration-300"
-                            style={{ opacity: 1 - headerOpacity }}
+                            ref={mobileSvcRef}
+                            className="absolute inset-0 flex flex-col gap-4"
+                            style={{ opacity: 0, willChange: "opacity" }}
                         >
                             {/* Image — full width, takes remaining vertical space */}
                             <div className="relative min-h-0 flex-1 overflow-hidden rounded-2xl bg-[var(--bg-secondary)]">
