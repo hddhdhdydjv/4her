@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { Screen, gutter, type, tone } from "@/components/ui/section";
 import { useInViewOnce } from "@/hooks/use-in-view-once";
 import { Reveal } from "@/components/motion/reveal";
+import { SplitReveal } from "@/components/motion/split-reveal";
 import { cx } from "@/utils/cx";
 
 /**
@@ -50,11 +51,9 @@ export function CaseWePiper() {
             {/* Text (2020:5933): título H1 44 y subtítulo H2 34, a 800 de ancho.
                 El bloque cierra en y=220 y el visual abre en y=268: gap 48. */}
             <div className="flex max-w-[800px] flex-col gap-4 pb-12">
-                <Reveal delay={0} variant="side" x={-28}>
-                    <h2 className={cx(type.h1, tone.primary, "text-balance")}>
-                        De la idea a una marca que se entiende
-                    </h2>
-                </Reveal>
+                <SplitReveal delay={0} className={cx(type.h1, tone.primary, "text-balance")}>
+                    De la idea a una marca que se entiende
+                </SplitReveal>
                 <Reveal delay={140} variant="side" x={-28}>
                     <p className={cx(type.h2, tone.tertiary)}>Así construimos WePiper.</p>
                 </Reveal>

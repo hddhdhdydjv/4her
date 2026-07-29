@@ -1,5 +1,6 @@
 import { Screen, gutter, type, tone } from "@/components/ui/section";
 import { Reveal } from "@/components/motion/reveal";
+import { SplitReveal } from "@/components/motion/split-reveal";
 import { cx } from "@/utils/cx";
 
 /**
@@ -54,15 +55,19 @@ export function Values() {
             {/* Intro cierra en y=325 y la grilla abre en y=405: 80 de separación. */}
             <div className="flex flex-1 flex-col gap-12 lg:gap-20">
                 {/* Headline (gap 16) + 32 + Subheadline = los 205 del intro. */}
-                <Reveal delay={0} className="flex max-w-[800px] flex-col gap-8">
+                <div className="flex max-w-[800px] flex-col gap-8">
                     <div className="flex flex-col gap-4">
-                        <p className={cx(type.title, tone.secondary)}>Nuestros valores</p>
-                        <h2 className={cx(type.h1, tone.primary, "text-balance")}>
+                        <Reveal delay={0}>
+                            <p className={cx(type.title, tone.secondary)}>Nuestros valores</p>
+                        </Reveal>
+                        <SplitReveal delay={120} className={cx(type.h1, tone.primary, "text-balance")}>
                             Los valores no se anuncian, se demuestran
-                        </h2>
+                        </SplitReveal>
                     </div>
-                    <p className={cx(type.h2, tone.tertiary)}>Y se ven en cómo trabajamos.</p>
-                </Reveal>
+                    <Reveal delay={260}>
+                        <p className={cx(type.h2, tone.tertiary)}>Y se ven en cómo trabajamos.</p>
+                    </Reveal>
+                </div>
 
                 <ul className="grid gap-8 sm:grid-cols-2">
                     {values.map((v, i) => (

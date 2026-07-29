@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Screen, gutter, type, tone } from "@/components/ui/section";
 import { ServiceCanvas } from "@/components/sections/service-canvas";
 import { Reveal } from "@/components/motion/reveal";
+import { SplitReveal } from "@/components/motion/split-reveal";
 import { useLenisInstance } from "@/components/providers/lenis-provider";
 import { cx } from "@/utils/cx";
 
@@ -139,15 +140,19 @@ export function Services() {
                 ignore la rueda sobre esta zona y nos deje manejarla. */}
             <div ref={rootRef} data-lenis-prevent className="flex flex-1 flex-col gap-10 lg:gap-20">
                 {/* Headline (gap 16) + 24 + Subheadline = los 197 del intro. */}
-                <Reveal delay={0} className="flex max-w-[800px] flex-col gap-6">
+                <div className="flex max-w-[800px] flex-col gap-6">
                     <div className="flex flex-col gap-4">
-                        <p className={cx(type.title, tone.secondary)}>Nuestros servicios</p>
-                        <h2 className={cx(type.h1, tone.primary, "text-balance")}>
+                        <Reveal delay={0}>
+                            <p className={cx(type.title, tone.secondary)}>Nuestros servicios</p>
+                        </Reveal>
+                        <SplitReveal delay={120} className={cx(type.h1, tone.primary, "text-balance")}>
                             Servicios que se combinan según lo que tu marca necesita
-                        </h2>
+                        </SplitReveal>
                     </div>
-                    <p className={cx(type.h2, tone.tertiary)}>Vos elegís por dónde empezar</p>
-                </Reveal>
+                    <Reveal delay={260}>
+                        <p className={cx(type.h2, tone.tertiary)}>Vos elegís por dónde empezar</p>
+                    </Reveal>
+                </div>
 
                 {/* Content 672 + gap 64 + Image 544 sobre los 1280. */}
                 <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-[5%]">

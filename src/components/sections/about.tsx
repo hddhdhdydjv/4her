@@ -1,6 +1,7 @@
 import { Screen, gutter, type, tone } from "@/components/ui/section";
 import { IsoCluster } from "@/components/graphics/iso";
 import { Reveal } from "@/components/motion/reveal";
+import { SplitReveal } from "@/components/motion/split-reveal";
 import { cx } from "@/utils/cx";
 
 /**
@@ -34,13 +35,11 @@ export function About() {
                         <Reveal delay={80}>
                             <p className={cx(type.title, tone.secondary)}>Quiénes somos</p>
                         </Reveal>
-                        <Reveal delay={160}>
-                            <h2 className={cx(type.h2, tone.primary)}>
-                                Es de la ejecución a la estrategia,
-                                <br />
-                                sin intermediarios
-                            </h2>
-                        </Reveal>
+                        <SplitReveal delay={160} className={cx(type.h2, tone.primary)}>
+                            Es de la ejecución a la estrategia,
+                            <br />
+                            sin intermediarios
+                        </SplitReveal>
                     </div>
 
                     <Reveal delay={280}>

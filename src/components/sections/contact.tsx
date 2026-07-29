@@ -1,6 +1,7 @@
 import { Section, type, tone } from "@/components/ui/section";
 import { Input, Label, Textarea } from "@/components/ui/field";
 import { Reveal } from "@/components/motion/reveal";
+import { SplitReveal } from "@/components/motion/split-reveal";
 import { cx } from "@/utils/cx";
 
 /**
@@ -17,47 +18,54 @@ export function Contact() {
             pad="pt-[clamp(88px,16vh,176px)] pb-16 lg:pb-30"
             className=""
         >
-            <Reveal>
-                {/* Mobile: un único panel que ocupa el viewport completo, sin la tarjeta
-                    del form (inputs sueltos sobre el fondo). Desktop: layout de dos columnas. */}
-                <div className="flex min-h-[calc(100svh-4rem)] flex-col justify-center gap-10 lg:min-h-0 lg:flex-row lg:gap-16">
-                    <div className="flex flex-col gap-4 lg:flex-1">
+            {/* Mobile: un único panel que ocupa el viewport completo, sin la tarjeta
+                del form (inputs sueltos sobre el fondo). Desktop: layout de dos columnas. */}
+            <div className="flex min-h-[calc(100svh-4rem)] flex-col justify-center gap-10 lg:min-h-0 lg:flex-row lg:gap-16">
+                <div className="flex flex-col gap-4 lg:flex-1">
+                    <Reveal delay={0}>
                         <p className={cx(type.title, tone.secondary)}>Contacto</p>
-                        <h2 className={cx(type.h1, tone.primary, "text-balance")}>
-                            Contanos qué querés lograr
-                        </h2>
+                    </Reveal>
+                    <SplitReveal delay={120} className={cx(type.h1, tone.primary, "text-balance")}>
+                        Contanos qué querés lograr
+                    </SplitReveal>
+                    <Reveal delay={260}>
                         <p className={cx(type.bodyLg, tone.secondary)}>
                             Escribinos y arrancamos por una conversación, sin compromiso.
                         </p>
-                    </div>
-
-                    {/* Fondo propio (a reemplazar más adelante por una imagen) con
-                        32px de padding arriba y abajo, según lo pedido. */}
-                    <form className="flex w-full flex-col gap-5 rounded-3xl bg-[var(--bg-secondary)] px-6 py-8 sm:px-8 lg:flex-1">
-                        <div>
-                            <Label htmlFor="name">Nombre</Label>
-                            <Input id="name" name="name" type="text" placeholder="Tu nombre" autoComplete="name" />
-                        </div>
-                        <div>
-                            <Label htmlFor="email">Email</Label>
-                            <Input id="email" name="email" type="email" placeholder="tu@email.com" autoComplete="email" />
-                        </div>
-                        <div>
-                            <Label htmlFor="message">Mensaje</Label>
-                            <Textarea id="message" name="message" rows={4} placeholder="Contanos qué tenés en mente" />
-                        </div>
-                        <button
-                            type="submit"
-                            className={cx(
-                                type.bodyLg,
-                                "mt-1 w-full rounded-[45px] bg-[var(--bg-inverse)] px-4 py-3 text-center text-[var(--text-inverse)] transition-opacity hover:opacity-85",
-                            )}
-                        >
-                            Enviar
-                        </button>
-                    </form>
+                    </Reveal>
                 </div>
-            </Reveal>
+
+                {/* Fondo propio (a reemplazar más adelante por una imagen) con
+                    32px de padding arriba y abajo, según lo pedido. */}
+                <Reveal
+                    delay={200}
+                    variant="scale"
+                    as="form"
+                    className="flex w-full flex-col gap-5 rounded-3xl bg-[var(--bg-secondary)] px-6 py-8 sm:px-8 lg:flex-1"
+                >
+                    <div>
+                        <Label htmlFor="name">Nombre</Label>
+                        <Input id="name" name="name" type="text" placeholder="Tu nombre" autoComplete="name" />
+                    </div>
+                    <div>
+                        <Label htmlFor="email">Email</Label>
+                        <Input id="email" name="email" type="email" placeholder="tu@email.com" autoComplete="email" />
+                    </div>
+                    <div>
+                        <Label htmlFor="message">Mensaje</Label>
+                        <Textarea id="message" name="message" rows={4} placeholder="Contanos qué tenés en mente" />
+                    </div>
+                    <button
+                        type="submit"
+                        className={cx(
+                            type.bodyLg,
+                            "mt-1 w-full rounded-[45px] bg-[var(--bg-inverse)] px-4 py-3 text-center text-[var(--text-inverse)] transition-opacity hover:opacity-85",
+                        )}
+                    >
+                        Enviar
+                    </button>
+                </Reveal>
+            </div>
         </Section>
     );
 }

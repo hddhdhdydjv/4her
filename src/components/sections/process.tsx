@@ -3,6 +3,7 @@
 import type { CSSProperties } from "react";
 import { Screen, gutter, type, tone } from "@/components/ui/section";
 import { Reveal } from "@/components/motion/reveal";
+import { SplitReveal } from "@/components/motion/split-reveal";
 import { useInViewOnce } from "@/hooks/use-in-view-once";
 import { cx } from "@/utils/cx";
 
@@ -115,11 +116,9 @@ export function Process() {
                         <Reveal delay={260} variant="side" x={-28}>
                             <p className={cx(type.title, tone.secondary)}>Nuestro proceso</p>
                         </Reveal>
-                        <Reveal delay={0} variant="side" x={-28}>
-                            <h2 className={cx(type.h1, tone.primary, "text-balance")}>
-                                Un proceso simple, sin cajas negras
-                            </h2>
-                        </Reveal>
+                        <SplitReveal delay={0} className={cx(type.h1, tone.primary, "text-balance")}>
+                            Un proceso simple, sin cajas negras
+                        </SplitReveal>
                     </div>
                     <Reveal delay={420} variant="side" x={-28}>
                         <p className={cx(type.h2, tone.tertiary)}>Y siempre a tu lado.</p>
