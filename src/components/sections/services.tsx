@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Screen, gutter, type, tone } from "@/components/ui/section";
 import { ServiceCanvas } from "@/components/sections/service-canvas";
 import { Reveal } from "@/components/motion/reveal";
+import { useLenisInstance } from "@/components/providers/lenis-provider";
 import { cx } from "@/utils/cx";
 
 /**
@@ -77,9 +78,17 @@ export function Services() {
         activeRef.current = active;
     }, [active]);
 
-    // El wheel avanza de servicio en servicio mientras queden por mostrar;
-    // recién al llegar al primero/último deja pasar el scroll para que la
-    // página siga a la sección vecina — no un secuestro total de la rueda.
+    const lenis = useLenisInstance();
+    const lenisRef = useRef(lenis);
+    useEffect(() => {
+        lenisRef.current = lenis;
+    }, [lenis]);
+
+    // El wheel avanza de servicio en servicio mientras queden por mostrar.
+    // Al llegar al primero/último, en vez de dejar pasar el scroll nativo
+    // (brusco, sin la inercia del resto del sitio) se le pide a Lenis que
+    // termine el gesto llevando suave a la sección vecina — mismo motor,
+    // mismo feel en todos lados.
     useEffect(() => {
         const el = rootRef.current;
         if (!el) return;
@@ -89,15 +98,27 @@ export function Services() {
             if (Math.abs(e.deltaY) < 4) return;
             const dir = e.deltaY > 0 ? 1 : -1;
             const next = activeRef.current + dir;
-            if (next < 0 || next > n - 1) return;
 
             e.preventDefault();
             if (locked) return;
+
+            if (next >= 0 && next <= n - 1) {
+                locked = true;
+                setActive(next);
+                window.setTimeout(() => {
+                    locked = false;
+                }, 700);
+                return;
+            }
+
+            const targetId = dir > 0 ? "caso-wepiper" : "quienes-somos";
+            const target = document.getElementById(targetId);
+            if (!target || !lenisRef.current) return;
             locked = true;
-            setActive(next);
+            lenisRef.current.scrollTo(target, { offset: -24, duration: 1.1 });
             window.setTimeout(() => {
                 locked = false;
-            }, 650);
+            }, 1100);
         }
 
         el.addEventListener("wheel", onWheel, { passive: false });
