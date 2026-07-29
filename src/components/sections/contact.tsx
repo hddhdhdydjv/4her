@@ -31,7 +31,9 @@ export function Contact() {
                         </p>
                     </div>
 
-                    <form className="flex w-full flex-col gap-5 lg:flex-1">
+                    {/* Fondo propio (a reemplazar más adelante por una imagen) con
+                        32px de padding arriba y abajo, según lo pedido. */}
+                    <form className="flex w-full flex-col gap-5 rounded-3xl bg-[var(--bg-secondary)] px-6 py-8 sm:px-8 lg:flex-1">
                         <div>
                             <Label htmlFor="name">Nombre</Label>
                             <Input id="name" name="name" type="text" placeholder="Tu nombre" autoComplete="name" />

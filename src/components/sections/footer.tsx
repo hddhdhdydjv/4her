@@ -55,7 +55,8 @@ export function Footer() {
     const scrollTo = useAnchorScroll();
 
     return (
-        <Section as="footer" pad="py-10 lg:py-16">
+        // Fondo propio (a reemplazar más adelante por una imagen).
+        <Section as="footer" pad="py-10 lg:py-16" className="bg-[var(--bg-secondary)]">
             <div className="flex flex-col items-start gap-8 lg:flex-row lg:items-center lg:justify-between">
                 {/* Text (40:3855) */}
                 <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:gap-8">

@@ -35,8 +35,10 @@ export function About() {
                             <p className={cx(type.title, tone.secondary)}>Quiénes somos</p>
                         </Reveal>
                         <Reveal delay={160}>
-                            <h2 className={cx(type.h2, tone.primary, "text-balance")}>
-                                De la estrategia a la ejecución, sin intermediarios
+                            <h2 className={cx(type.h2, tone.primary)}>
+                                Es de la ejecución a la estrategia,
+                                <br />
+                                sin intermediarios
                             </h2>
                         </Reveal>
                     </div>

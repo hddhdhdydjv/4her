@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { Screen, gutter, type, tone } from "@/components/ui/section";
 import { useInViewOnce } from "@/hooks/use-in-view-once";
 import { Reveal } from "@/components/motion/reveal";
@@ -21,6 +22,25 @@ const IMAGE_SRC: string | undefined = undefined; // "/images/wepiper.jpg"
 
 export function CaseWePiper() {
     const { ref, inView } = useInViewOnce<HTMLDivElement>(0.3);
+    const boxRef = useRef<HTMLDivElement>(null);
+
+    // Crecimiento sutil (no un "pop" desde invisible): el recuadro ya está ahí,
+    // solo se agranda un poco al llegar a la sección. anime.js para que la
+    // curva sea la misma que el resto de las entradas del sitio.
+    useEffect(() => {
+        if (!inView) return;
+        const el = boxRef.current;
+        if (!el) return;
+
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            el.style.transform = "none";
+            return;
+        }
+
+        import("animejs").then(({ animate }) => {
+            animate(el, { scale: [0.94, 1], duration: 1100, ease: "outExpo" });
+        });
+    }, [inView]);
 
     return (
         <Screen
@@ -41,13 +61,15 @@ export function CaseWePiper() {
             </div>
 
             <div
-                ref={ref}
+                ref={(el) => {
+                    ref.current = el;
+                    boxRef.current = el;
+                }}
+                style={{ transform: "scale(0.94)" }}
                 className={cx(
                     // WePiper visual (2020:5936): 1280×648 — el ancho completo
                     // del contenido, no a sangre.
                     "relative aspect-[1280/648] min-h-[320px] w-full overflow-hidden rounded-2xl bg-[var(--bg-inverse)]",
-                    "transition-all duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
-                    inView ? "scale-100 opacity-100" : "scale-[0.62] opacity-0",
                 )}
             >
                 {IMAGE_SRC ? (

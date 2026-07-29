@@ -31,10 +31,9 @@ const HEADLINE = "font-display font-medium leading-none tracking-[-0.02em] text-
 
 export function Hero() {
     return (
-        <section
-            id="inicio"
-            className="relative min-h-screen overflow-hidden bg-[var(--neutral-200)] lg:h-screen"
-        >
+        // Sin overflow-hidden: los cubos del borde inferior (más abajo) están
+        // pensados para asomar más allá del hero, sobre la sección siguiente.
+        <section id="inicio" className="relative min-h-screen bg-[var(--neutral-200)] lg:h-screen">
             {/* Mobile: la textura pasa del costado a una franja abajo (estilo Aptos, a pedido). */}
             <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[22%] bg-[var(--neutral-300)] sm:hidden" />
             <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[7%] bg-[var(--neutral-400)] sm:hidden" />
@@ -102,8 +101,14 @@ export function Hero() {
                     <span className="pl-[3%]">Marketing</span>
                 </h1>
 
-                {/* ---------- Cubos que asoman por el borde inferior ---------- */}
-                <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 hidden lg:block">
+                {/* ---------- Cubos que asoman por el borde inferior ----------
+                    z-10 para que se sigan viendo por encima del fondo opaco de
+                    la sección siguiente (Quiénes somos), tal cual el frame de
+                    Figma: los tres clusters miden más que los 900px del Hero. */}
+                <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-x-0 bottom-0 z-10 hidden lg:block"
+                >
                     <IsoCluster className="absolute right-[calc(8.33%+93px)] bottom-[-88px] h-[321px] w-[362px]" />
                     <IsoCluster className="absolute bottom-[-42px] left-[37.8%] h-[180px] w-[203px]" />
                     <IsoCluster className="absolute bottom-[-50px] left-[13.44%] h-[180px] w-[203px]" />

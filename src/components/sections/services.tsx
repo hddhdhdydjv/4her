@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Screen, gutter, type, tone } from "@/components/ui/section";
 import { ServiceCanvas } from "@/components/sections/service-canvas";
 import { Reveal } from "@/components/motion/reveal";
@@ -72,9 +72,37 @@ export function Services() {
     const [active, setActive] = useState(0);
     const n = services.length;
     const rootRef = useRef<HTMLDivElement>(null);
+    const activeRef = useRef(active);
+    useEffect(() => {
+        activeRef.current = active;
+    }, [active]);
 
-    // El wheel ya no cambia de servicio: secuestrar la rueda frenaba el scroll
-    // de la página. Los servicios se recorren con el indicador de barras.
+    // El wheel avanza de servicio en servicio mientras queden por mostrar;
+    // recién al llegar al primero/último deja pasar el scroll para que la
+    // página siga a la sección vecina — no un secuestro total de la rueda.
+    useEffect(() => {
+        const el = rootRef.current;
+        if (!el) return;
+        let locked = false;
+
+        function onWheel(e: WheelEvent) {
+            if (Math.abs(e.deltaY) < 4) return;
+            const dir = e.deltaY > 0 ? 1 : -1;
+            const next = activeRef.current + dir;
+            if (next < 0 || next > n - 1) return;
+
+            e.preventDefault();
+            if (locked) return;
+            locked = true;
+            setActive(next);
+            window.setTimeout(() => {
+                locked = false;
+            }, 650);
+        }
+
+        el.addEventListener("wheel", onWheel, { passive: false });
+        return () => el.removeEventListener("wheel", onWheel);
+    }, [n]);
 
     return (
         <Screen
@@ -83,7 +111,12 @@ export function Services() {
         >
             {/* `Intro — Servicios` (2020:5899) arriba y `Feature 01` (2020:5904)
                 abajo, separados por 80px (y=320.5 → y=400.5). */}
-            <div ref={rootRef} className="flex flex-1 flex-col gap-10 lg:gap-20">
+            {/* data-lenis-prevent: Lenis procesa la rueda en paralelo a nuestro
+                listener, así que preventDefault() por sí solo no alcanza para
+                frenar el scroll de la página — solo bloquea el scroll nativo,
+                no el que calcula Lenis. Este atributo le pide a Lenis que
+                ignore la rueda sobre esta zona y nos deje manejarla. */}
+            <div ref={rootRef} data-lenis-prevent className="flex flex-1 flex-col gap-10 lg:gap-20">
                 {/* Headline (gap 16) + 24 + Subheadline = los 197 del intro. */}
                 <Reveal delay={0} className="flex max-w-[800px] flex-col gap-6">
                     <div className="flex flex-col gap-4">
@@ -107,14 +140,22 @@ export function Services() {
                                     key={s.title}
                                     aria-hidden={i !== active}
                                     className={cx(
+                                        // Sin blur: con overflow-hidden + rounded-2xl en la tarjeta
+                                        // de al lado, el filter creaba una fuga visual de píxeles
+                                        // fuera del borde redondeado durante la transición (bug de
+                                        // compositing de Chromium con filter+clip).
                                         "absolute inset-x-0 top-0 flex flex-col gap-3 transition-all duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
                                         i === active
-                                            ? "translate-y-0 opacity-100 blur-none"
-                                            : "pointer-events-none translate-y-3 opacity-0 blur-sm",
+                                            ? "translate-y-0 opacity-100"
+                                            : "pointer-events-none translate-y-3 opacity-0",
                                     )}
                                 >
-                                    {/* Title (2020:5912): H2 34 · Description (2020:5913): Body/Large 18 */}
-                                    <h3 className={cx(type.h2, tone.primary, "text-balance")}>{s.title}</h3>
+                                    {/* Title (2020:5912): H2 34, angosto (376 de los 672 de la
+                                        columna) para que envuelva en dos líneas cortas en vez de
+                                        estirarse a lo ancho. Description (2020:5913): Body/Large 18. */}
+                                    <h3 className={cx(type.h2, tone.primary, "max-w-[376px] text-balance")}>
+                                        {s.title}
+                                    </h3>
                                     <p className={cx(type.bodyLg, tone.secondary)}>{s.body}</p>
                                 </div>
                             ))}
@@ -138,11 +179,11 @@ export function Services() {
                                 key={s.title}
                                 aria-hidden="true"
                                 className={cx(
+                                    // Mismo motivo que el panel de texto: sin blur para no
+                                    // filtrar píxeles fuera de la tarjeta redondeada.
                                     "absolute inset-0 flex items-center",
                                     "transition-all duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
-                                    i === active
-                                        ? "scale-100 opacity-100 blur-none"
-                                        : "scale-[0.96] opacity-0 blur-sm",
+                                    i === active ? "scale-100 opacity-100" : "scale-[0.96] opacity-0",
                                 )}
                             >
                                 <ServiceCanvas letter={s.letter} offset={i} />
