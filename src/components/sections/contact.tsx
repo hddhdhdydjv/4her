@@ -12,11 +12,13 @@ import { cx } from "@/utils/cx";
 export function Contact() {
     return (
         // Última banda del frame Desktop: 611px de los 6011 (6×900 + 611), con
-        // el mismo top del ritmo para no quedar pegada al navbar.
+        // el mismo top del ritmo para no quedar pegada al navbar. Mismo fondo
+        // que el Footer (bg-secondary) para que las dos sean una sola franja
+        // continua sin costura entre ellas.
         <Section
             id="contacto"
             pad="pt-[clamp(88px,16vh,176px)] pb-16 lg:pb-30"
-            className=""
+            className="bg-[var(--bg-secondary)]"
         >
             {/* Mobile: un único panel que ocupa el viewport completo, sin la tarjeta
                 del form (inputs sueltos sobre el fondo). Desktop: layout de dos columnas. */}
@@ -35,13 +37,13 @@ export function Contact() {
                     </Reveal>
                 </div>
 
-                {/* Fondo propio (a reemplazar más adelante por una imagen) con
-                    32px de padding arriba y abajo, según lo pedido. */}
+                {/* Sin color propio (comparte el fondo de la sección): solo el
+                    espacio de 32px arriba y abajo que se había pedido. */}
                 <Reveal
                     delay={200}
                     variant="scale"
                     as="form"
-                    className="flex w-full flex-col gap-5 rounded-3xl bg-[var(--bg-secondary)] px-6 py-8 sm:px-8 lg:flex-1"
+                    className="flex w-full flex-col gap-5 py-8 lg:flex-1"
                 >
                     <div>
                         <Label htmlFor="name">Nombre</Label>

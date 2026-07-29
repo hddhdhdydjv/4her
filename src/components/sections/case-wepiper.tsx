@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { Screen, gutter, type, tone } from "@/components/ui/section";
 import { useInViewOnce } from "@/hooks/use-in-view-once";
 import { Reveal } from "@/components/motion/reveal";
@@ -22,8 +22,22 @@ import { cx } from "@/utils/cx";
 const IMAGE_SRC: string | undefined = undefined; // "/images/wepiper.jpg"
 
 export function CaseWePiper() {
-    const { ref, inView } = useInViewOnce<HTMLDivElement>(0.3);
+    // Threshold alto (0.6, no el 0.3 default): con una caja casi del ancho
+    // completo de la pantalla, al 30% disparaba con la mitad de arriba
+    // todavía fuera de cámara — para cuando se veía completa ya había
+    // terminado de crecer, así que en la práctica no se notaba.
+    const { ref, inView } = useInViewOnce<HTMLDivElement>(0.6);
     const boxRef = useRef<HTMLDivElement>(null);
+    // Callback ref memoizado: uno inline se recrea en cada render y React
+    // desengancha + reengancha el nodo en cada uno (aunque sea el mismo
+    // elemento), sin necesidad.
+    const setRefs = useCallback(
+        (el: HTMLDivElement | null) => {
+            ref.current = el;
+            boxRef.current = el;
+        },
+        [ref],
+    );
 
     // Crecimiento sutil (no un "pop" desde invisible): el recuadro ya está ahí,
     // solo se agranda un poco al llegar a la sección. anime.js para que la
@@ -39,7 +53,7 @@ export function CaseWePiper() {
         }
 
         import("animejs").then(({ animate }) => {
-            animate(el, { scale: [0.94, 1], duration: 1100, ease: "outExpo" });
+            animate(el, { scale: [0.9, 1], duration: 1200, ease: "outExpo" });
         });
     }, [inView]);
 
@@ -60,11 +74,8 @@ export function CaseWePiper() {
             </div>
 
             <div
-                ref={(el) => {
-                    ref.current = el;
-                    boxRef.current = el;
-                }}
-                style={{ transform: "scale(0.94)" }}
+                ref={setRefs}
+                style={{ transform: "scale(0.9)" }}
                 className={cx(
                     // WePiper visual (2020:5936): 1280×648 — el ancho completo
                     // del contenido, no a sangre.
