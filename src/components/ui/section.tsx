@@ -71,18 +71,11 @@ export const screenPadY = cx(screenPadTop, screenPadBottom);
  */
 
 /**
- * Sección que engancha por scroll-snap y apunta a ocupar un viewport.
- * En desktop (`lg:`) es exacto: `h-screen` + `overflow-hidden`, tal cual
- * marca el ruler de "1 viewport" de Figma (solo anota el frame Desktop).
- * En mobile se acerca a lo mismo con `min-h-screen` (sin recortar): el
- * contenido en una sola columna suele pesar más, así que si no entra
- * entero se deja crecer un poco en vez de tapar texto.
+ * Sección del flujo principal. El scroll es continuo: no hay scroll-snap ni
+ * alto forzado a un viewport — cada sección mide lo que mide su contenido
+ * más el ritmo de padding del diseño, y la página se lee de corrido.
  *
- * Para las 6 pantallas del flujo principal (Hero, Quiénes somos, Servicios,
- * WePiper, Valores, Proceso) — cada una debe entrar entera en desktop, sin
- * scroll interno. `pb` da un respiro abajo; el resto del alto lo reparte el
- * contenido según cómo lo organice cada sección (con `justify-center` si
- * quiere centrarse, o `flex-1` en un hijo si quiere ocupar el resto).
+ * `minH` deja fijar el alto de la banda cuando el frame de Figma lo pide.
  */
 export function Screen({
     children,
@@ -106,7 +99,7 @@ export function Screen({
         <section
             id={id}
             className={cx(
-                "relative flex min-h-screen snap-start snap-always flex-col lg:h-screen lg:overflow-hidden",
+                "relative flex flex-col",
                 inset,
                 className,
             )}

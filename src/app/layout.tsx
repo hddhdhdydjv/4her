@@ -33,7 +33,7 @@ export default function RootLayout({
     return (
         <html
             lang="es"
-            className={`${funnelDisplay.variable} ${funnelSans.variable} h-full antialiased lg:snap-y lg:snap-proximity`}
+            className={`${funnelDisplay.variable} ${funnelSans.variable} h-full antialiased`}
         >
             <body className="min-h-full bg-primary font-body text-primary">
                 <Preloader />

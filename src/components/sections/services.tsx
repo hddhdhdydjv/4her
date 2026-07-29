@@ -1,18 +1,18 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { Screen, type, tone } from "@/components/ui/section";
+import { useRef, useState } from "react";
+import { Screen, gutter, type, tone } from "@/components/ui/section";
 import { ServiceCanvas } from "@/components/sections/service-canvas";
 import { Reveal } from "@/components/motion/reveal";
 import { cx } from "@/utils/cx";
 
 /**
- * Figma `Intro — Servicios` (74:6992) + `Feature 2` (40:3787), en una sola
- * pantalla: se ve un servicio a la vez, y se cambia clickeando el indicador
- * de barras verticales (74:7016 — activa 16px #646464, inactivas 8px
- * #b4b8b4) o con la rueda del mouse: mientras queden servicios por recorrer,
- * el scroll cambia de servicio en vez de avanzar de sección; al llegar al
- * primero/último, un scroll más ya navega a la sección vecina.
+ * Figma `Intro — Servicios` (2020:5899) + `Feature 01` (2020:5904), dentro de
+ * una sección de 900: intro de y=123.5 a y=320.5 (titular a 800 de ancho) y
+ * feature de y=400.5 a y=832.5 (Content 672 + gap 64 + Image 544).
+ *
+ * Se ve un servicio a la vez y se cambia con el indicador de barras
+ * verticales (2020:5907 — activa 16px, inactivas 8px).
  */
 const services = [
     {
@@ -72,43 +72,19 @@ export function Services() {
     const [active, setActive] = useState(0);
     const n = services.length;
     const rootRef = useRef<HTMLDivElement>(null);
-    const lockRef = useRef(false);
 
-    // El wheel cicla los servicios mientras queden por mostrar; recién
-    // cuando estás en el primero/último deja pasar el scroll nativo para
-    // que la sección snapee a la vecina.
-    useEffect(() => {
-        const el = rootRef.current;
-        if (!el) return;
-
-        function onWheel(e: WheelEvent) {
-            if (Math.abs(e.deltaY) < 4) return;
-            const dir = e.deltaY > 0 ? 1 : -1;
-
-            setActive((prev) => {
-                const next = prev + dir;
-                if (next < 0 || next > n - 1) return prev;
-
-                e.preventDefault();
-                if (lockRef.current) return prev;
-                lockRef.current = true;
-                window.setTimeout(() => {
-                    lockRef.current = false;
-                }, 650);
-                return next;
-            });
-        }
-
-        el.addEventListener("wheel", onWheel, { passive: false });
-        return () => el.removeEventListener("wheel", onWheel);
-    }, [n]);
+    // El wheel ya no cambia de servicio: secuestrar la rueda frenaba el scroll
+    // de la página. Los servicios se recorren con el indicador de barras.
 
     return (
-        <Screen id="servicios">
-            {/* Figma arma la sección en dos bandas: el encabezado arriba, a un
-                máximo del 60% del ancho, y debajo la fila texto | canvas. */}
-            <div ref={rootRef} className="flex flex-1 flex-col gap-8 lg:gap-10">
-                <Reveal delay={0} className="flex flex-col gap-3 lg:max-w-[60%]">
+        <Screen
+            id="servicios"
+            inset={cx(gutter, "pt-[clamp(72px,13.72vh,151px)] pb-[clamp(40px,7.5vh,83px)]")}
+        >
+            {/* `Intro — Servicios` (2020:5899) arriba y `Feature 01` (2020:5904)
+                abajo, separados por 80px (y=320.5 → y=400.5). */}
+            <div ref={rootRef} className="flex flex-1 flex-col gap-10 lg:gap-20">
+                <Reveal delay={0} className="flex max-w-[800px] flex-col gap-4">
                     <p className={cx(type.title, tone.secondary)}>Nuestros servicios</p>
                     <h2 className={cx(type.h1, tone.primary, "text-balance")}>
                         Servicios que se combinan según lo que tu marca necesita
@@ -116,12 +92,13 @@ export function Services() {
                     <p className={cx(type.h2, tone.tertiary)}>Vos elegís por dónde empezar</p>
                 </Reveal>
 
-                {/* Fila inferior: ambas columnas arrancan a la misma altura. */}
-                <div className="flex min-h-0 flex-1 flex-col gap-6 lg:flex-row lg:items-stretch lg:gap-10">
-                    <div className="flex flex-col gap-4 lg:w-[42%] lg:max-w-[520px] lg:shrink-0 lg:gap-5">
+                {/* Content 672 + gap 64 + Image 544 sobre los 1280. */}
+                <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-[5%]">
+                    <div className="flex flex-col gap-4 lg:w-[52.5%] lg:shrink-0 lg:gap-6">
                         <BarIndicator count={n} active={active} onSelect={setActive} />
 
-                        <div className="relative min-h-[175px] sm:min-h-[165px] lg:min-h-[195px]">
+                        {/* Text (2020:5906) mide 217: barras 16 + 24 + título 37 + 24 + desc 116 */}
+                        <div className="relative min-h-[190px] sm:min-h-[180px] lg:min-h-[201px]">
                             {services.map((s, i) => (
                                 <div
                                     key={s.title}
@@ -133,9 +110,9 @@ export function Services() {
                                             : "pointer-events-none translate-y-3 opacity-0 blur-sm",
                                     )}
                                 >
-                                    {/* Mismo cuerpo tipográfico que el titular de la sección. */}
-                                    <h3 className={cx(type.h1, tone.primary, "text-balance")}>{s.title}</h3>
-                                    <p className={cx(type.body, tone.secondary)}>{s.body}</p>
+                                    {/* Title (2020:5912): H2 34 · Description (2020:5913): Body/Large 18 */}
+                                    <h3 className={cx(type.h2, tone.primary, "text-balance")}>{s.title}</h3>
+                                    <p className={cx(type.bodyLg, tone.secondary)}>{s.body}</p>
                                 </div>
                             ))}
                         </div>
@@ -151,8 +128,8 @@ export function Services() {
                         </a>
                     </div>
 
-                    {/* RIGHT: tarjeta grande con el canvas */}
-                    <div className="relative min-h-[260px] overflow-hidden rounded-2xl bg-[var(--bg-secondary)] sm:min-h-[320px] lg:min-h-0 lg:flex-1">
+                    {/* Image (2020:5916): 544×432 sobre los 1280 = 42.5%, ratio 544/432 */}
+                    <div className="relative min-h-[260px] overflow-hidden rounded-2xl bg-[var(--bg-secondary)] sm:min-h-[320px] lg:aspect-[544/432] lg:min-h-0 lg:w-[42.5%] lg:shrink-0">
                         {services.map((s, i) => (
                             <div
                                 key={s.title}

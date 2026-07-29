@@ -45,10 +45,8 @@ const GRAIN =
 export function Values() {
     return (
         <Screen id="valores" className="justify-center">
-            {/* El bloque ocupa la banda de 618px y `items-stretch` deja que la
-                grilla la llene entera; el texto igual arranca arriba porque la
-                columna es flex-col con justify-start. */}
-            <div className="flex flex-col gap-8 lg:min-h-0 lg:flex-1 lg:flex-row lg:items-stretch lg:gap-14">
+            {/* Texto y grilla alineados por el top. */}
+            <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-14">
                 <Reveal delay={0} variant="side" x={-28} className="flex flex-col gap-3 lg:flex-1">
                     <p className={cx(type.title, tone.secondary)}>Nuestros valores</p>
                     <h2 className={cx(type.h1, tone.primary, "text-balance")}>
@@ -63,9 +61,7 @@ export function Values() {
                         <li key={v.title} className="h-full">
                             <Reveal delay={160 + i * 110} y={22} className="h-full">
                                 <article className="flex h-full flex-col gap-3 rounded-2xl bg-[var(--bg-secondary)] p-4 sm:gap-4 sm:p-5">
-                                    {/* En desktop la franja absorbe el sobrante de
-                                        la card, así las 4 llenan la banda justo. */}
-                                    <div className="relative h-[80px] w-full overflow-hidden rounded-xl sm:h-[110px] lg:h-auto lg:min-h-[72px] lg:flex-1">
+                                    <div className="relative h-[80px] w-full shrink-0 overflow-hidden rounded-xl sm:h-[110px] lg:h-[140px]">
                                         {v.image ? (
                                             // eslint-disable-next-line @next/next/no-img-element
                                             <img

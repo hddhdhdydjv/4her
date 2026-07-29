@@ -15,7 +15,7 @@ export function Contact() {
         <Section
             id="contacto"
             pad="pt-[clamp(88px,16vh,176px)] pb-16 lg:pb-30"
-            className="snap-start lg:min-h-[67.9vh]"
+            className=""
         >
             <Reveal>
                 {/* Mobile: un único panel que ocupa el viewport completo, sin la tarjeta

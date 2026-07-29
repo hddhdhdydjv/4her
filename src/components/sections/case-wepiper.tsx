@@ -45,7 +45,10 @@ export function CaseWePiper() {
             <div
                 ref={ref}
                 className={cx(
-                    "relative min-h-0 flex-1 overflow-hidden rounded-2xl bg-[var(--bg-inverse)] transition-all duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
+                    // Sin el alto forzado del viewport el recuadro colapsaba:
+                    // ahora mide una proporción del alto de la sección.
+                    "relative min-h-[320px] flex-1 overflow-hidden rounded-2xl bg-[var(--bg-inverse)] lg:min-h-[68vh]",
+                    "transition-all duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
                     inView ? "scale-100 opacity-100" : "scale-[0.62] opacity-0",
                 )}
             >

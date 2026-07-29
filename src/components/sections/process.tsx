@@ -102,7 +102,7 @@ function StepCard({ step, index }: { step: (typeof steps)[number]; index: number
 export function Process() {
     return (
         <Screen id="proceso" className="justify-center">
-            <div className="flex flex-col gap-8 lg:my-auto lg:flex-row lg:items-start lg:gap-12">
+            <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-12">
                 {/* Header (40:3827): la frase entra primero; eyebrow y bajada la
                     acompañan después, aunque el eyebrow quede arriba en el layout. */}
                 <div className="flex flex-col gap-4 lg:flex-1">
