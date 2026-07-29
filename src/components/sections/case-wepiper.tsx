@@ -1,6 +1,6 @@
 "use client";
 
-import { Screen, screenPadTop, type, tone } from "@/components/ui/section";
+import { Screen, gutter, type, tone } from "@/components/ui/section";
 import { useInViewOnce } from "@/hooks/use-in-view-once";
 import { Reveal } from "@/components/motion/reveal";
 import { cx } from "@/utils/cx";
@@ -23,31 +23,29 @@ export function CaseWePiper() {
     const { ref, inView } = useInViewOnce<HTMLDivElement>(0.3);
 
     return (
-        // Mantiene el top del ritmo general (para no pisar el navbar) pero
-        // recorta laterales y base: el recuadro llega más cerca de los bordes
-        // que en el resto de las secciones.
         <Screen
             id="caso-wepiper"
-            inset={cx("px-4 sm:px-6 lg:px-8", screenPadTop, "pb-[clamp(40px,7vh,72px)]")}
-            content="flex w-full flex-1 flex-col"
+            inset={cx(gutter, "pt-[clamp(72px,13.33vh,147px)] pb-[clamp(40px,7.11vh,78px)]")}
         >
-            <div className="flex flex-col gap-2 pb-4">
+            {/* Text (2020:5933): título H1 44 y subtítulo H2 34, a 800 de ancho.
+                El bloque cierra en y=220 y el visual abre en y=268: gap 48. */}
+            <div className="flex max-w-[800px] flex-col gap-4 pb-12">
                 <Reveal delay={0} variant="side" x={-28}>
-                    <h3 className={cx(type.h2, tone.primary, "text-balance")}>
+                    <h2 className={cx(type.h1, tone.primary, "text-balance")}>
                         De la idea a una marca que se entiende
-                    </h3>
+                    </h2>
                 </Reveal>
                 <Reveal delay={140} variant="side" x={-28}>
-                    <p className={cx(type.h3, tone.secondary)}>Así construimos WePiper.</p>
+                    <p className={cx(type.h2, tone.tertiary)}>Así construimos WePiper.</p>
                 </Reveal>
             </div>
 
             <div
                 ref={ref}
                 className={cx(
-                    // Sin el alto forzado del viewport el recuadro colapsaba:
-                    // ahora mide una proporción del alto de la sección.
-                    "relative min-h-[320px] flex-1 overflow-hidden rounded-2xl bg-[var(--bg-inverse)] lg:min-h-[68vh]",
+                    // WePiper visual (2020:5936): 1280×648 — el ancho completo
+                    // del contenido, no a sangre.
+                    "relative aspect-[1280/648] min-h-[320px] w-full overflow-hidden rounded-2xl bg-[var(--bg-inverse)]",
                     "transition-all duration-[1100ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
                     inView ? "scale-100 opacity-100" : "scale-[0.62] opacity-0",
                 )}

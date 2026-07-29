@@ -71,11 +71,9 @@ export const screenPadY = cx(screenPadTop, screenPadBottom);
  */
 
 /**
- * Sección del flujo principal. El scroll es continuo: no hay scroll-snap ni
- * alto forzado a un viewport — cada sección mide lo que mide su contenido
- * más el ritmo de padding del diseño, y la página se lee de corrido.
- *
- * `minH` deja fijar el alto de la banda cuando el frame de Figma lo pide.
+ * Sección del flujo principal. Scroll continuo, sin snap: cada sección ocupa
+ * como mínimo un viewport (los frames de Figma miden 900) y si el contenido
+ * pide más, crece y se scrollea — como WePiper (980) y Valores (1269).
  */
 export function Screen({
     children,
@@ -99,7 +97,7 @@ export function Screen({
         <section
             id={id}
             className={cx(
-                "relative flex flex-col",
+                "relative flex min-h-screen flex-col",
                 inset,
                 className,
             )}

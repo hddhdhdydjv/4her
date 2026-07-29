@@ -1,15 +1,18 @@
-import { Screen, type, tone } from "@/components/ui/section";
+import { Screen, gutter, type, tone } from "@/components/ui/section";
 import { Reveal } from "@/components/motion/reveal";
 import { cx } from "@/utils/cx";
 
 /**
- * Figma `Intro — Valores` (78:8288) + `Feature cards 1` (40:3805), en una sola
- * pantalla: la card ya no puede llevar la foto de 384px asomando por el
- * borde (no entra en un viewport junto a las otras tres) — pasa a una franja
- * de imagen dentro de la card, en una fila de 4.
+ * Figma `Values` (2020:6172) — 1440×1269, la sección más alta del frame: pasa
+ * el viewport y se scrollea.
  *
- * Las texturas del diseño son imágenes; hasta tenerlas exportadas van los
- * mismos degradados en CSS. Para reemplazarlas alcanza con pasar `image`.
+ *   Intro — Valores (2020:6173)  x=80  y=120  1280×205, titular a 800
+ *   Valores         (2020:6178)  x=80  y=405  1280×800
+ *
+ * La grilla es 2×2 de cards de 624×384 con 32 de gap. Cada card lleva el
+ * texto arriba (título H3 26 + descripción Body/Large 18, con 32 de padding)
+ * y la imagen de 240×234 centrada, arrancando en y=198 — o sea 38.46% de
+ * ancho y 60.94% de alto, al 51.56% desde el borde superior.
  */
 const values = [
     {
@@ -44,24 +47,34 @@ const GRAIN =
 
 export function Values() {
     return (
-        <Screen id="valores" className="justify-center">
-            {/* Texto y grilla alineados por el top. */}
-            <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-14">
-                <Reveal delay={0} variant="side" x={-28} className="flex flex-col gap-3 lg:flex-1">
-                    <p className={cx(type.title, tone.secondary)}>Nuestros valores</p>
-                    <h2 className={cx(type.h1, tone.primary, "text-balance")}>
-                        Los valores no se anuncian, se demuestran
-                    </h2>
+        <Screen
+            id="valores"
+            inset={cx(gutter, "pt-[clamp(72px,13.33vh,147px)] pb-[clamp(40px,7.11vh,78px)]")}
+        >
+            {/* Intro cierra en y=325 y la grilla abre en y=405: 80 de separación. */}
+            <div className="flex flex-1 flex-col gap-12 lg:gap-20">
+                {/* Headline (gap 16) + 32 + Subheadline = los 205 del intro. */}
+                <Reveal delay={0} className="flex max-w-[800px] flex-col gap-8">
+                    <div className="flex flex-col gap-4">
+                        <p className={cx(type.title, tone.secondary)}>Nuestros valores</p>
+                        <h2 className={cx(type.h1, tone.primary, "text-balance")}>
+                            Los valores no se anuncian, se demuestran
+                        </h2>
+                    </div>
+                    <p className={cx(type.h2, tone.tertiary)}>Y se ven en cómo trabajamos.</p>
                 </Reveal>
 
-                {/* `auto-rows-fr` + `h-full` en toda la cadena: las 4 cards miden
-                    exactamente lo mismo, aunque el texto de cada una varíe. */}
-                <ul className="grid auto-rows-fr grid-cols-2 gap-3 sm:gap-5 lg:flex-1 lg:gap-5">
+                <ul className="grid gap-8 sm:grid-cols-2">
                     {values.map((v, i) => (
-                        <li key={v.title} className="h-full">
-                            <Reveal delay={160 + i * 110} y={22} className="h-full">
-                                <article className="flex h-full flex-col gap-3 rounded-2xl bg-[var(--bg-secondary)] p-4 sm:gap-4 sm:p-5">
-                                    <div className="relative h-[80px] w-full shrink-0 overflow-hidden rounded-xl sm:h-[110px] lg:h-[140px]">
+                        <li key={v.title}>
+                            <Reveal delay={120 + i * 110} y={22}>
+                                <article className="relative overflow-hidden rounded-2xl bg-[var(--bg-secondary)] pb-[60%] sm:aspect-[624/384] sm:pb-0">
+                                    <div className="flex flex-col gap-2 p-8">
+                                        <h3 className={cx(type.h3, tone.primary)}>{v.title}</h3>
+                                        <p className={cx(type.bodyLg, tone.secondary)}>{v.body}</p>
+                                    </div>
+
+                                    <div className="absolute top-[51.56%] left-1/2 h-[60.94%] w-[38.46%] -translate-x-1/2 overflow-hidden rounded-xl">
                                         {v.image ? (
                                             // eslint-disable-next-line @next/next/no-img-element
                                             <img
@@ -83,10 +96,6 @@ export function Values() {
                                                 />
                                             </>
                                         )}
-                                    </div>
-                                    <div className="flex flex-col gap-1.5">
-                                        <h3 className={cx(type.h3, tone.primary)}>{v.title}</h3>
-                                        <p className={cx(type.body, tone.secondary)}>{v.body}</p>
                                     </div>
                                 </article>
                             </Reveal>

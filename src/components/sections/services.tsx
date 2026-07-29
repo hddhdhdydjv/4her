@@ -84,11 +84,14 @@ export function Services() {
             {/* `Intro — Servicios` (2020:5899) arriba y `Feature 01` (2020:5904)
                 abajo, separados por 80px (y=320.5 → y=400.5). */}
             <div ref={rootRef} className="flex flex-1 flex-col gap-10 lg:gap-20">
-                <Reveal delay={0} className="flex max-w-[800px] flex-col gap-4">
-                    <p className={cx(type.title, tone.secondary)}>Nuestros servicios</p>
-                    <h2 className={cx(type.h1, tone.primary, "text-balance")}>
-                        Servicios que se combinan según lo que tu marca necesita
-                    </h2>
+                {/* Headline (gap 16) + 24 + Subheadline = los 197 del intro. */}
+                <Reveal delay={0} className="flex max-w-[800px] flex-col gap-6">
+                    <div className="flex flex-col gap-4">
+                        <p className={cx(type.title, tone.secondary)}>Nuestros servicios</p>
+                        <h2 className={cx(type.h1, tone.primary, "text-balance")}>
+                            Servicios que se combinan según lo que tu marca necesita
+                        </h2>
+                    </div>
                     <p className={cx(type.h2, tone.tertiary)}>Vos elegís por dónde empezar</p>
                 </Reveal>
 
