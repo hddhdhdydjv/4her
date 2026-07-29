@@ -10,7 +10,13 @@ import { cx } from "@/utils/cx";
  */
 export function Contact() {
     return (
-        <Section id="contacto" pad="pb-16 lg:pb-30" className="snap-start">
+        // Última banda del frame Desktop: 611px de los 6011 (6×900 + 611), con
+        // el mismo top del ritmo para no quedar pegada al navbar.
+        <Section
+            id="contacto"
+            pad="pt-[clamp(88px,16vh,176px)] pb-16 lg:pb-30"
+            className="snap-start lg:min-h-[67.9vh]"
+        >
             <Reveal>
                 {/* Mobile: un único panel que ocupa el viewport completo, sin la tarjeta
                     del form (inputs sueltos sobre el fondo). Desktop: layout de dos columnas. */}

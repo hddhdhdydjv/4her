@@ -1,4 +1,4 @@
-import { Screen, screenType, type, tone } from "@/components/ui/section";
+import { Screen, type, tone } from "@/components/ui/section";
 import { IsoCluster } from "@/components/graphics/iso";
 import { Reveal } from "@/components/motion/reveal";
 import { cx } from "@/utils/cx";
@@ -27,16 +27,16 @@ export function About() {
                 <div className="flex flex-col gap-6 lg:flex-1 lg:justify-between lg:py-1">
                     <div className="flex flex-col gap-3 lg:gap-4">
                         <Reveal delay={80}>
-                            <p className={cx(screenType.title, tone.secondary)}>Quiénes somos</p>
+                            <p className={cx(type.title, tone.secondary)}>Quiénes somos</p>
                         </Reveal>
                         <Reveal delay={160}>
-                            <p className={cx(screenType.body, tone.secondary)}>
+                            <p className={cx(type.body, tone.secondary)}>
                                 Somos la rama de comunicación y marketing de 4HIS Technology. Antes de producir
                                 cualquier pieza, pensamos qué decir, a quién y por qué.
                             </p>
                         </Reveal>
                         <Reveal delay={240}>
-                            <p className={cx(screenType.body, tone.secondary)}>
+                            <p className={cx(type.body, tone.secondary)}>
                                 No tercerizamos ni fragmentamos tu marca entre proveedores sueltos. Un mismo
                                 equipo piensa, produce y mide — con vos, en cada paso.
                             </p>

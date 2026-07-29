@@ -57,28 +57,35 @@ export function Hero() {
                 <IsoCluster className="h-full w-full" />
             </div>
 
-            <div className="relative mx-auto flex min-h-screen w-full max-w-[1280px] flex-col px-6 pt-40 pb-24 sm:px-10 lg:justify-center lg:px-16 lg:py-24">
-                {/* ---------- Heading 1 (61:6610) — composición exacta en desktop ---------- */}
+            {/* Mismo ritmo que el resto: el titular arranca en y=144 y la tarjeta
+                oscura cierra en y=762, o sea 138 desde abajo (frame 2020:5677).
+                El padding va acá y el tope de 1280 en el div de adentro — si van
+                juntos, border-box se come los 160px de gutter. */}
+            <div className="relative flex min-h-screen flex-col px-6 pt-40 pb-24 sm:px-10 lg:h-full lg:min-h-0 lg:px-20 lg:pt-[clamp(88px,16vh,176px)] lg:pb-0">
+              <div className="relative mx-auto flex w-full max-w-[1280px] flex-1 flex-col">
+                {/* ---------- Heading 1 (2020:5697) — composición exacta en desktop.
+                    Los `left` son el centro de cada palabra sobre los 1280 del
+                    frame; los `top` van en em del Display/Large de 72px. ---------- */}
                 <div
-                    className="relative hidden h-[4.03em] w-full max-w-[1152px] lg:block"
+                    className="relative hidden h-[4.0278em] w-full lg:block"
                     style={{ fontSize: "clamp(2.5rem, 5.625vw, 4.5rem)" }}
                 >
                     <h1 className="contents">
-                        <span className={cx(HEADLINE, "absolute top-0 left-[10.417%] -translate-x-1/2 whitespace-pre")}>
+                        <span className={cx(HEADLINE, "absolute top-0 left-[16.25%] -translate-x-1/2 whitespace-pre")}>
                             {"(  4her )"}
                         </span>
                         <span
-                            className={cx(HEADLINE, "absolute top-[1.3333em] left-[32.986%] -translate-x-1/2 whitespace-nowrap")}
+                            className={cx(HEADLINE, "absolute top-[1.3333em] left-[36.563%] -translate-x-1/2 whitespace-nowrap")}
                         >
                             Comunicación
                         </span>
                         <span
-                            className={cx(HEADLINE, "absolute top-[1.4583em] left-[59.549%] -translate-x-1/2 whitespace-nowrap")}
+                            className={cx(HEADLINE, "absolute top-[1.4583em] left-[60.469%] -translate-x-1/2 whitespace-nowrap")}
                         >
                             &
                         </span>
                         <span
-                            className={cx(HEADLINE, "absolute top-[2.6667em] left-[21.094%] -translate-x-1/2 whitespace-nowrap")}
+                            className={cx(HEADLINE, "absolute top-[2.6667em] left-[25.859%] -translate-x-1/2 whitespace-nowrap")}
                         >
                             Marketing
                         </span>
@@ -103,7 +110,8 @@ export function Hero() {
                 </div>
 
                 {/* ---------- Container (61:6736): tarjeta oscura ---------- */}
-                <div className="relative mt-12 w-full max-w-[390px] lg:absolute lg:bottom-[83px] lg:left-[calc(8.33%+55px)] lg:mt-0 lg:h-[208px]">
+                {/* Articles (2020:5823): x=98 sobre los 1280, cierra en y=762. */}
+                <div className="relative mt-12 w-full max-w-[390px] lg:absolute lg:bottom-[clamp(64px,15.33vh,168px)] lg:left-[7.656%] lg:mt-0 lg:h-[208px]">
                     {/* Cuadradito que asoma arriba a la derecha (61:6741) */}
                     <div aria-hidden="true" className="absolute top-0 right-0 size-6 bg-[var(--bg-inverse)]" />
                     <div className="mt-6 mr-6 flex flex-col gap-4 bg-[var(--bg-inverse)] p-6">
@@ -115,12 +123,15 @@ export function Hero() {
                 </div>
 
                 {/* ---------- Container (61:6742): label con icono ---------- */}
-                <div className="mt-8 flex w-full max-w-[279px] flex-col items-end gap-3 p-4 lg:absolute lg:bottom-[256px] lg:left-[calc(75%-23px)] lg:mt-0">
+                {/* Container (2020:5830): x=903 sobre los 1280, alto 94, arranca
+                    en y=554 → cierra a 252 del piso de la sección. */}
+                <div className="mt-8 flex w-full max-w-[279px] flex-col items-end gap-3 p-4 lg:absolute lg:bottom-[calc(clamp(64px,15.33vh,168px)+114px)] lg:left-[70.547%] lg:mt-0">
                     <SparkIcon className="h-[18px] w-[35px] text-[var(--accent-default)]" />
                     <p className={cx(type.label, "text-right text-[var(--accent-default)]")}>
                         Marca, contenido y estrategia en un mismo equipo.
                     </p>
                 </div>
+              </div>
             </div>
         </section>
     );

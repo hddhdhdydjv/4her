@@ -40,25 +40,35 @@ export const tone = {
     inverse: "text-[var(--text-inverse)]",
 } as const;
 
-/** Padding lateral del diseño: 64px en desktop, proporcional hacia abajo. */
-export const gutter = "px-6 sm:px-10 lg:px-16";
+/**
+ * Padding lateral del diseño: el frame Desktop (1440) abre el contenido en
+ * x=80 con 1280 de ancho, así que son 80px por lado en desktop.
+ */
+export const gutter = "px-6 sm:px-10 lg:px-20";
+
+/** Ancho de contenido del diseño: 1280px dentro del frame de 1440. */
+export const contentWidth = "max-w-[1280px]";
 
 /**
- * Rampa tipográfica reducida para las secciones de "una pantalla" (Quiénes
- * somos, Servicios, WePiper, Valores, Proceso): la escala de arriba está
- * pensada para un scroll normal con mucho aire; acá el contenido tiene que
- * entrar entero en el alto real del viewport, así que todo baja un escalón.
+ * Ritmo vertical de una pantalla, medido sobre el frame `Hero` (1440×900):
+ * el contenido arranca en y=144 y cierra en y=762, o sea 144 arriba / 138
+ * abajo y una banda útil de 618px.
+ *
+ * Va en `vh` para que la proporción se mantenga en viewports que no midan
+ * 900px (144/900 = 16vh, 138/900 = 15.33vh), con clamp para que no se
+ * desarme ni en notebooks bajas ni en monitores altos.
  */
-export const screenType = {
-    h1: "font-display font-medium text-[clamp(1.5rem,2.6vw,2.25rem)] leading-[1.08] tracking-[-0.01em]",
-    h2: "font-display font-medium text-[clamp(1.25rem,1.9vw,1.625rem)] leading-[1.15] tracking-[-0.008em]",
-    h3: "font-display font-semibold text-[clamp(1.0625rem,1.5vw,1.25rem)] leading-[1.2]",
-    body: "font-body text-[clamp(0.875rem,1.1vw,1rem)] leading-[1.55]",
-    title: "font-display font-semibold text-[clamp(0.9375rem,1.3vw,1.0625rem)] leading-[1.3]",
-} as const;
+export const screenPadTop = "pt-[clamp(88px,16vh,176px)]";
+export const screenPadBottom = "pb-[clamp(64px,15.33vh,168px)]";
+export const screenPadY = cx(screenPadTop, screenPadBottom);
 
-/** Espacio reservado arriba para que el pill del navbar fijo nunca tape contenido. */
-export const screenNavClearance = "pt-28 lg:pt-32";
+/**
+ * Antes acá vivía `screenType`, una rampa encogida (~80% de `type`) que había
+ * armado para pelear que el contenido entrara en un viewport. El frame
+ * `Desktop` de Figma demuestra que no hacía falta: a 1440×900 la rampa real
+ * entra, porque la disciplina está en el ritmo (banda de 618px + 1280 de
+ * ancho), no en achicar la tipografía. Las secciones usan `type` directo.
+ */
 
 /**
  * Sección que engancha por scroll-snap y apunta a ocupar un viewport.
@@ -78,8 +88,8 @@ export function Screen({
     children,
     id,
     className,
-    inset = cx(gutter, "pb-10 lg:pb-14"),
-    content = "mx-auto flex w-full max-w-[1152px] flex-1 flex-col",
+    inset = cx(gutter, screenPadY),
+    content = cx("mx-auto flex w-full flex-1 flex-col", contentWidth),
 }: {
     children: ReactNode;
     id?: string;
@@ -97,7 +107,6 @@ export function Screen({
             id={id}
             className={cx(
                 "relative flex min-h-screen snap-start snap-always flex-col lg:h-screen lg:overflow-hidden",
-                screenNavClearance,
                 inset,
                 className,
             )}
@@ -127,7 +136,7 @@ export function Section({
 }) {
     return (
         <Tag id={id} className={cx(gutter, pad, className)}>
-            <div className="mx-auto w-full max-w-[1152px]">{children}</div>
+            <div className={cx("mx-auto w-full", contentWidth)}>{children}</div>
         </Tag>
     );
 }

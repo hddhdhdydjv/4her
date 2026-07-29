@@ -1,7 +1,7 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { Screen, screenType, tone } from "@/components/ui/section";
+import { Screen, type, tone } from "@/components/ui/section";
 import { Reveal } from "@/components/motion/reveal";
 import { useInViewOnce } from "@/hooks/use-in-view-once";
 import { cx } from "@/utils/cx";
@@ -92,9 +92,9 @@ function StepCard({ step, index }: { step: (typeof steps)[number]; index: number
                         inView ? "scale-100 opacity-100" : "scale-50 opacity-0",
                     )}
                 />
-                <h3 className={cx(screenType.h3, tone.primary)}>{step.title}</h3>
+                <h3 className={cx(type.h3, tone.primary)}>{step.title}</h3>
             </div>
-            <p className={cx(screenType.body, tone.primary)}>{step.body}</p>
+            <p className={cx(type.body, tone.primary)}>{step.body}</p>
         </li>
     );
 }
@@ -107,15 +107,15 @@ export function Process() {
                     acompañan después, aunque el eyebrow quede arriba en el layout. */}
                 <div className="flex flex-col gap-4 lg:flex-1">
                     <Reveal delay={260} variant="side" x={-28}>
-                        <p className={cx(screenType.title, tone.secondary)}>Nuestro proceso</p>
+                        <p className={cx(type.title, tone.secondary)}>Nuestro proceso</p>
                     </Reveal>
                     <Reveal delay={0} variant="side" x={-28}>
-                        <h2 className={cx(screenType.h1, tone.primary, "text-balance")}>
+                        <h2 className={cx(type.h1, tone.primary, "text-balance")}>
                             Un proceso simple, sin cajas negras
                         </h2>
                     </Reveal>
                     <Reveal delay={420} variant="side" x={-28}>
-                        <p className={cx(screenType.body, tone.secondary)}>
+                        <p className={cx(type.body, tone.secondary)}>
                             Nada de plantillas: cada paso se adapta a cómo trabaja tu marca.
                         </p>
                     </Reveal>

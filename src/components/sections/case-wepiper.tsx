@@ -1,6 +1,6 @@
 "use client";
 
-import { Screen, screenType, tone } from "@/components/ui/section";
+import { Screen, screenPadTop, type, tone } from "@/components/ui/section";
 import { useInViewOnce } from "@/hooks/use-in-view-once";
 import { Reveal } from "@/components/motion/reveal";
 import { cx } from "@/utils/cx";
@@ -23,21 +23,22 @@ export function CaseWePiper() {
     const { ref, inView } = useInViewOnce<HTMLDivElement>(0.3);
 
     return (
-        // Padding lateral e inferior reducidos: el recuadro llega más cerca
-        // de los bordes de la pantalla que en el resto de las secciones.
+        // Mantiene el top del ritmo general (para no pisar el navbar) pero
+        // recorta laterales y base: el recuadro llega más cerca de los bordes
+        // que en el resto de las secciones.
         <Screen
             id="caso-wepiper"
-            inset="px-4 sm:px-6 lg:px-8 pb-6 lg:pb-8"
+            inset={cx("px-4 sm:px-6 lg:px-8", screenPadTop, "pb-[clamp(40px,7vh,72px)]")}
             content="flex w-full flex-1 flex-col"
         >
             <div className="flex flex-col gap-2 pb-4">
                 <Reveal delay={0} variant="side" x={-28}>
-                    <h3 className={cx(screenType.h1, tone.primary, "text-balance")}>
+                    <h3 className={cx(type.h2, tone.primary, "text-balance")}>
                         De la idea a una marca que se entiende
                     </h3>
                 </Reveal>
                 <Reveal delay={140} variant="side" x={-28}>
-                    <p className={cx(screenType.h2, tone.secondary)}>Así construimos WePiper.</p>
+                    <p className={cx(type.h3, tone.secondary)}>Así construimos WePiper.</p>
                 </Reveal>
             </div>
 
@@ -70,7 +71,7 @@ export function CaseWePiper() {
                         <span className="block overflow-hidden">
                             <span
                                 className={cx(
-                                    screenType.body,
+                                    type.body,
                                     "block text-[var(--neutral-400)]",
                                     "transition-transform delay-[660ms] duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
                                     inView ? "translate-y-0" : "translate-y-full",

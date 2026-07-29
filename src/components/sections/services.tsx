@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Screen, screenType, tone } from "@/components/ui/section";
+import { Screen, type, tone } from "@/components/ui/section";
 import { ServiceCanvas } from "@/components/sections/service-canvas";
 import { Reveal } from "@/components/motion/reveal";
 import { cx } from "@/utils/cx";
@@ -105,20 +105,20 @@ export function Services() {
 
     return (
         <Screen id="servicios">
-            {/* flex-1 para que la tarjeta del canvas llene el alto disponible en desktop */}
-            <div ref={rootRef} className="flex flex-1 flex-col gap-6 lg:flex-row lg:items-stretch lg:gap-10">
-                {/* LEFT: columna angosta con texto y controles, alineada al top
-                    igual que la tarjeta de la derecha */}
-                <div className="flex flex-col gap-5 lg:w-[38%] lg:max-w-[380px] lg:shrink-0">
-                    <Reveal delay={0} className="flex flex-col gap-2 lg:gap-3">
-                        <p className={cx(screenType.title, tone.secondary)}>Nuestros servicios</p>
-                        <h2 className={cx(screenType.h1, tone.primary, "text-balance")}>
-                            Servicios que se combinan según lo que tu marca necesita
-                        </h2>
-                        <p className={cx(screenType.body, tone.tertiary)}>Vos elegís por dónde empezar</p>
-                    </Reveal>
+            {/* Figma arma la sección en dos bandas: el encabezado arriba, a un
+                máximo del 60% del ancho, y debajo la fila texto | canvas. */}
+            <div ref={rootRef} className="flex flex-1 flex-col gap-8 lg:gap-10">
+                <Reveal delay={0} className="flex flex-col gap-3 lg:max-w-[60%]">
+                    <p className={cx(type.title, tone.secondary)}>Nuestros servicios</p>
+                    <h2 className={cx(type.h1, tone.primary, "text-balance")}>
+                        Servicios que se combinan según lo que tu marca necesita
+                    </h2>
+                    <p className={cx(type.h2, tone.tertiary)}>Vos elegís por dónde empezar</p>
+                </Reveal>
 
-                    <div className="flex flex-col gap-4 lg:gap-5">
+                {/* Fila inferior: ambas columnas arrancan a la misma altura. */}
+                <div className="flex min-h-0 flex-1 flex-col gap-6 lg:flex-row lg:items-stretch lg:gap-10">
+                    <div className="flex flex-col gap-4 lg:w-[42%] lg:max-w-[520px] lg:shrink-0 lg:gap-5">
                         <BarIndicator count={n} active={active} onSelect={setActive} />
 
                         <div className="relative min-h-[175px] sm:min-h-[165px] lg:min-h-[195px]">
@@ -134,8 +134,8 @@ export function Services() {
                                     )}
                                 >
                                     {/* Mismo cuerpo tipográfico que el titular de la sección. */}
-                                    <h3 className={cx(screenType.h1, tone.primary, "text-balance")}>{s.title}</h3>
-                                    <p className={cx(screenType.body, tone.secondary)}>{s.body}</p>
+                                    <h3 className={cx(type.h1, tone.primary, "text-balance")}>{s.title}</h3>
+                                    <p className={cx(type.body, tone.secondary)}>{s.body}</p>
                                 </div>
                             ))}
                         </div>
@@ -143,30 +143,32 @@ export function Services() {
                         <a
                             href="#contacto"
                             className={cx(
-                                screenType.body,
+                                type.body,
                                 "w-fit rounded-[45px] bg-[var(--bg-inverse)] px-4 py-2.5 text-center text-[var(--text-inverse)] transition-opacity hover:opacity-85",
                             )}
                         >
                             Hacé tu consulta
                         </a>
                     </div>
-                </div>
 
-                {/* RIGHT: tarjeta grande con el canvas */}
-                <div className="relative min-h-[260px] overflow-hidden rounded-2xl bg-[var(--bg-secondary)] sm:min-h-[320px] lg:min-h-0 lg:flex-1">
-                    {services.map((s, i) => (
-                        <div
-                            key={s.title}
-                            aria-hidden="true"
-                            className={cx(
-                                "absolute inset-0 flex items-center",
-                                "transition-all duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
-                                i === active ? "scale-100 opacity-100 blur-none" : "scale-[0.96] opacity-0 blur-sm",
-                            )}
-                        >
-                            <ServiceCanvas letter={s.letter} offset={i} />
-                        </div>
-                    ))}
+                    {/* RIGHT: tarjeta grande con el canvas */}
+                    <div className="relative min-h-[260px] overflow-hidden rounded-2xl bg-[var(--bg-secondary)] sm:min-h-[320px] lg:min-h-0 lg:flex-1">
+                        {services.map((s, i) => (
+                            <div
+                                key={s.title}
+                                aria-hidden="true"
+                                className={cx(
+                                    "absolute inset-0 flex items-center",
+                                    "transition-all duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
+                                    i === active
+                                        ? "scale-100 opacity-100 blur-none"
+                                        : "scale-[0.96] opacity-0 blur-sm",
+                                )}
+                            >
+                                <ServiceCanvas letter={s.letter} offset={i} />
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
         </Screen>

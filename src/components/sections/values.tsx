@@ -1,4 +1,4 @@
-import { Screen, screenType, tone } from "@/components/ui/section";
+import { Screen, type, tone } from "@/components/ui/section";
 import { Reveal } from "@/components/motion/reveal";
 import { cx } from "@/utils/cx";
 
@@ -45,12 +45,13 @@ const GRAIN =
 export function Values() {
     return (
         <Screen id="valores" className="justify-center">
-            {/* `my-auto` centra el bloque en la pantalla; `items-start` mantiene
-                texto y cards alineados entre sí por el top. */}
-            <div className="flex flex-col gap-8 lg:my-auto lg:flex-row lg:items-start lg:gap-14">
+            {/* El bloque ocupa la banda de 618px y `items-stretch` deja que la
+                grilla la llene entera; el texto igual arranca arriba porque la
+                columna es flex-col con justify-start. */}
+            <div className="flex flex-col gap-8 lg:min-h-0 lg:flex-1 lg:flex-row lg:items-stretch lg:gap-14">
                 <Reveal delay={0} variant="side" x={-28} className="flex flex-col gap-3 lg:flex-1">
-                    <p className={cx(screenType.title, tone.secondary)}>Nuestros valores</p>
-                    <h2 className={cx(screenType.h1, tone.primary, "text-balance")}>
+                    <p className={cx(type.title, tone.secondary)}>Nuestros valores</p>
+                    <h2 className={cx(type.h1, tone.primary, "text-balance")}>
                         Los valores no se anuncian, se demuestran
                     </h2>
                 </Reveal>
@@ -62,7 +63,9 @@ export function Values() {
                         <li key={v.title} className="h-full">
                             <Reveal delay={160 + i * 110} y={22} className="h-full">
                                 <article className="flex h-full flex-col gap-3 rounded-2xl bg-[var(--bg-secondary)] p-4 sm:gap-4 sm:p-5">
-                                    <div className="relative h-[80px] w-full overflow-hidden rounded-xl sm:h-[110px]">
+                                    {/* En desktop la franja absorbe el sobrante de
+                                        la card, así las 4 llenan la banda justo. */}
+                                    <div className="relative h-[80px] w-full overflow-hidden rounded-xl sm:h-[110px] lg:h-auto lg:min-h-[72px] lg:flex-1">
                                         {v.image ? (
                                             // eslint-disable-next-line @next/next/no-img-element
                                             <img
@@ -86,8 +89,8 @@ export function Values() {
                                         )}
                                     </div>
                                     <div className="flex flex-col gap-1.5">
-                                        <h3 className={cx(screenType.h3, tone.primary)}>{v.title}</h3>
-                                        <p className={cx(screenType.body, tone.secondary)}>{v.body}</p>
+                                        <h3 className={cx(type.h3, tone.primary)}>{v.title}</h3>
+                                        <p className={cx(type.body, tone.secondary)}>{v.body}</p>
                                     </div>
                                 </article>
                             </Reveal>
