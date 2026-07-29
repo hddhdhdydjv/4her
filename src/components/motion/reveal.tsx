@@ -7,20 +7,10 @@ type RevealVariant = "up" | "scale" | "side";
 type RevealProps = {
     children: ReactNode;
     className?: string;
-    /** Delay en ms antes de animar. */
     delay?: number;
-    /** Desplazamiento vertical inicial en px (solo variant "up"). */
     y?: number;
-    /**
-     * Tipo de entrada según lo que se revela:
-     *  - "up": fade + subida + desenfoque (texto, default).
-     *  - "scale": fade + zoom suave, sin desenfoque (imágenes, visuales).
-     *  - "side": fade + deslizamiento lateral (columnas enfrentadas).
-     */
     variant?: RevealVariant;
-    /** Dirección del deslizamiento lateral en px (negativo = desde la izquierda). */
     x?: number;
-    /** Etiqueta a renderizar (div por defecto). */
     as?: ElementType;
 };
 
@@ -30,11 +20,6 @@ const VARIANT_DEFAULTS: Record<RevealVariant, { duration: number; ease: string }
     side: { duration: 900, ease: "outExpo" },
 };
 
-/**
- * Revela su contenido al entrar en viewport, con una de tres entradas
- * (ver `variant`). Motion cálido, una sola vez, con fallback
- * prefers-reduced-motion.
- */
 export function Reveal({
     children,
     className,
@@ -58,10 +43,17 @@ export function Reveal({
             return;
         }
 
-        let done = false;
+        const resetHidden = () => {
+            el.style.opacity = "0";
+            if (variant === "scale") el.style.transform = "scale(0.94)";
+            else if (variant === "side") el.style.transform = `translateX(${x}px)`;
+            else {
+                el.style.transform = `translateY(${y}px)`;
+                el.style.filter = "blur(6px)";
+            }
+        };
+
         const show = () => {
-            if (done) return;
-            done = true;
             const { duration, ease } = VARIANT_DEFAULTS[variant];
             import("animejs")
                 .then(({ animate }) => {
@@ -81,14 +73,12 @@ export function Reveal({
                     }
                 })
                 .catch(() => {
-                    // Fallback si anime.js no carga: mostrar sin animar.
                     el.style.opacity = "1";
                     el.style.transform = "none";
                     el.style.filter = "none";
                 });
         };
 
-        // Fallback duro: si IntersectionObserver no existe, mostrar ya.
         if (typeof IntersectionObserver === "undefined") {
             el.style.opacity = "1";
             return;
@@ -98,8 +88,10 @@ export function Reveal({
             (entries) => {
                 for (const entry of entries) {
                     if (entry.isIntersecting) {
-                        io.unobserve(el);
                         show();
+                    } else {
+                        // Reset so the animation replays next time this section enters viewport.
+                        resetHidden();
                     }
                 }
             },
