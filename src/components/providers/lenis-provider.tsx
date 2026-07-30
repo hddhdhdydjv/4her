@@ -15,8 +15,10 @@ export function LenisProvider({ children }: { children: React.ReactNode }) {
 
     useEffect(() => {
         const instance = new Lenis({
-            duration: 1.15,
+            duration: 1.4,
             easing: (t) => 1 - Math.pow(1 - t, 4),
+            wheelMultiplier: 0.82,
+            touchMultiplier: 1.6,
         });
         setLenis(instance);
 
