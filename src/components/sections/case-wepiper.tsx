@@ -79,7 +79,7 @@ export function CaseWePiper() {
                 className={cx(
                     // WePiper visual (2020:5936): 1280×648 — el ancho completo
                     // del contenido, no a sangre.
-                    "relative aspect-[1280/648] min-h-[320px] w-full overflow-hidden rounded-2xl bg-[var(--bg-inverse)]",
+                    "relative aspect-video lg:aspect-[1280/648] min-h-[320px] w-full overflow-hidden rounded-2xl bg-[var(--bg-inverse)]",
                 )}
             >
                 {IMAGE_SRC ? (
