@@ -137,9 +137,9 @@ export function Services() {
 
                 {/* Part 1 — intro, normal scroll */}
                 <div className={cx(
-                    "flex min-h-screen flex-col justify-center gap-6",
+                    "flex flex-col gap-6",
                     gutter,
-                    "pt-[clamp(72px,13.72vh,151px)] pb-10",
+                    "pt-[clamp(72px,13.72vh,151px)] pb-16",
                 )}>
                     <div className={cx("mx-auto w-full", contentWidth)}>
                         <div className="flex flex-col gap-6">
