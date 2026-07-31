@@ -75,9 +75,10 @@ function BarIndicator({
 // On mobile the first viewport of scroll is the header exit phase; after that
 // each service gets its own viewport. Total track = (n+2)*100vh.
 const FADE_RATIO = 1 / (services.length + 1); // 0.2 for n=4
-// Header is fully gone at this fraction of the fade viewport; service panel
-// starts entering only after — fully sequential, zero overlap.
-const HDR_EXIT = 0.7;
+// Header fully gone at HDR_OUT; services start entering at SVC_IN.
+// SVC_IN < HDR_OUT creates a brief crossfade that eliminates any blank gap.
+const HDR_OUT = 0.6;
+const SVC_IN = 0.4;
 
 export function Services() {
     const [active, setActive] = useState(0);
@@ -113,15 +114,16 @@ export function Services() {
                 // t: 0→1 within the fade viewport.
                 const t = clamped / FADE_RATIO;
 
-                // Header exits upward — fully gone at t = HDR_EXIT.
-                const hOpacity = Math.max(0, 1 - t / HDR_EXIT);
+                // Header exits upward. Fully gone at HDR_OUT.
+                const hOpacity = Math.max(0, 1 - t / HDR_OUT);
                 if (mobileHdrRef.current) {
                     mobileHdrRef.current.style.opacity = String(hOpacity);
                     mobileHdrRef.current.style.transform = `translateY(${-(t * 48)}px)`;
                     mobileHdrRef.current.style.pointerEvents = hOpacity < 0.05 ? "none" : "auto";
                 }
-                // Service panel enters only after header is fully gone.
-                const sOpacity = Math.max(0, (t - HDR_EXIT) / (1 - HDR_EXIT));
+                // Service panel enters starting at SVC_IN (before header fully gone)
+                // — brief crossfade ensures there's never a blank frame.
+                const sOpacity = Math.max(0, (t - SVC_IN) / (1 - SVC_IN));
                 if (mobileSvcRef.current) mobileSvcRef.current.style.opacity = String(sOpacity);
 
                 setActive(0);
