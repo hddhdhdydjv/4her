@@ -194,23 +194,20 @@ export function Services() {
                         - Layer B: image+service → enters only after A is completely gone  */}
                     <div className="relative flex flex-1 flex-col lg:hidden">
 
-                        {/* Layer A — intro header (opacity/transform driven by scroll via ref) */}
+                        {/* Layer A — intro header (opacity/transform driven by scroll via ref).
+                            No entry animations here — the scroll handler owns opacity. */}
                         <div
                             ref={mobileHdrRef}
                             className="absolute inset-0 z-10 flex flex-col justify-center gap-6"
                             style={{ opacity: 1, willChange: "opacity, transform" }}
                         >
                             <div className="flex flex-col gap-4">
-                                <Reveal delay={0}>
-                                    <p className={cx(type.title, tone.secondary)}>Nuestros servicios</p>
-                                </Reveal>
-                                <SplitReveal delay={120} className={cx(type.h1, tone.primary, "text-balance")}>
+                                <p className={cx(type.title, tone.secondary)}>Nuestros servicios</p>
+                                <h2 className={cx(type.h1, tone.primary, "text-balance")}>
                                     Servicios que se combinan según lo que tu marca necesita
-                                </SplitReveal>
+                                </h2>
                             </div>
-                            <Reveal delay={260}>
-                                <p className={cx(type.h2, tone.tertiary)}>Vos elegís por dónde empezar</p>
-                            </Reveal>
+                            <p className={cx(type.h2, tone.tertiary)}>Vos elegís por dónde empezar</p>
                         </div>
 
                         {/* Layer B — image (top) + service detail (opacity driven by ref) */}

@@ -3,9 +3,9 @@
 import { useEffect } from "react";
 import { useLenisInstance } from "@/components/providers/lenis-provider";
 
-// Fades all page sections in/out as the user scrolls.
+// Fades sections out as they exit from the top. Sections always ENTER at full
+// opacity — only exit fades. This prevents any blank-space gap between sections.
 // #servicios is excluded — it manages its own visibility internally.
-// Runs directly on DOM refs for zero React re-renders per frame.
 export function SectionFader() {
     const lenis = useLenisInstance();
 
@@ -17,25 +17,17 @@ export function SectionFader() {
             for (const el of sections) {
                 if (el.id === "servicios") continue;
 
-                const rect = el.getBoundingClientRect();
-                const top = rect.top;
-                const bottom = rect.bottom;
+                const bottom = el.getBoundingClientRect().bottom;
 
-                let opacity = 1;
-
-                if (top > vh * 0.15) {
-                    // Entering from below: fade in as top descends from 0.75vh to 0.15vh
-                    opacity = Math.max(0, Math.min(1, (vh * 0.75 - top) / (vh * 0.6)));
-                } else if (bottom < vh * 0.45) {
-                    // Exiting from top: fade out as bottom rises from 0.45vh toward 0
-                    opacity = Math.max(0, Math.min(1, bottom / (vh * 0.45)));
-                }
+                // Fade out as section exits from top: 1 at 80%vh, 0 at 0.
+                const opacity = bottom <= 0
+                    ? 0
+                    : Math.min(1, bottom / (vh * 0.8));
 
                 el.style.opacity = String(opacity);
             }
         }
 
-        // Run once immediately so sections start at the right opacity.
         update();
 
         if (lenis) {
@@ -43,7 +35,6 @@ export function SectionFader() {
             return () => { lenis.off("scroll", update); };
         }
 
-        // Fallback for when lenis isn't ready yet.
         window.addEventListener("scroll", update, { passive: true });
         return () => { window.removeEventListener("scroll", update); };
     }, [lenis]);
