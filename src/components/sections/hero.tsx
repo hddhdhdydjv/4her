@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { IsoCluster } from "@/components/graphics/iso";
 import { type } from "@/components/ui/section";
 import { cx } from "@/utils/cx";
@@ -14,9 +15,9 @@ import { cx } from "@/utils/cx";
  */
 
 /** Icono 35×18 del bloque de label (61:6744). */
-function SparkIcon({ className }: { className?: string }) {
+function SparkIcon({ className, style }: { className?: string; style?: CSSProperties }) {
     return (
-        <svg viewBox="0 0 35 18" className={className} fill="none" aria-hidden="true">
+        <svg viewBox="0 0 35 18" className={className} style={style} fill="none" aria-hidden="true">
             <path
                 d="M11 17h13M13.5 17a4 4 0 1 1 8 0M17.5 5V1M11.2 7.2 8.4 4.4M23.8 7.2l2.8-2.8M8 13H4M27 13h4"
                 stroke="currentColor"
@@ -27,31 +28,44 @@ function SparkIcon({ className }: { className?: string }) {
     );
 }
 
-const HEADLINE = "font-display font-medium leading-none tracking-[-0.02em] text-[var(--text-primary)]";
+/* ---------- Paleta hero (inspiración Starling Bank: violeta profundo) ----------
+   Estos valores son locales al hero — el resto del sitio mantiene la paleta
+   cálida de brand.css. Si más adelante se quiere unificar, se mueven a tokens.   */
+const HERO_BG      = "#1B1247"; // fondo principal: violeta medianoche
+const HERO_STRIP1  = "#231866"; // franja ancha: violeta medio
+const HERO_STRIP2  = "#3427A4"; // franja angosta (acento): violeta vivo
+const HERO_CARD    = "#0A0820"; // tarjeta oscura: violeta casi negro
+const HERO_TEXT    = "var(--neutral-50)";  // crema sobre oscuro
+
+const HEADLINE = "font-display font-medium leading-none tracking-[-0.02em]";
 
 export function Hero() {
     return (
         // Sin overflow-hidden: los cubos del borde inferior (más abajo) están
         // pensados para asomar más allá del hero, sobre la sección siguiente.
-        <section id="inicio" className="relative min-h-screen bg-[var(--neutral-200)] lg:h-screen">
-            {/* Mobile: la textura pasa del costado a una franja abajo (estilo Aptos, a pedido). */}
-            <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[22%] bg-[var(--neutral-300)] sm:hidden" />
-            <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[7%] bg-[var(--neutral-400)] sm:hidden" />
+        <section
+            id="inicio"
+            className="relative min-h-screen lg:h-screen"
+            style={{ background: HERO_BG }}
+        >
+            {/* Mobile: franjas de textura en la parte inferior */}
+            <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[22%] sm:hidden" style={{ background: HERO_STRIP1 }} />
+            <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[7%] sm:hidden" style={{ background: HERO_STRIP2 }} />
             <div
                 aria-hidden="true"
-                className="absolute inset-x-0 bottom-0 top-[calc(70%-70px)] opacity-[0.26] sm:hidden"
+                className="absolute inset-x-0 bottom-0 top-[calc(70%-70px)] opacity-[0.18] sm:hidden"
             >
                 <IsoCluster className="h-full w-full" />
             </div>
 
-            {/* Desktop/tablet: franjas que cortan el borde derecho (61:6591-2) */}
-            <div aria-hidden="true" className="absolute inset-y-0 right-0 hidden w-[26.17%] bg-[var(--neutral-300)] sm:block" />
-            <div aria-hidden="true" className="absolute inset-y-0 right-0 hidden w-[7.27%] bg-[var(--neutral-400)] sm:block" />
+            {/* Desktop/tablet: franjas que cortan el borde derecho */}
+            <div aria-hidden="true" className="absolute inset-y-0 right-0 hidden w-[26.17%] sm:block" style={{ background: HERO_STRIP1 }} />
+            <div aria-hidden="true" className="absolute inset-y-0 right-0 hidden w-[7.27%] sm:block" style={{ background: HERO_STRIP2 }} />
 
             {/* Imagen (61:6593): campo isométrico al 26% */}
             <div
                 aria-hidden="true"
-                className="absolute inset-y-0 right-0 left-[calc(25%+70px)] hidden opacity-[0.26] sm:block"
+                className="absolute inset-y-0 right-0 left-[calc(25%+70px)] hidden opacity-[0.18] sm:block"
             >
                 <IsoCluster className="h-full w-full" />
             </div>
@@ -70,21 +84,24 @@ export function Hero() {
                     style={{ fontSize: "clamp(2.5rem, 5.625vw, 4.5rem)" }}
                 >
                     <h1 className="contents">
-                        <span className={cx(HEADLINE, "absolute top-0 left-[16.25%] -translate-x-1/2 whitespace-pre")}>
+                        <span className={cx(HEADLINE, "absolute top-0 left-[16.25%] -translate-x-1/2 whitespace-pre")} style={{ color: HERO_TEXT }}>
                             {"(  4her )"}
                         </span>
                         <span
                             className={cx(HEADLINE, "absolute top-[1.3333em] left-[36.563%] -translate-x-1/2 whitespace-nowrap")}
+                            style={{ color: HERO_TEXT }}
                         >
                             Comunicación
                         </span>
                         <span
                             className={cx(HEADLINE, "absolute top-[1.4583em] left-[60.469%] -translate-x-1/2 whitespace-nowrap")}
+                            style={{ color: HERO_TEXT }}
                         >
                             &
                         </span>
                         <span
                             className={cx(HEADLINE, "absolute top-[2.6667em] left-[25.859%] -translate-x-1/2 whitespace-nowrap")}
+                            style={{ color: HERO_TEXT }}
                         >
                             Marketing
                         </span>
@@ -94,7 +111,7 @@ export function Hero() {
                 {/* ---------- Titular apilado (mobile / tablet) ---------- */}
                 <h1
                     className={cx(HEADLINE, "flex flex-col lg:hidden")}
-                    style={{ fontSize: "clamp(2.25rem, 9vw, 3.25rem)" }}
+                    style={{ fontSize: "clamp(2.25rem, 9vw, 3.25rem)", color: HERO_TEXT }}
                 >
                     <span className="whitespace-pre">{"(  4her )"}</span>
                     <span className="pl-[8%]">Comunicación &</span>
@@ -118,10 +135,10 @@ export function Hero() {
                 {/* Articles (2020:5823): x=98 sobre los 1280, cierra en y=762. */}
                 <div className="relative mt-12 w-full max-w-[390px] lg:absolute lg:bottom-[clamp(64px,15.33vh,168px)] lg:left-[7.656%] lg:mt-0 lg:h-[208px]">
                     {/* Cuadradito que asoma arriba a la derecha (61:6741) */}
-                    <div aria-hidden="true" className="absolute top-0 right-0 size-6 bg-[var(--bg-inverse)]" />
-                    <div className="mt-6 mr-6 flex flex-col gap-4 bg-[var(--bg-inverse)] p-6">
-                        <p className={cx(type.h3, "text-[var(--text-inverse)]")}>Comunicación &amp; Marketing</p>
-                        <p className={cx(type.body, "text-[var(--text-inverse)]")}>
+                    <div aria-hidden="true" className="absolute top-0 right-0 size-6" style={{ background: HERO_CARD }} />
+                    <div className="mt-6 mr-6 flex flex-col gap-4 p-6" style={{ background: HERO_CARD }}>
+                        <p className={cx(type.h3)} style={{ color: HERO_TEXT }}>Comunicación &amp; Marketing</p>
+                        <p className={cx(type.body)} style={{ color: "var(--neutral-300)" }}>
                             Más estratégico que una agencia, más cercano que un freelance
                         </p>
                     </div>
@@ -131,8 +148,8 @@ export function Hero() {
                 {/* Container (2020:5830): x=903 sobre los 1280, alto 94, arranca
                     en y=554 → cierra a 252 del piso de la sección. */}
                 <div className="mt-8 flex w-full max-w-[279px] flex-col items-end gap-3 p-4 lg:absolute lg:bottom-[calc(clamp(64px,15.33vh,168px)+114px)] lg:left-[70.547%] lg:mt-0">
-                    <SparkIcon className="h-[18px] w-[35px] text-[var(--accent-default)]" />
-                    <p className={cx(type.label, "text-right text-[var(--accent-default)]")}>
+                    <SparkIcon className="h-[18px] w-[35px]" style={{ color: "var(--accent-subtle)" }} />
+                    <p className={cx(type.label, "text-right")} style={{ color: "var(--accent-subtle)" }}>
                         Marca, contenido y estrategia en un mismo equipo.
                     </p>
                 </div>
