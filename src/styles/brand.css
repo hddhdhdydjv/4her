@@ -24,10 +24,10 @@
     --neutral-900: #160E0A;
     --neutral-950: #0C0806;
 
-    /* Acento: lavanda suave inspirado en @thetogetheragency / Amperos */
+    /* Acento: violeta oscuro (mismo tono del hero) */
     --accent-subtle:  #EAE4F2;
-    --accent-default: #7B5EA7;
-    --accent-hover:   #634899;
+    --accent-default: #1B1247;
+    --accent-hover:   #0A0820;
 
     /* --- Semánticos (modo claro) ------------------------------------------ */
     --bg-primary: var(--neutral-50);
