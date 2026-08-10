@@ -11,23 +11,23 @@
    ============================================================================ */
 
 :root {
-    /* --- Primitives: escala neutral --------------------------------------- */
-    --neutral-50: #f7f7f6;
-    --neutral-100: #ececea;
-    --neutral-200: #d9d9d7;
-    --neutral-300: #c2c2c0;
-    --neutral-400: #a3a3a1;
-    --neutral-500: #7c7c7a;
-    --neutral-600: #5f5f5d;
-    --neutral-700: #434341;
-    --neutral-800: #2b2b2a;
-    --neutral-900: #161616;
-    --neutral-950: #0e0e0e;
+    /* --- Primitives: escala neutral (warm caramel/chocolate) -------------- */
+    --neutral-50:  #F8F2EA;
+    --neutral-100: #EFE7DA;
+    --neutral-200: #DDD0BE;
+    --neutral-300: #C5B5A0;
+    --neutral-400: #A09080;
+    --neutral-500: #786858;
+    --neutral-600: #5C4E40;
+    --neutral-700: #3E3028;
+    --neutral-800: #261A14;
+    --neutral-900: #160E0A;
+    --neutral-950: #0C0806;
 
-    /* Acento: placeholder gris. Cambiar acá cuando exista el color de marca. */
-    --accent-subtle: #e2e2e0;
-    --accent-default: #141414;
-    --accent-hover: #333333;
+    /* Acento: lavanda suave inspirado en @thetogetheragency / Amperos */
+    --accent-subtle:  #EAE4F2;
+    --accent-default: #7B5EA7;
+    --accent-hover:   #634899;
 
     /* --- Semánticos (modo claro) ------------------------------------------ */
     --bg-primary: var(--neutral-50);
