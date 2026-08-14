@@ -1,113 +1,104 @@
-import { Screen, gutter, type, tone } from "@/components/ui/section";
-import { Reveal } from "@/components/motion/reveal";
-import { SplitReveal } from "@/components/motion/split-reveal";
+"use client";
+
+import { type } from "@/components/ui/section";
+import { useInViewOnce } from "@/hooks/use-in-view-once";
 import { cx } from "@/utils/cx";
 
 /**
- * Figma `Values` (2020:6172) — 1440×1269, la sección más alta del frame: pasa
- * el viewport y se scrollea.
+ * Valores — v2 bento.
+ * Columna izquierda sticky con fondo mauve + columna derecha oscura con
+ * 4 filas separadas por borde, que scrollean mientras la izquierda permanece
+ * fija en desktop.
  *
- *   Intro — Valores (2020:6173)  x=80  y=120  1280×205, titular a 800
- *   Valores         (2020:6178)  x=80  y=405  1280×800
- *
- * La grilla es 2×2 de cards de 624×384 con 32 de gap. Cada card lleva el
- * texto arriba (título H3 26 + descripción Body/Large 18, con 32 de padding)
- * y la imagen de 240×234 centrada, arrancando en y=198 — o sea 38.46% de
- * ancho y 60.94% de alto, al 51.56% desde el borde superior.
+ * Mobile: apilado (header mauve → 4 cards en columna).
  */
 const values = [
     {
         title: "Estrategia antes que estética",
         body: "Pensamos qué decir y por qué, no solo cómo se ve.",
-        gradient: "linear-gradient(160deg, #fde3b0 8%, #f9a94f 52%, #f7c98a 110%)",
-        image: undefined as string | undefined,
     },
     {
         title: "Un equipo con varias cabezas",
         body: "Varias miradas trabajando tu marca, no una sola persona para todo.",
-        gradient: "linear-gradient(160deg, #fdf189 8%, #75fcec 55%, #89a0fd 110%)",
-        image: undefined,
     },
     {
         title: "Medimos si comunica",
         body: "Nos importa el impacto real, no solo los likes.",
-        gradient: "linear-gradient(160deg, #bfdcfc 8%, #75fcc0 55%, #a7f39a 110%)",
-        image: undefined,
     },
     {
         title: "Te acompañamos",
         body: "Seguimos después de entregar. No desaparecemos.",
-        gradient: "linear-gradient(160deg, #75fcec 8%, #7de3a8 55%, #cdf5a0 110%)",
-        image: undefined,
     },
 ];
 
-/** Grano sutil, para acercarse a la textura de las imágenes del diseño. */
-const GRAIN =
-    "radial-gradient(rgba(255,255,255,0.55) 0.7px, transparent 0.7px), radial-gradient(rgba(0,0,0,0.06) 0.7px, transparent 0.7px)";
+function ValueRow({ v, index }: { v: (typeof values)[number]; index: number }) {
+    const { ref, inView } = useInViewOnce<HTMLLIElement>(0.3);
+
+    return (
+        <li
+            ref={ref}
+            style={{ transitionDelay: inView ? `${index * 80}ms` : "0ms" }}
+            className={cx(
+                "flex flex-col gap-3 p-10 sm:p-12 lg:px-16 lg:py-12",
+                "border-t border-[var(--neutral-800)]",
+                "transition-all duration-[800ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
+                inView ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0",
+            )}
+        >
+            <h3
+                className="font-display font-semibold leading-[1.1] tracking-[-0.01em] text-[var(--neutral-50)]"
+                style={{ fontSize: "clamp(1.25rem, 2.2vw, 1.75rem)" }}
+            >
+                {v.title}
+            </h3>
+            <p className={cx(type.bodyLg, "text-[var(--neutral-500)] max-w-[54ch]")}>{v.body}</p>
+        </li>
+    );
+}
 
 export function Values() {
     return (
-        <Screen
+        <section
             id="valores"
-            inset={cx(gutter, "pt-[clamp(72px,13.33vh,147px)] pb-[clamp(40px,7.11vh,78px)]")}
+            className={cx(
+                "flex flex-col",
+                "lg:flex-row lg:min-h-[200vh]",
+            )}
         >
-            {/* Intro cierra en y=325 y la grilla abre en y=405: 80 de separación. */}
-            <div className="flex flex-1 flex-col gap-12 lg:gap-20">
-                {/* Headline (gap 16) + 32 + Subheadline = los 205 del intro. */}
-                <div className="flex max-w-[800px] flex-col gap-8">
-                    <div className="flex flex-col gap-4">
-                        <Reveal delay={0}>
-                            <p className={cx(type.title, tone.secondary)}>Nuestros valores</p>
-                        </Reveal>
-                        <SplitReveal delay={120} className={cx(type.h1, tone.primary, "text-balance")}>
-                            Los valores no se anuncian, se demuestran
-                        </SplitReveal>
-                    </div>
-                    <Reveal delay={260}>
-                        <p className={cx(type.h2, tone.tertiary)}>Y se ven en cómo trabajamos.</p>
-                    </Reveal>
-                </div>
+            {/* ── Left: sticky mauve ── */}
+            <div
+                className={cx(
+                    "flex flex-col justify-end gap-6 p-10 sm:p-12 lg:p-16",
+                    "bg-[var(--accent-default)]",
+                    "min-h-[55vw] sm:min-h-0 py-16",
+                    "lg:sticky lg:top-0 lg:h-screen lg:w-[38%] lg:shrink-0 lg:min-h-0",
+                )}
+            >
+                <p className={cx(type.label, "uppercase tracking-[0.12em] text-[var(--neutral-700)]")}>
+                    Nuestros valores
+                </p>
+                <h2
+                    className="font-display font-medium leading-[1.0] tracking-[-0.035em] text-[var(--neutral-950)]"
+                    style={{ fontSize: "clamp(2rem, 4vw, 3.25rem)" }}
+                >
+                    Los valores no se anuncian,
+                    <br />se demuestran
+                </h2>
+                <p className={cx(type.bodyLg, "text-[var(--neutral-700)]")}>
+                    Y se ven en cómo trabajamos.
+                </p>
+            </div>
 
-                <ul className="grid gap-8 sm:grid-cols-2">
+            {/* ── Right: dark with 4 value rows ── */}
+            <div className="flex flex-1 flex-col bg-[var(--neutral-950)]">
+                <ul className="flex flex-col">
                     {values.map((v, i) => (
-                        <li key={v.title}>
-                            <Reveal delay={120 + i * 110} y={22}>
-                                <article className="relative overflow-hidden rounded-2xl bg-[var(--bg-secondary)] pb-[60%] sm:aspect-[624/384] sm:pb-0">
-                                    <div className="flex flex-col gap-2 p-8">
-                                        <h3 className={cx(type.h3, tone.primary)}>{v.title}</h3>
-                                        <p className={cx(type.bodyLg, tone.secondary)}>{v.body}</p>
-                                    </div>
-
-                                    <div className="absolute top-[51.56%] left-1/2 h-[60.94%] w-[38.46%] -translate-x-1/2 overflow-hidden rounded-xl">
-                                        {v.image ? (
-                                            // eslint-disable-next-line @next/next/no-img-element
-                                            <img
-                                                src={v.image}
-                                                alt=""
-                                                className="absolute inset-0 h-full w-full object-cover"
-                                            />
-                                        ) : (
-                                            <>
-                                                <div className="absolute inset-0" style={{ background: v.gradient }} />
-                                                <div
-                                                    aria-hidden="true"
-                                                    className="absolute inset-0 opacity-70"
-                                                    style={{
-                                                        backgroundImage: GRAIN,
-                                                        backgroundSize: "3px 3px, 4px 4px",
-                                                        backgroundPosition: "0 0, 1px 2px",
-                                                    }}
-                                                />
-                                            </>
-                                        )}
-                                    </div>
-                                </article>
-                            </Reveal>
-                        </li>
+                        <ValueRow key={v.title} v={v} index={i} />
                     ))}
                 </ul>
+                {/* Bottom border */}
+                <div className="border-t border-[var(--neutral-800)]" />
             </div>
-        </Screen>
+        </section>
     );
 }

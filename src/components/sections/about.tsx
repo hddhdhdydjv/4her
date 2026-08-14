@@ -1,56 +1,91 @@
-import { Screen, gutter, type, tone } from "@/components/ui/section";
 import { IsoCluster } from "@/components/graphics/iso";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitReveal } from "@/components/motion/split-reveal";
+import { type } from "@/components/ui/section";
 import { cx } from "@/utils/cx";
 
 /**
- * Figma `Intro 2` (2020:5846) — el frame va de y=142 a y=814 dentro de los 900
- * de la sección (142 arriba / 86 abajo) y mide 1280×672.
+ * Quiénes somos — v2 bento.
+ * Columna sticky oscura (izquierda) + columna scrollable clara (derecha).
  *
- * Dos columnas de 608 con 64 de gap: ilustración a la izquierda, contenido a
- * la derecha centrado en vertical. Los anchos van en % del contenedor de 1280
- * para que acompañen cuando la ventana es más angosta.
+ * Desktop: columna left fija en viewport mientras el usuario scrollea el
+ *          contenido de la derecha (texto + ilustración).
+ * Mobile:  apilado vertical (header oscuro → contenido claro).
  */
 export function About() {
     return (
-        <Screen
+        <section
             id="quienes-somos"
-            inset={cx(gutter, "pt-[clamp(88px,15.78vh,174px)] pb-[clamp(48px,9.56vh,105px)]")}
+            className={cx(
+                "flex flex-col",
+                // Desktop: fila flex con la columna left pegajosa
+                "lg:flex-row lg:min-h-[180vh]",
+            )}
         >
-            {/* El frame mide 672 de alto sobre los 900 de la sección = 74.67vh. */}
-            <div className="flex flex-1 flex-col gap-8 lg:min-h-[74.67vh] lg:flex-row lg:gap-[5%]">
-                {/* Image (2020:5847) — 608 de 1280 = 47.5% */}
-                <Reveal
-                    delay={0}
-                    variant="scale"
-                    className="flex h-52 shrink-0 items-center justify-center sm:h-64 lg:h-auto lg:w-[47.5%] lg:flex-none lg:self-center"
-                >
-                    <IsoCluster className="h-full w-full max-w-[320px] lg:max-w-none" />
+            {/* ── Left: sticky dark — eyebrow + titular ── */}
+            <div
+                className={cx(
+                    "flex flex-col justify-end gap-6 p-10 sm:p-12 lg:p-16",
+                    "bg-[var(--neutral-950)]",
+                    // Mobile: ocupa el alto que necesita el texto
+                    "min-h-[55vw] sm:min-h-0 py-16",
+                    // Desktop: sticky, plena altura
+                    "lg:sticky lg:top-0 lg:h-screen lg:w-[42%] lg:shrink-0 lg:min-h-0",
+                )}
+            >
+                <Reveal delay={0}>
+                    <p className={cx(type.label, "uppercase tracking-[0.12em] text-[var(--neutral-500)]")}>
+                        Quiénes somos
+                    </p>
                 </Reveal>
 
-                {/* Content (2020:5893) — gap 24, bloque de titular con gap 16 */}
-                <div className="flex flex-col gap-6 lg:w-[47.5%] lg:flex-none lg:justify-center">
-                    <div className="flex max-w-[800px] flex-col gap-4">
-                        <Reveal delay={80}>
-                            <p className={cx(type.title, tone.secondary)}>Quiénes somos</p>
-                        </Reveal>
-                        <SplitReveal delay={160} className={cx(type.h2, tone.primary)}>
-                            Es de la ejecución a la estrategia,
-                            <br />
-                            sin intermediarios
-                        </SplitReveal>
-                    </div>
+                <SplitReveal
+                    delay={100}
+                    className={cx(
+                        "font-display font-medium leading-[1.0] tracking-[-0.035em] text-[var(--neutral-50)]",
+                    )}
+                    style={{ fontSize: "clamp(2rem, 4.5vw, 3.75rem)" }}
+                >
+                    De la estrategia a la ejecución.
+                    Sin intermediarios.
+                </SplitReveal>
+            </div>
 
-                    <Reveal delay={280}>
-                        <p className={cx(type.bodyLg, tone.secondary, "max-w-[800px]")}>
+            {/* ── Right: scrollable light ── */}
+            <div className="flex flex-1 flex-col">
+                {/* Texto */}
+                <div className="flex flex-col justify-center gap-6 p-10 sm:p-12 lg:p-16 lg:pt-24 bg-[var(--neutral-50)] flex-1">
+                    <Reveal delay={200}>
+                        <p className={cx(type.bodyLg, "text-[var(--neutral-600)] max-w-[54ch]")}>
                             No entregamos piezas lindas y desaparecemos. Pensamos qué decir y por qué,
-                            trabajamos con vos en cada paso y medimos si de verdad comunica. Somos la cara de
-                            comunicación de 4HIS, aplicando la misma forma de trabajar a tu marca.
+                            trabajamos con vos en cada paso y medimos si de verdad comunica.
                         </p>
                     </Reveal>
+                    <Reveal delay={300}>
+                        <p className={cx(type.bodyLg, "text-[var(--neutral-600)] max-w-[54ch]")}>
+                            Somos la cara de comunicación de 4HIS, aplicando la misma forma de
+                            trabajar a tu marca.
+                        </p>
+                    </Reveal>
+                    <Reveal delay={400}>
+                        <a
+                            href="#contacto"
+                            className={cx(
+                                type.body,
+                                "self-start mt-2 rounded-full border border-[var(--neutral-300)] px-5 py-2.5",
+                                "text-[var(--neutral-700)] transition-colors hover:bg-[var(--neutral-900)] hover:border-[var(--neutral-900)] hover:text-[var(--neutral-50)]",
+                            )}
+                        >
+                            Contanos tu proyecto
+                        </a>
+                    </Reveal>
                 </div>
+
+                {/* Ilustración */}
+                <Reveal delay={0} variant="scale" className="bg-[var(--neutral-100)] p-10 sm:p-12 lg:p-16">
+                    <IsoCluster className="w-full max-w-[400px] opacity-60" />
+                </Reveal>
             </div>
-        </Screen>
+        </section>
     );
 }

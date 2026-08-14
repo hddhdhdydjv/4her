@@ -1,12 +1,17 @@
 "use client";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { contentWidth, gutter, type, tone } from "@/components/ui/section";
+import { type } from "@/components/ui/section";
 import { ServiceCanvas } from "@/components/sections/service-canvas";
 import { Reveal } from "@/components/motion/reveal";
-import { SplitReveal } from "@/components/motion/split-reveal";
 import { cx } from "@/utils/cx";
 
+/**
+ * Servicios — v2 bento.
+ * Cabecera full-width oscura + bento de dos columnas: texto izquierda,
+ * canvas derecha. El scroll avanza por los 4 servicios igual que en v1;
+ * solo cambia el lenguaje visual (palette oscura + fondo mauve en el canvas).
+ */
 const services = [
     {
         letter: "b",
@@ -56,7 +61,7 @@ function BarIndicator({
                     className={cx(
                         "relative w-px cursor-pointer transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]",
                         "before:absolute before:-inset-x-2 before:-inset-y-3 before:content-['']",
-                        i === active ? "h-4 bg-[#646464]" : "h-2 bg-[#b4b8b4]",
+                        i === active ? "h-4 bg-[var(--neutral-300)]" : "h-2 bg-[var(--neutral-600)]",
                     )}
                 />
             ))}
@@ -67,8 +72,6 @@ function BarIndicator({
 export function Services() {
     const [active, setActive] = useState(0);
     const n = services.length;
-    // Desktop: tracks the full section (n*100vh).
-    // Mobile: tracks only the sticky services container (n*100vh), after the normal-flow intro.
     const trackRef = useRef<HTMLElement>(null);
     const mobileTrackRef = useRef<HTMLDivElement>(null);
 
@@ -125,171 +128,44 @@ export function Services() {
             id="servicios"
             ref={trackRef}
             style={{ "--track": `${n * 100}vh` } as CSSProperties}
-            className="relative lg:h-[var(--track)]"
+            className="relative bg-[var(--neutral-950)] lg:h-[var(--track)]"
         >
-            {/* ═══ MOBILE LAYOUT (< lg) ═══
-                Two separate parts:
-                - Part 1: Intro text — normal flow, fills one viewport, scrolls away naturally.
-                - Part 2: Sticky services panel — image top + indicator + service text bottom.
-                          Sticks while the user scrolls through n viewports.
-                No blank gap: intro exits like any normal content; sticky takes over immediately. */}
+            {/* ═══ MOBILE ═══ */}
             <div className="lg:hidden">
-
-                {/* Part 1 — intro, normal scroll */}
-                <div className={cx(
-                    "flex flex-col gap-6",
-                    gutter,
-                    "pt-[clamp(72px,13.72vh,151px)] pb-16",
-                )}>
-                    <div className={cx("mx-auto w-full", contentWidth)}>
-                        <div className="flex flex-col gap-6">
-                            <div className="flex flex-col gap-4">
-                                <Reveal delay={0}>
-                                    <p className={cx(type.title, tone.secondary)}>Nuestros servicios</p>
-                                </Reveal>
-                                <SplitReveal delay={120} className={cx(type.h1, tone.primary, "text-balance")}>
-                                    Servicios que se combinan según lo que tu marca necesita
-                                </SplitReveal>
-                            </div>
-                            <Reveal delay={260}>
-                                <p className={cx(type.h2, tone.tertiary)}>Vos elegís por dónde empezar</p>
-                            </Reveal>
-                        </div>
-                    </div>
+                {/* Intro */}
+                <div className="flex flex-col gap-6 p-10 sm:p-12 pt-16 sm:pt-20">
+                    <Reveal delay={0}>
+                        <p className={cx(type.label, "uppercase tracking-[0.12em] text-[var(--neutral-500)]")}>
+                            Nuestros servicios
+                        </p>
+                    </Reveal>
+                    <h2
+                        className="font-display font-medium leading-[1.0] tracking-[-0.03em] text-[var(--neutral-50)] text-balance"
+                        style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)" }}
+                    >
+                        Servicios que se combinan según lo que tu marca necesita
+                    </h2>
+                    <p className={cx(type.bodyLg, "text-[var(--neutral-500)]")}>
+                        Vos elegís por dónde empezar
+                    </p>
                 </div>
 
-                {/* Part 2 — sticky services panel */}
+                {/* Panel sticky */}
                 <div
                     ref={mobileTrackRef}
                     style={{ height: `${n * 100}vh` }}
                     className="relative"
                 >
-                    <div className={cx(
-                        "sticky top-0 flex h-screen min-h-0 flex-col",
-                        gutter,
-                        "pt-[clamp(72px,13.72vh,151px)] pb-[clamp(40px,7.5vh,83px)]",
-                    )}>
-                        <div className={cx("mx-auto flex w-full flex-1 flex-col", contentWidth)}>
-                            {/* Image — fills remaining vertical space */}
-                            <div className="relative min-h-0 flex-1 overflow-hidden rounded-2xl bg-[var(--bg-secondary)]">
-                                {services.map((s, i) => (
-                                    <div
-                                        key={s.title}
-                                        aria-hidden="true"
-                                        className={cx(
-                                            "absolute inset-0 flex items-center",
-                                            "transition-opacity duration-[550ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
-                                            i === active ? "opacity-100" : "opacity-0",
-                                        )}
-                                    >
-                                        <ServiceCanvas letter={s.letter} offset={i} />
-                                    </div>
-                                ))}
-                            </div>
-
-                            {/* Service text — below image */}
-                            <div className="flex shrink-0 flex-col gap-3 pt-3">
-                                <BarIndicator count={n} active={active} onSelect={goTo} />
-                                <div className="relative min-h-[108px]">
-                                    {services.map((s, i) => (
-                                        <div
-                                            key={s.title}
-                                            aria-hidden={i !== active}
-                                            className={cx(
-                                                "absolute inset-x-0 top-0 flex flex-col gap-1.5",
-                                                "transition-opacity duration-[550ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
-                                                i === active
-                                                    ? "opacity-100"
-                                                    : "pointer-events-none opacity-0",
-                                            )}
-                                        >
-                                            <h3 className={cx(type.h2, tone.primary)}>{s.title}</h3>
-                                            <p className={cx(type.body, tone.secondary)}>{s.body1}</p>
-                                        </div>
-                                    ))}
-                                </div>
-                                <a
-                                    href="#contacto"
-                                    className={cx(
-                                        type.body,
-                                        "w-fit rounded-[45px] bg-[var(--bg-inverse)] px-4 py-2.5 text-center text-[var(--text-inverse)] transition-opacity hover:opacity-85",
-                                    )}
-                                >
-                                    Hacé tu consulta
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* ═══ DESKTOP LAYOUT (≥ lg) ═══
-                Header above, services in two-column row. Entire section is n*100vh sticky. */}
-            <div className={cx(
-                "hidden sticky top-0 h-screen min-h-0 flex-col lg:flex",
-                gutter,
-                "pt-[clamp(72px,13.72vh,151px)] pb-[clamp(40px,7.5vh,83px)]",
-            )}>
-                <div className={cx("mx-auto flex w-full flex-1 flex-col gap-10 lg:gap-20", contentWidth)}>
-                    <div className="flex max-w-[800px] flex-col gap-6">
-                        <div className="flex flex-col gap-4">
-                            <Reveal delay={0}>
-                                <p className={cx(type.title, tone.secondary)}>Nuestros servicios</p>
-                            </Reveal>
-                            <SplitReveal delay={120} className={cx(type.h1, tone.primary, "text-balance")}>
-                                Servicios que se combinan según lo que tu marca necesita
-                            </SplitReveal>
-                        </div>
-                        <Reveal delay={260}>
-                            <p className={cx(type.h2, tone.tertiary)}>Vos elegís por dónde empezar</p>
-                        </Reveal>
-                    </div>
-
-                    <div className="flex items-start gap-[5%]">
-                        {/* Text column — left */}
-                        <div className="flex w-[52.5%] shrink-0 flex-col gap-6">
-                            <BarIndicator count={n} active={active} onSelect={goTo} />
-                            <div className="relative min-h-[201px]">
-                                {services.map((s, i) => (
-                                    <div
-                                        key={s.title}
-                                        aria-hidden={i !== active}
-                                        className={cx(
-                                            "absolute inset-x-0 top-0 flex flex-col gap-3",
-                                            "transition-opacity duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
-                                            i === active
-                                                ? "opacity-100"
-                                                : "pointer-events-none opacity-0",
-                                        )}
-                                    >
-                                        <h3 className={cx(type.h2, tone.primary, "max-w-[376px] text-balance")}>
-                                            {s.title}
-                                        </h3>
-                                        <p className={cx(type.bodyLg, tone.secondary)}>{s.body1}</p>
-                                        <p className={cx(type.bodyLg, tone.secondary)}>{s.body2}</p>
-                                    </div>
-                                ))}
-                            </div>
-                            <a
-                                href="#contacto"
-                                className={cx(
-                                    type.body,
-                                    "w-fit rounded-[45px] bg-[var(--bg-inverse)] px-4 py-2.5 text-center text-[var(--text-inverse)] transition-opacity hover:opacity-85",
-                                )}
-                            >
-                                Hacé tu consulta
-                            </a>
-                        </div>
-
-                        {/* Image column — right */}
-                        <div className="relative w-[42.5%] shrink-0 overflow-hidden rounded-2xl bg-[var(--bg-secondary)] aspect-[544/432]">
+                    <div className="sticky top-0 flex h-screen min-h-0 flex-col p-10 sm:p-12 pt-8 pb-10">
+                        {/* Canvas */}
+                        <div className="relative min-h-0 flex-1 overflow-hidden rounded-2xl bg-[var(--accent-default)]">
                             {services.map((s, i) => (
                                 <div
                                     key={s.title}
                                     aria-hidden="true"
                                     className={cx(
                                         "absolute inset-0 flex items-center",
-                                        "transition-opacity duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
+                                        "transition-opacity duration-[550ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
                                         i === active ? "opacity-100" : "opacity-0",
                                     )}
                                 >
@@ -297,6 +173,116 @@ export function Services() {
                                 </div>
                             ))}
                         </div>
+
+                        {/* Texto del servicio activo */}
+                        <div className="flex shrink-0 flex-col gap-3 pt-4">
+                            <BarIndicator count={n} active={active} onSelect={goTo} />
+                            <div className="relative min-h-[108px]">
+                                {services.map((s, i) => (
+                                    <div
+                                        key={s.title}
+                                        aria-hidden={i !== active}
+                                        className={cx(
+                                            "absolute inset-x-0 top-0 flex flex-col gap-1.5",
+                                            "transition-opacity duration-[550ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
+                                            i === active ? "opacity-100" : "pointer-events-none opacity-0",
+                                        )}
+                                    >
+                                        <h3 className={cx(type.h2, "text-[var(--neutral-50)]")}>{s.title}</h3>
+                                        <p className={cx(type.body, "text-[var(--neutral-400)]")}>{s.body1}</p>
+                                    </div>
+                                ))}
+                            </div>
+                            <a
+                                href="#contacto"
+                                className={cx(
+                                    type.body,
+                                    "w-fit mt-1 rounded-full bg-[var(--neutral-50)] px-4 py-2.5 text-center text-[var(--neutral-950)] transition-opacity hover:opacity-85",
+                                )}
+                            >
+                                Hacé tu consulta
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* ═══ DESKTOP ═══ */}
+            <div className="hidden sticky top-0 h-screen min-h-0 flex-col lg:flex">
+                {/* Header row */}
+                <div className="flex items-end justify-between gap-10 p-10 lg:px-16 lg:pt-20 lg:pb-10 border-b border-[var(--neutral-800)]">
+                    <div className="flex flex-col gap-3">
+                        <p className={cx(type.label, "uppercase tracking-[0.12em] text-[var(--neutral-500)]")}>
+                            Nuestros servicios
+                        </p>
+                        <h2
+                            className="font-display font-medium leading-[1.0] tracking-[-0.03em] text-[var(--neutral-50)] max-w-[700px] text-balance"
+                            style={{ fontSize: "clamp(1.75rem, 3.5vw, 3rem)" }}
+                        >
+                            Servicios que se combinan según lo que tu marca necesita
+                        </h2>
+                    </div>
+                    <p className={cx(type.body, "text-[var(--neutral-500)] shrink-0 pb-1")}>
+                        Vos elegís por dónde empezar
+                    </p>
+                </div>
+
+                {/* Bento row: texto izquierda + canvas derecha */}
+                <div className="flex flex-1 min-h-0">
+                    {/* Left: indicador + texto del servicio */}
+                    <div className="flex w-[44%] shrink-0 flex-col justify-between gap-6 p-10 lg:px-16 lg:py-10 border-r border-[var(--neutral-800)]">
+                        <div className="flex flex-col gap-6">
+                            <BarIndicator count={n} active={active} onSelect={goTo} />
+                            <div className="relative min-h-[220px]">
+                                {services.map((s, i) => (
+                                    <div
+                                        key={s.title}
+                                        aria-hidden={i !== active}
+                                        className={cx(
+                                            "absolute inset-x-0 top-0 flex flex-col gap-4",
+                                            "transition-opacity duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
+                                            i === active ? "opacity-100" : "pointer-events-none opacity-0",
+                                        )}
+                                    >
+                                        <h3
+                                            className="font-display font-semibold leading-[1.1] tracking-[-0.01em] text-[var(--neutral-50)] text-balance"
+                                            style={{ fontSize: "clamp(1.25rem, 2vw, 1.75rem)" }}
+                                        >
+                                            {s.title}
+                                        </h3>
+                                        <p className={cx(type.bodyLg, "text-[var(--neutral-400)]")}>{s.body1}</p>
+                                        <p className={cx(type.body, "text-[var(--neutral-600)]")}>{s.body2}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <a
+                            href="#contacto"
+                            className={cx(
+                                type.body,
+                                "self-start rounded-full bg-[var(--neutral-50)] px-4 py-2.5 text-center text-[var(--neutral-950)] transition-opacity hover:opacity-85",
+                            )}
+                        >
+                            Hacé tu consulta
+                        </a>
+                    </div>
+
+                    {/* Right: canvas sobre fondo mauve */}
+                    <div className="relative flex-1 overflow-hidden bg-[var(--accent-default)]">
+                        {services.map((s, i) => (
+                            <div
+                                key={s.title}
+                                aria-hidden="true"
+                                className={cx(
+                                    "absolute inset-0 flex items-center",
+                                    "transition-opacity duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
+                                    i === active ? "opacity-100" : "opacity-0",
+                                )}
+                            >
+                                <ServiceCanvas letter={s.letter} offset={i} />
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>

@@ -1,10 +1,11 @@
 "use client";
 
-import { useLayoutEffect, useRef, type ElementType, type ReactNode } from "react";
+import { useLayoutEffect, useRef, type CSSProperties, type ElementType, type ReactNode } from "react";
 
 type SplitRevealProps = {
     children: ReactNode;
     className?: string;
+    style?: CSSProperties;
     delay?: number;
     stagger?: number;
     by?: "words" | "lines";
@@ -14,6 +15,7 @@ type SplitRevealProps = {
 export function SplitReveal({
     children,
     className,
+    style,
     delay = 0,
     stagger: staggerMs = 60,
     by = "words",
@@ -75,7 +77,7 @@ export function SplitReveal({
     }, [delay, staggerMs, by]);
 
     return (
-        <Tag ref={ref} className={className}>
+        <Tag ref={ref} className={className} style={style}>
             {children}
         </Tag>
     );

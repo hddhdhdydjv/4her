@@ -7,7 +7,11 @@ import { useAnchorScroll } from "@/hooks/use-anchor-scroll";
 import { useLenisInstance } from "@/components/providers/lenis-provider";
 import { cx } from "@/utils/cx";
 
-/** Figma `Header 1` (40:3870) — pill centrada de 640px, py-24. */
+/**
+ * Navbar v2 — píldora dark siempre visible.
+ * Sobre el bento hero la píldora flota en dark desde el primer momento;
+ * el blur + borde la separa visualmente de cualquier panel (claro u oscuro).
+ */
 const links = [
     { label: "Quiénes somos", href: "#quienes-somos" },
     { label: "Servicios", href: "#servicios" },
@@ -22,31 +26,18 @@ const allMobileLinks = [
 
 export function Navbar() {
     const [open, setOpen] = useState(false);
-    const [scrolled, setScrolled] = useState(false);
     const lenis = useLenisInstance();
     const scrollTo = useAnchorScroll();
     const linkRefs = useRef<(HTMLAnchorElement | null)[]>([]);
 
-    // Point 1: track scroll offset via Lenis so the state stays in sync with
-    // the smooth-scroll interpolation (not window.scroll which fires ahead).
-    useEffect(() => {
-        if (!lenis) return;
-        const onScroll = ({ scroll }: { scroll: number }) => {
-            setScrolled(scroll > 10);
-        };
-        lenis.on("scroll", onScroll);
-        return () => { lenis.off("scroll", onScroll); };
-    }, [lenis]);
-
-    // Point 2: freeze Lenis while the mobile overlay is visible so the page
-    // doesn't scroll behind it; resume the moment the overlay closes.
+    // Congela / reanuda Lenis con el overlay mobile abierto.
     useEffect(() => {
         if (!lenis) return;
         if (open) lenis.stop();
         else lenis.start();
     }, [open, lenis]);
 
-    // Point 2: animate mobile links with clip-path curtain + blur + opacity.
+    // Animación de cortina en los links mobile.
     useEffect(() => {
         const els = linkRefs.current.filter((el): el is HTMLAnchorElement => el !== null);
         if (!els.length) return;
@@ -81,18 +72,18 @@ export function Navbar() {
         <>
             <header className="fixed inset-x-0 top-0 z-50 px-4 py-4 sm:px-6 lg:py-6">
                 <div className="mx-auto w-full max-w-[640px]">
-                    {/* Pill (40:3871) — bg transitions on scroll, blur stays constant */}
+                    {/* Píldora dark con blur permanente */}
                     <div
                         className={cx(
-                            "flex items-center justify-between rounded-[48px] border border-[var(--border-strong)]",
+                            "flex items-center justify-between rounded-[48px]",
+                            "border border-[var(--neutral-700)]",
                             "py-2 pr-2 pl-4 backdrop-blur-[35px]",
-                            "transition-colors duration-[250ms] ease-[cubic-bezier(0.4,0,0.2,1)]",
-                            scrolled ? "bg-[var(--bg-primary)]" : "bg-[var(--bg-primary)]/80",
+                            "bg-[var(--neutral-950)]/90",
                         )}
                     >
-                        <Logo />
+                        <Logo dark />
 
-                        {/* Desktop nav (40:3875) */}
+                        {/* Desktop nav */}
                         <nav className="hidden items-center gap-6 lg:flex">
                             {links.map((link) => (
                                 <a
@@ -101,7 +92,7 @@ export function Navbar() {
                                     onClick={scrollTo}
                                     className={cx(
                                         type.body,
-                                        "text-center text-[var(--text-primary)] transition-opacity hover:opacity-60",
+                                        "text-center text-[var(--neutral-300)] transition-colors hover:text-[var(--neutral-50)]",
                                     )}
                                 >
                                     {link.label}
@@ -112,21 +103,21 @@ export function Navbar() {
                                 onClick={scrollTo}
                                 className={cx(
                                     type.body,
-                                    "rounded-[31px] bg-[var(--bg-inverse)] px-3 py-2 text-center text-[var(--text-inverse)] transition-opacity hover:opacity-85",
+                                    "rounded-[31px] bg-[var(--neutral-50)] px-3 py-2 text-center text-[var(--neutral-950)] transition-opacity hover:opacity-85",
                                 )}
                             >
                                 Hablemos
                             </a>
                         </nav>
 
-                        {/* Mobile: CTA + hamburger always visible in pill (Header 2, 82:11761) */}
+                        {/* Mobile: CTA + hamburger */}
                         <nav className="flex items-center lg:hidden">
                             <a
                                 href="#contacto"
                                 onClick={scrollTo}
                                 className={cx(
                                     type.body,
-                                    "rounded-[31px] bg-[var(--bg-inverse)] px-3 py-2 text-center text-[var(--text-inverse)] transition-opacity hover:opacity-85",
+                                    "rounded-[31px] bg-[var(--neutral-50)] px-3 py-2 text-center text-[var(--neutral-950)] transition-opacity hover:opacity-85",
                                 )}
                             >
                                 Hablemos
@@ -136,7 +127,7 @@ export function Navbar() {
                                 aria-label={open ? "Cerrar menú" : "Abrir menú"}
                                 aria-expanded={open}
                                 onClick={() => setOpen((v) => !v)}
-                                className="flex size-10 shrink-0 items-center justify-center rounded-full text-[var(--text-primary)]"
+                                className="flex size-10 shrink-0 items-center justify-center rounded-full text-[var(--neutral-50)]"
                             >
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                                     <path
@@ -153,12 +144,12 @@ export function Navbar() {
                 </div>
             </header>
 
-            {/* Mobile full-screen overlay — z-40 so the pill (z-50) stays on top */}
+            {/* Overlay mobile — dark, z-40 para que la píldora (z-50) quede encima */}
             <div
                 aria-hidden={!open}
                 className={cx(
                     "fixed inset-0 z-40 flex flex-col px-6 pb-10 pt-6 lg:hidden",
-                    "bg-[var(--bg-primary)]",
+                    "bg-[var(--neutral-950)]",
                     "transition-opacity duration-300 ease-out",
                     open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none",
                 )}
@@ -178,10 +169,13 @@ export function Navbar() {
                                 style={{ clipPath: "inset(0 0% 0 100%)", opacity: 0, filter: "blur(10px)" }}
                                 className={cx(
                                     isCTA
-                                        ? cx(type.body, "mt-4 self-start rounded-[31px] bg-[var(--bg-inverse)] px-5 py-3 text-[var(--text-inverse)]")
+                                        ? cx(
+                                              type.body,
+                                              "mt-4 self-start rounded-[31px] bg-[var(--neutral-50)] px-5 py-3 text-[var(--neutral-950)]",
+                                          )
                                         : cx(
                                               "font-display text-[clamp(1.75rem,5vw,2.5rem)] font-medium leading-snug tracking-[-0.02em]",
-                                              "rounded-[18px] px-2 py-3 text-[var(--text-primary)]",
+                                              "rounded-[18px] px-2 py-3 text-[var(--neutral-50)]",
                                           ),
                                 )}
                             >

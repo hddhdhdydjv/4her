@@ -1,51 +1,50 @@
 /* ============================================================================
-   4HER — Design tokens
+   4HER — Design tokens v2
    ----------------------------------------------------------------------------
-   Espejo del sistema de variables de Figma (colecciones Primitives / Color /
-   Typography). ÚNICO lugar para reajustar la piel de la marca.
+   Paleta fría (off-white ↔ near-black) + acento mauve + violeta eléctrico.
+   Inspirada en el frame Figma 2190:1882.
 
-   Figma            ->  CSS
-   neutral/900      ->  --neutral-900
-   text/primary     ->  --text-primary
-   bg/secondary     ->  --bg-secondary
+   RAMA: claude/4her-v2-bento   ←  para volver: git checkout claude/4her-landing-page-k00ipa
    ============================================================================ */
 
 :root {
-    /* --- Primitives: escala neutral (warm caramel/chocolate) -------------- */
-    --neutral-50:  #F8F2EA;
-    --neutral-100: #EFE7DA;
-    --neutral-200: #DDD0BE;
-    --neutral-300: #C5B5A0;
-    --neutral-400: #A09080;
-    --neutral-500: #786858;
-    --neutral-600: #5C4E40;
-    --neutral-700: #3E3028;
-    --neutral-800: #261A14;
-    --neutral-900: #160E0A;
-    --neutral-950: #0C0806;
+    /* --- Primitives: escala neutra fría ------------------------------------ */
+    --neutral-50:  #f7f7f6;
+    --neutral-100: #ececea;
+    --neutral-200: #d9d9d7;
+    --neutral-300: #c2c2c0;
+    --neutral-400: #8c8c8a;
+    --neutral-500: #636361;
+    --neutral-600: #434341;
+    --neutral-700: #333333;
+    --neutral-800: #1e1e1c;
+    --neutral-900: #161616;
+    --neutral-950: #0e0e0e;
 
-    /* Acento: violeta oscuro (mismo tono del hero) */
-    --accent-subtle:  #EAE4F2;
-    --accent-default: #1B1247;
-    --accent-hover:   #0A0820;
+    /* Brand accents */
+    --accent-mauve:  #ccaab8;   /* secciones principales */
+    --accent-purple: #7928e2;   /* acento vivo */
+    --accent-subtle: #ede5e9;
+    --accent-default: #ccaab8;
+    --accent-hover:   #ba95a3;
 
-    /* --- Semánticos (modo claro) ------------------------------------------ */
-    --bg-primary: var(--neutral-50);
+    /* --- Semánticos -------------------------------------------------------- */
+    --bg-primary:   var(--neutral-50);
     --bg-secondary: var(--neutral-100);
-    --bg-tertiary: var(--neutral-200);
-    --bg-inverse: var(--neutral-950);
+    --bg-tertiary:  var(--neutral-200);
+    --bg-inverse:   var(--neutral-950);
 
-    --text-primary: var(--neutral-900);
-    --text-secondary: var(--neutral-700);
-    --text-tertiary: var(--neutral-500);
-    --text-inverse: var(--neutral-50);
+    --text-primary:   var(--neutral-900);
+    --text-secondary: var(--neutral-500);
+    --text-tertiary:  var(--neutral-400);
+    --text-inverse:   var(--neutral-50);
 
     --border-default: var(--neutral-200);
-    --border-strong: var(--neutral-300);
+    --border-strong:  var(--neutral-300);
 
     --accent-on-accent: var(--neutral-50);
 
-    /* --- Alias legacy (componentes que aún usan los nombres viejos) -------- */
+    /* --- Alias legacy (para componentes que aún usen los nombres viejos) --- */
     --brand-cream: var(--bg-primary);
     --brand-cream-2: var(--bg-secondary);
     --brand-surface: var(--bg-secondary);
@@ -61,7 +60,7 @@
     --brand-accent-deep: var(--accent-hover);
     --brand-line: var(--border-default);
 
-    /* --- Escala "brand" de Untitled UI ------------------------------------ */
+    /* --- Escala brand (Untitled UI compat) --------------------------------- */
     --color-brand-50: var(--neutral-50);
     --color-brand-100: var(--neutral-100);
     --color-brand-200: var(--neutral-200);
@@ -74,59 +73,44 @@
     --color-brand-900: var(--neutral-900);
     --color-brand-950: var(--neutral-950);
 
-    /* --- Superficies (tokens semánticos Untitled UI) ---------------------- */
-    --color-bg-primary: var(--bg-primary);
-    --color-bg-primary_alt: var(--bg-primary);
-    --color-bg-primary_hover: var(--bg-secondary);
-    --color-bg-secondary: var(--bg-secondary);
-    --color-bg-secondary_alt: var(--bg-secondary);
-    --color-bg-secondary_hover: var(--bg-tertiary);
-    --color-bg-active: var(--bg-secondary);
-    --color-bg-tertiary: var(--bg-tertiary);
-
-    --color-bg-brand-primary: var(--bg-secondary);
-    --color-bg-brand-primary_alt: var(--bg-secondary);
-    --color-bg-brand-secondary: var(--bg-tertiary);
-    --color-bg-brand-solid: var(--accent-default);
+    /* --- Superficies ------------------------------------------------------- */
+    --color-bg-primary:          var(--bg-primary);
+    --color-bg-primary_alt:      var(--bg-primary);
+    --color-bg-primary_hover:    var(--bg-secondary);
+    --color-bg-secondary:        var(--bg-secondary);
+    --color-bg-secondary_alt:    var(--bg-secondary);
+    --color-bg-secondary_hover:  var(--bg-tertiary);
+    --color-bg-active:           var(--bg-secondary);
+    --color-bg-tertiary:         var(--bg-tertiary);
+    --color-bg-brand-primary:    var(--bg-secondary);
+    --color-bg-brand-solid:      var(--accent-default);
     --color-bg-brand-solid_hover: var(--accent-hover);
-    --color-bg-brand-section: var(--bg-inverse);
-    --color-bg-brand-section_subtle: var(--neutral-900);
-    --color-bg-primary-solid: var(--text-primary);
+    --color-bg-brand-section:    var(--bg-inverse);
+    --color-bg-primary-solid:    var(--text-primary);
 
     /* --- Texto ------------------------------------------------------------ */
-    --color-text-primary: var(--text-primary);
-    --color-text-secondary: var(--text-secondary);
-    --color-text-secondary_hover: var(--neutral-800);
-    --color-text-tertiary: var(--text-tertiary);
-    --color-text-tertiary_hover: var(--neutral-600);
-    --color-text-quaternary: var(--neutral-400);
-    --color-text-placeholder: var(--neutral-400);
-    --color-text-brand-primary: var(--text-primary);
-    --color-text-brand-secondary: var(--text-secondary);
-    --color-text-brand-secondary_hover: var(--neutral-800);
-    --color-text-brand-tertiary: var(--text-tertiary);
-    --color-text-brand-tertiary_alt: var(--text-tertiary);
+    --color-text-primary:        var(--text-primary);
+    --color-text-secondary:      var(--text-secondary);
+    --color-text-tertiary:       var(--text-tertiary);
+    --color-text-quaternary:     var(--neutral-400);
+    --color-text-placeholder:    var(--neutral-400);
+    --color-text-brand-primary:  var(--text-primary);
     --color-text-primary_on-brand: var(--text-inverse);
-    --color-text-secondary_on-brand: var(--neutral-200);
-    --color-text-tertiary_on-brand: var(--neutral-400);
+    --color-text-secondary_on-brand: var(--neutral-300);
     --color-text-white: #ffffff;
 
-    /* --- Foreground / iconos ---------------------------------------------- */
+    /* --- Foreground -------------------------------------------------------- */
     --color-fg-brand-primary: var(--accent-default);
-    --color-fg-brand-primary_alt: var(--accent-default);
-    --color-fg-brand-secondary: var(--accent-default);
 
-    /* --- Bordes ----------------------------------------------------------- */
-    --color-border-primary: var(--border-default);
+    /* --- Bordes ------------------------------------------------------------ */
+    --color-border-primary:   var(--border-default);
     --color-border-secondary: var(--neutral-100);
-    --color-border-tertiary: var(--neutral-100);
-    --color-border-brand: var(--border-strong);
+    --color-border-brand:     var(--border-strong);
     --color-border-brand-solid: var(--accent-default);
+    --color-focus-ring:       var(--accent-default);
 
-    --color-focus-ring: var(--accent-default);
-
-    /* --- Tipografía: Funnel Display (títulos) + Funnel Sans (cuerpo) ------- */
+    /* --- Tipografía ------------------------------------------------------- */
     --font-display: var(--font-funnel-display), "Helvetica Neue", Arial, sans-serif;
-    --font-body: var(--font-funnel-sans), -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-    --font-mono: var(--font-funnel-sans), -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    --font-body:    var(--font-funnel-sans), -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    --font-mono:    var(--font-funnel-sans), -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 }

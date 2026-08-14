@@ -6,15 +6,19 @@ import { CaseWePiper } from "@/components/sections/case-wepiper";
 import { Values } from "@/components/sections/values";
 import { Process } from "@/components/sections/process";
 import { Contact } from "@/components/sections/contact";
-import { Footer } from "@/components/sections/footer";
 
-/** Orden del wireframe Desktop de Figma (40:3764). */
+/**
+ * v2: bento grid layout. El <Footer> fue integrado en <Contact>,
+ * así que ya no se renderiza por separado.
+ * El fondo de <main> es oscuro para que el SectionFader (fade-out al hacer
+ * scroll) muestre el neutral-950 entre secciones que transicionan.
+ */
 export default function Home() {
     return (
         <>
             <Navbar />
 
-            <main>
+            <main className="bg-[var(--neutral-950)]">
                 <Hero />
                 <About />
                 <Services />
@@ -23,8 +27,6 @@ export default function Home() {
                 <Process />
                 <Contact />
             </main>
-
-            <Footer />
         </>
     );
 }

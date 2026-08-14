@@ -1,159 +1,116 @@
-import type { CSSProperties } from "react";
-import { IsoCluster } from "@/components/graphics/iso";
+"use client";
+
+import { Logo } from "@/components/ui/logo";
+import { useAnchorScroll } from "@/hooks/use-anchor-scroll";
 import { type } from "@/components/ui/section";
 import { cx } from "@/utils/cx";
 
 /**
- * Figma `Hero` (61:6590) — 1280×880, bg neutral/200.
+ * Hero v2 — Figma frame 2190:1882.
+ * Bento 2×2 que ocupa exactamente el viewport.
  *
- * La composición del titular está posicionada en absoluto tal cual el diseño:
- * los `left` son % del ancho de contenido (1152) y los `top` van en `em`,
- * de modo que todo escala junto con el tamaño de fuente.
+ *  ┌──────────────┬──────────────┐
+ *  │  TL  cream   │  TR  dark    │
+ *  │  Logo + label│  Tagline     │
+ *  ├──────────────┼──────────────┤
+ *  │  BL  dark    │  BR  purple  │
+ *  │  Headline h1 │  Mauve│Cream │
+ *  └──────────────┴──────────────┘
  *
- * Las ilustraciones isométricas del diseño no se pueden exportar desde este
- * entorno; se reconstruyen en SVG (`IsoCluster`) con el mismo lenguaje.
+ * Mobile: apilado en una sola columna (TL → BL → BR; TR oculto).
  */
-
-/** Icono 35×18 del bloque de label (61:6744). */
-function SparkIcon({ className, style }: { className?: string; style?: CSSProperties }) {
-    return (
-        <svg viewBox="0 0 35 18" className={className} style={style} fill="none" aria-hidden="true">
-            <path
-                d="M11 17h13M13.5 17a4 4 0 1 1 8 0M17.5 5V1M11.2 7.2 8.4 4.4M23.8 7.2l2.8-2.8M8 13H4M27 13h4"
-                stroke="currentColor"
-                strokeWidth="1.2"
-                strokeLinecap="round"
-            />
-        </svg>
-    );
-}
-
-/* ---------- Paleta hero (inspiración Starling Bank: violeta profundo) ----------
-   Estos valores son locales al hero — el resto del sitio mantiene la paleta
-   cálida de brand.css. Si más adelante se quiere unificar, se mueven a tokens.   */
-const HERO_BG      = "#1B1247"; // fondo principal: violeta medianoche
-const HERO_STRIP1  = "#231866"; // franja ancha: violeta medio
-const HERO_STRIP2  = "#3427A4"; // franja angosta (acento): violeta vivo
-const HERO_CARD    = "#0A0820"; // tarjeta oscura: violeta casi negro
-const HERO_TEXT    = "var(--neutral-50)";  // crema sobre oscuro
-
-const HEADLINE = "font-display font-medium leading-none tracking-[-0.02em]";
-
 export function Hero() {
+    const scrollTo = useAnchorScroll();
+
     return (
-        // Sin overflow-hidden: los cubos del borde inferior (más abajo) están
-        // pensados para asomar más allá del hero, sobre la sección siguiente.
         <section
             id="inicio"
-            className="relative min-h-screen lg:h-screen"
-            style={{ background: HERO_BG }}
+            className={cx(
+                // Mobile: columna única
+                "flex flex-col min-h-screen",
+                // Tablet +: bento 2 × 2
+                "sm:grid sm:grid-cols-2 sm:grid-rows-2 sm:h-screen sm:min-h-0",
+            )}
         >
-            {/* Mobile: franjas de textura en la parte inferior */}
-            <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[22%] sm:hidden" style={{ background: HERO_STRIP1 }} />
-            <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[7%] sm:hidden" style={{ background: HERO_STRIP2 }} />
-            <div
-                aria-hidden="true"
-                className="absolute inset-x-0 bottom-0 top-[calc(70%-70px)] opacity-[0.18] sm:hidden"
-            >
-                <IsoCluster className="h-full w-full" />
+            {/* ── TL — cream: logo + label ── */}
+            <div className="flex flex-col justify-between gap-8 p-8 sm:p-10 lg:p-14 bg-[var(--neutral-50)]">
+                <Logo />
+                <p className={cx(type.label, "uppercase tracking-[0.12em] text-[var(--neutral-400)]")}>
+                    Comunicación &amp; Marketing
+                </p>
             </div>
 
-            {/* Desktop/tablet: franjas que cortan el borde derecho */}
-            <div aria-hidden="true" className="absolute inset-y-0 right-0 hidden w-[26.17%] sm:block" style={{ background: HERO_STRIP1 }} />
-            <div aria-hidden="true" className="absolute inset-y-0 right-0 hidden w-[7.27%] sm:block" style={{ background: HERO_STRIP2 }} />
-
-            {/* Imagen (61:6593): campo isométrico al 26% */}
-            <div
-                aria-hidden="true"
-                className="absolute inset-y-0 right-0 left-[calc(25%+70px)] hidden opacity-[0.18] sm:block"
-            >
-                <IsoCluster className="h-full w-full" />
-            </div>
-
-            {/* Mismo ritmo que el resto: el titular arranca en y=144 y la tarjeta
-                oscura cierra en y=762, o sea 138 desde abajo (frame 2020:5677).
-                El padding va acá y el tope de 1280 en el div de adentro — si van
-                juntos, border-box se come los 160px de gutter. */}
-            <div className="relative flex min-h-screen flex-col px-6 pt-40 pb-24 sm:px-10 lg:h-full lg:min-h-0 lg:px-20 lg:pt-[clamp(88px,16vh,176px)] lg:pb-0">
-              <div className="relative mx-auto flex w-full max-w-[1280px] flex-1 flex-col">
-                {/* ---------- Heading 1 (2020:5697) — composición exacta en desktop.
-                    Los `left` son el centro de cada palabra sobre los 1280 del
-                    frame; los `top` van en em del Display/Large de 72px. ---------- */}
-                <div
-                    className="relative hidden h-[4.0278em] w-full lg:block"
-                    style={{ fontSize: "clamp(2.5rem, 5.625vw, 4.5rem)" }}
+            {/* ── TR — dark: tagline decorativa (oculta en mobile) ── */}
+            <div className="hidden sm:flex flex-col justify-end p-10 lg:p-14 bg-[var(--neutral-950)]">
+                <p
+                    aria-hidden="true"
+                    className="font-display font-medium leading-[1.05] tracking-[-0.03em] text-[var(--neutral-400)]"
+                    style={{ fontSize: "clamp(1.125rem, 2.5vw, 2rem)" }}
                 >
-                    <h1 className="contents">
-                        <span className={cx(HEADLINE, "absolute top-0 left-[16.25%] -translate-x-1/2 whitespace-pre")} style={{ color: HERO_TEXT }}>
-                            {"(  4her )"}
-                        </span>
-                        <span
-                            className={cx(HEADLINE, "absolute top-[1.3333em] left-[36.563%] -translate-x-1/2 whitespace-nowrap")}
-                            style={{ color: HERO_TEXT }}
-                        >
-                            Comunicación
-                        </span>
-                        <span
-                            className={cx(HEADLINE, "absolute top-[1.4583em] left-[60.469%] -translate-x-1/2 whitespace-nowrap")}
-                            style={{ color: HERO_TEXT }}
-                        >
-                            &
-                        </span>
-                        <span
-                            className={cx(HEADLINE, "absolute top-[2.6667em] left-[25.859%] -translate-x-1/2 whitespace-nowrap")}
-                            style={{ color: HERO_TEXT }}
-                        >
-                            Marketing
-                        </span>
-                    </h1>
-                </div>
+                    Estrategia antes<br />que estética
+                </p>
+            </div>
 
-                {/* ---------- Titular apilado (mobile / tablet) ---------- */}
+            {/* ── BL — dark: titular principal ── */}
+            <div className="flex flex-1 flex-col justify-end gap-2 p-8 sm:p-10 lg:p-14 bg-[var(--neutral-900)] sm:flex-none">
                 <h1
-                    className={cx(HEADLINE, "flex flex-col lg:hidden")}
-                    style={{ fontSize: "clamp(2.25rem, 9vw, 3.25rem)", color: HERO_TEXT }}
+                    className="font-display font-medium leading-[0.95] tracking-[-0.04em] text-[var(--neutral-50)]"
+                    style={{ fontSize: "clamp(2.5rem, 6.5vw, 5.75rem)" }}
                 >
-                    <span className="whitespace-pre">{"(  4her )"}</span>
-                    <span className="pl-[8%]">Comunicación &</span>
-                    <span className="pl-[3%]">Marketing</span>
+                    Comuni&shy;cación
+                    <br />&amp; Marketing
                 </h1>
 
-                {/* ---------- Cubos que asoman por el borde inferior ----------
-                    z-10 para que se sigan viendo por encima del fondo opaco de
-                    la sección siguiente (Quiénes somos), tal cual el frame de
-                    Figma: los tres clusters miden más que los 900px del Hero. */}
-                <div
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-x-0 bottom-0 z-10 hidden lg:block"
+                {/* Subtexto y CTA solo visibles en mobile (en desktop van en BR) */}
+                <p className={cx(type.body, "sm:hidden mt-4 text-[var(--neutral-400)] max-w-[34ch]")}>
+                    Más estratégico que una agencia,
+                    <br />más cercano que un freelance.
+                </p>
+                <a
+                    href="#contacto"
+                    onClick={scrollTo}
+                    className={cx(
+                        type.body,
+                        "sm:hidden self-start mt-5 rounded-full bg-[var(--neutral-50)] px-5 py-2.5",
+                        "text-[var(--neutral-900)] transition-opacity hover:opacity-80",
+                    )}
                 >
-                    <IsoCluster className="absolute right-[calc(8.33%+93px)] bottom-[-88px] h-[321px] w-[362px]" />
-                    <IsoCluster className="absolute bottom-[-42px] left-[37.8%] h-[180px] w-[203px]" />
-                    <IsoCluster className="absolute bottom-[-50px] left-[13.44%] h-[180px] w-[203px]" />
+                    Hablemos
+                </a>
+            </div>
+
+            {/* ── BR — purple outer: dos sub-paneles (oculto en mobile) ── */}
+            <div className="hidden sm:flex bg-[var(--accent-purple)]">
+                {/* Sub-panel izquierdo: mauve con CTA */}
+                <div
+                    className="flex flex-1 flex-col justify-end gap-5 p-10 lg:p-14"
+                    style={{ background: "var(--accent-default)" }}
+                >
+                    <p className={cx(type.bodyLg, "text-[var(--neutral-800)] max-w-[22ch]")}>
+                        Más estratégico que una agencia,
+                        <br />más cercano que un freelance.
+                    </p>
+                    <a
+                        href="#contacto"
+                        onClick={scrollTo}
+                        className={cx(
+                            type.body,
+                            "self-start rounded-full bg-[var(--neutral-950)] px-4 py-2",
+                            "text-[var(--neutral-50)] transition-opacity hover:opacity-80",
+                        )}
+                    >
+                        Hablemos
+                    </a>
                 </div>
 
-                {/* ---------- Container (61:6736): tarjeta oscura ---------- */}
-                {/* Articles (2020:5823): x=98 sobre los 1280, cierra en y=762. */}
-                <div className="relative mt-12 w-full max-w-[390px] lg:absolute lg:bottom-[clamp(64px,15.33vh,168px)] lg:left-[7.656%] lg:mt-0 lg:h-[208px]">
-                    {/* Cuadradito que asoma arriba a la derecha (61:6741) */}
-                    <div aria-hidden="true" className="absolute top-0 right-0 size-6" style={{ background: HERO_CARD }} />
-                    <div className="mt-6 mr-6 flex flex-col gap-4 p-6" style={{ background: HERO_CARD }}>
-                        <p className={cx(type.h3)} style={{ color: HERO_TEXT }}>Comunicación &amp; Marketing</p>
-                        <p className={cx(type.body)} style={{ color: "var(--neutral-300)" }}>
-                            Más estratégico que una agencia, más cercano que un freelance
-                        </p>
-                    </div>
-                </div>
-
-                {/* ---------- Container (61:6742): label con icono ---------- */}
-                {/* Container (2020:5830): x=903 sobre los 1280, alto 94, arranca
-                    en y=554 → cierra a 252 del piso de la sección. */}
-                <div className="mt-8 flex w-full max-w-[279px] flex-col items-end gap-3 p-4 lg:absolute lg:bottom-[calc(clamp(64px,15.33vh,168px)+114px)] lg:left-[70.547%] lg:mt-0">
-                    <SparkIcon className="h-[18px] w-[35px]" style={{ color: "var(--accent-subtle)" }} />
-                    <p className={cx(type.label, "text-right")} style={{ color: "var(--accent-subtle)" }}>
-                        Marca, contenido y estrategia en un mismo equipo.
+                {/* Sub-panel derecho: cream, visible solo en desktop */}
+                <div className="hidden lg:flex flex-1 flex-col justify-end p-14 bg-[var(--neutral-100)]">
+                    <p className={cx(type.body, "text-[var(--neutral-500)] max-w-[18ch]")}>
+                        Marca, contenido
+                        <br />y estrategia
+                        <br />en un mismo equipo.
                     </p>
                 </div>
-              </div>
             </div>
         </section>
     );
