@@ -6,19 +6,28 @@ import { type } from "@/components/ui/section";
 import { cx } from "@/utils/cx";
 
 /**
- * Hero v2 — Figma frame 2190:1882.
- * Bento 2×2 que ocupa exactamente el viewport.
+ * Hero v2 — editorial bento.
  *
- *  ┌──────────────┬──────────────┐
- *  │  TL  cream   │  TR  dark    │
- *  │  Logo + label│  Tagline     │
- *  ├──────────────┼──────────────┤
- *  │  BL  dark    │  BR  purple  │
- *  │  Headline h1 │  Mauve│Cream │
- *  └──────────────┴──────────────┘
+ * Mobile (flex-col):
+ *   1. Panel oscuro: Logo tiny + "4her" ENORME + service label
+ *   2. Franja CTA: mauve izq (botón) | cream der (descriptor)
  *
- * Mobile: apilado en una sola columna (TL → BL → BR; TR oculto).
+ * Desktop (sm+, grid 2×2 con placement explícito):
+ *   ┌──[col1,row1] TL cream──┬──[col2,row1] TR dark ·dots·──┐
+ *   │  Logo + label          │  tagline decorativa           │
+ *   ├──[col1,row2] BL dark───┼──[col2,row2] BR purple────────┤
+ *   │  "4her" grande         │  mauve CTA  │  cream desc     │
+ *   │  + service copy        │             │                 │
+ *   └────────────────────────┴─────────────┴─────────────────┘
  */
+
+const DOT_GRID = {
+    backgroundImage:
+        "radial-gradient(circle, rgba(255,255,255,0.09) 1.5px, transparent 1.5px)",
+    backgroundSize: "28px 28px",
+    backgroundPosition: "14px 14px",
+} as const;
+
 export function Hero() {
     const scrollTo = useAnchorScroll();
 
@@ -26,22 +35,25 @@ export function Hero() {
         <section
             id="inicio"
             className={cx(
-                // Mobile: columna única
                 "flex flex-col min-h-screen",
-                // Tablet +: bento 2 × 2
                 "sm:grid sm:grid-cols-2 sm:grid-rows-2 sm:h-screen sm:min-h-0",
             )}
         >
-            {/* ── TL — cream: logo + label ── */}
-            <div className="flex flex-col justify-between gap-8 p-8 sm:p-10 lg:p-14 bg-[var(--neutral-50)]">
+            {/* ── TL — cream (desktop only, col 1 row 1) ── */}
+            <div
+                className="hidden sm:flex flex-col justify-between p-10 lg:p-14 bg-[var(--neutral-50)] sm:col-start-1 sm:row-start-1"
+            >
                 <Logo />
-                <p className={cx(type.label, "uppercase tracking-[0.12em] text-[var(--neutral-400)]")}>
+                <p className={cx(type.label, "uppercase tracking-[0.14em] text-[var(--neutral-400)]")}>
                     Comunicación &amp; Marketing
                 </p>
             </div>
 
-            {/* ── TR — dark: tagline decorativa (oculta en mobile) ── */}
-            <div className="hidden sm:flex flex-col justify-end p-10 lg:p-14 bg-[var(--neutral-950)]">
+            {/* ── TR — dark · dots (desktop only, col 2 row 1) ── */}
+            <div
+                className="hidden sm:flex flex-col justify-end p-10 lg:p-14 bg-[var(--neutral-950)] sm:col-start-2 sm:row-start-1"
+                style={DOT_GRID}
+            >
                 <p
                     aria-hidden="true"
                     className="font-display font-medium leading-[1.05] tracking-[-0.03em] text-[var(--neutral-400)]"
@@ -51,37 +63,86 @@ export function Hero() {
                 </p>
             </div>
 
-            {/* ── BL — dark: titular principal ── */}
-            <div className="flex flex-1 flex-col justify-end gap-2 p-8 sm:p-10 lg:p-14 bg-[var(--neutral-900)] sm:flex-none">
+            {/* ── BL / MAIN — dark · dots (mobile: panel 1; desktop: col 1 row 2) ── */}
+            <div
+                className={cx(
+                    "relative flex flex-col justify-between overflow-hidden bg-[var(--neutral-950)]",
+                    // Mobile: crece para cubrir la mayor parte de la pantalla
+                    "flex-1 p-7 pb-10",
+                    // Desktop: quadrante inferior izquierdo
+                    "sm:flex-none sm:p-10 lg:p-14 sm:col-start-1 sm:row-start-2",
+                )}
+                style={DOT_GRID}
+            >
+                {/* Logo solo en mobile */}
+                <div className="mb-auto sm:hidden">
+                    <Logo dark />
+                </div>
+
+                {/* Marca editorial: llena ~85 % del ancho en mobile */}
                 <h1
-                    className="font-display font-medium leading-[0.95] tracking-[-0.04em] text-[var(--neutral-50)]"
-                    style={{ fontSize: "clamp(2.5rem, 6.5vw, 5.75rem)" }}
+                    className="font-display font-medium leading-[0.88] tracking-[-0.055em] text-[var(--neutral-50)]"
+                    style={{ fontSize: "clamp(5rem, 37vw, 22rem)" }}
                 >
-                    Comuni&shy;cación
-                    <br />&amp; Marketing
+                    4her
                 </h1>
 
-                {/* Subtexto y CTA solo visibles en mobile (en desktop van en BR) */}
-                <p className={cx(type.body, "sm:hidden mt-4 text-[var(--neutral-400)] max-w-[34ch]")}>
-                    Más estratégico que una agencia,
-                    <br />más cercano que un freelance.
-                </p>
-                <a
-                    href="#contacto"
-                    onClick={scrollTo}
-                    className={cx(
-                        type.body,
-                        "sm:hidden self-start mt-5 rounded-full bg-[var(--neutral-50)] px-5 py-2.5",
-                        "text-[var(--neutral-900)] transition-opacity hover:opacity-80",
-                    )}
+                {/* Service label */}
+                <p
+                    className="mt-3 font-display font-medium leading-[1.1] tracking-[-0.02em] text-[var(--neutral-500)]"
+                    style={{ fontSize: "clamp(1rem, 2.8vw, 1.75rem)" }}
                 >
-                    Hablemos
-                </a>
+                    Comunicación<br />&amp; Marketing
+                </p>
+
+                {/* Velo inferior para separar el texto del fondo con puntos */}
+                <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-x-0 bottom-0 h-32 sm:hidden"
+                    style={{
+                        background: "linear-gradient(to top, var(--neutral-950) 0%, transparent 100%)",
+                    }}
+                />
             </div>
 
-            {/* ── BR — purple outer: dos sub-paneles (oculto en mobile) ── */}
-            <div className="hidden sm:flex bg-[var(--accent-purple)]">
-                {/* Sub-panel izquierdo: mauve con CTA */}
+            {/* ── Mobile CTA — franja mauve + cream (mobile only) ── */}
+            <div className="flex sm:hidden bg-[var(--accent-purple)]">
+                {/* Mauve: botón */}
+                <div
+                    className="flex flex-1 flex-col justify-center gap-4 p-7"
+                    style={{ background: "var(--accent-default)" }}
+                >
+                    <a
+                        href="#contacto"
+                        onClick={scrollTo}
+                        className={cx(
+                            type.body,
+                            "self-start rounded-full bg-[var(--neutral-950)] px-4 py-2.5",
+                            "text-[var(--neutral-50)] transition-opacity hover:opacity-80",
+                        )}
+                    >
+                        Hablemos
+                    </a>
+                    <p className={cx(type.label, "text-[var(--neutral-700)] leading-[1.5]")}>
+                        Más estratégico que una agencia,
+                        más cercano que un freelance.
+                    </p>
+                </div>
+
+                {/* Cream: descriptor */}
+                <div className="flex flex-1 flex-col justify-center p-7 bg-[var(--neutral-100)]">
+                    <p className={cx(type.label, "text-[var(--neutral-500)] leading-[1.7]")}>
+                        Marca,
+                        <br />contenido
+                        <br />y estrategia
+                        <br />en un equipo.
+                    </p>
+                </div>
+            </div>
+
+            {/* ── BR — purple outer · mauve + cream (desktop only, col 2 row 2) ── */}
+            <div className="hidden sm:flex bg-[var(--accent-purple)] sm:col-start-2 sm:row-start-2">
+                {/* Mauve: CTA */}
                 <div
                     className="flex flex-1 flex-col justify-end gap-5 p-10 lg:p-14"
                     style={{ background: "var(--accent-default)" }}
@@ -103,7 +164,7 @@ export function Hero() {
                     </a>
                 </div>
 
-                {/* Sub-panel derecho: cream, visible solo en desktop */}
+                {/* Cream: descriptor (solo en pantallas grandes) */}
                 <div className="hidden lg:flex flex-1 flex-col justify-end p-14 bg-[var(--neutral-100)]">
                     <p className={cx(type.body, "text-[var(--neutral-500)] max-w-[18ch]")}>
                         Marca, contenido
