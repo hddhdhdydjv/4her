@@ -46,6 +46,19 @@ const SPEED = {
     front: -0.06,
 } as const;
 
+/**
+ * Geometría compartida por los tres planos.
+ *
+ * Las dos fotos salen del MISMO lienzo (5120×3520), así que mientras compartan
+ * caja y `object-cover` recortan idéntico y quedan registradas en cualquier
+ * viewport. El alto extra es el margen que necesita el parallax para moverse
+ * sin descubrir los bordes.
+ */
+const SCENE_BOX = "absolute inset-x-0 -top-[14%] h-[128%] will-change-transform";
+
+/** Altura del logotipo dentro de la escena: apoyado sobre la línea de montañas. */
+const RIDGE = "44%";
+
 /** Textura de trama de puntos: el diseño tiene un dithering fino sobre la foto. */
 const DITHER = {
     backgroundImage:
@@ -68,7 +81,7 @@ export function Hero() {
             <div
                 ref={backRef}
                 aria-hidden="true"
-                className="absolute inset-x-0 -top-[12%] -z-30 h-[124%] will-change-transform"
+                className={cx(SCENE_BOX, "-z-30")}
                 style={{ background: SCENE_FALLBACK }}
             >
                 {/* `priority`: es el LCP de la página, no puede cargar diferido. */}
@@ -79,7 +92,7 @@ export function Hero() {
                         fill
                         priority
                         sizes="100vw"
-                        className="object-cover"
+                        className="object-cover object-center"
                         // Si el PNG todavía no está, se cae al degradado.
                         onError={() => setBackFailed(true)}
                     />
@@ -87,24 +100,25 @@ export function Hero() {
             </div>
 
             {/* ---------- Plano medio: logotipo en vidrio (Logo) ----------
-                Centro en 61.8% del ancho y 44.8% del alto del frame original.
-                El ancho tipográfico (~56% del viewport) sale de los 723px que
-                mide el logo sobre los 1280 del diseño. */}
+                Va en una caja de la misma geometría que las fotos, así el
+                logotipo acompaña al encuadre en vez de flotar por su cuenta.
+                `RIDGE` lo apoya sobre la línea de las montañas: las lomas del
+                frente arrancan al ~62% de la foto y le tapan la base. */}
             <div
                 ref={logoRef}
-                className="absolute inset-x-0 top-[42%] -z-20 flex justify-center will-change-transform"
+                className={cx(SCENE_BOX, "-z-20 flex items-start justify-center")}
             >
-                <GlassWordmark />
+                <span className="relative" style={{ top: RIDGE }}>
+                    <GlassWordmark />
+                </span>
             </div>
 
             {/* ---------- Primer plano: lomas verdes (Shape 1) ----------
-                Arranca al 51.41% del frame y se ancla abajo, que es donde el
-                recorte tiene sentido cuando cambia el alto de la ventana. */}
-            <div
-                ref={frontRef}
-                aria-hidden="true"
-                className="absolute inset-x-0 top-[46%] -bottom-[10%] -z-10 will-change-transform"
-            >
+                Misma caja y mismo `object-cover` que el fondo: las dos capas
+                salen del mismo lienzo (5120×3520), así que compartiendo
+                geometría quedan calzadas en cualquier viewport. La capa trae
+                el canal alfa: transparente hasta el ~60%, lomas abajo. */}
+            <div ref={frontRef} aria-hidden="true" className={cx(SCENE_BOX, "-z-10")}>
                 {!frontFailed && (
                     <Image
                         src={LAYER_FRONT}
@@ -112,7 +126,7 @@ export function Hero() {
                         fill
                         priority
                         sizes="100vw"
-                        className="object-cover object-top"
+                        className="object-cover object-center"
                         onError={() => setFrontFailed(true)}
                     />
                 )}
@@ -155,29 +169,27 @@ export function Hero() {
 }
 
 /**
- * "4her" en vidrio esmerilado.
+ * "4her" en vidrio, como en el diseño: blanco translúcido sobre el paisaje.
  *
- * Dos capas apiladas sobre el mismo glifo:
- *   1. `backdrop-filter` — difumina y aclara el paisaje que queda detrás.
- *   2. el texto en blanco translúcido — el cuerpo lechoso del vidrio.
+ * Acá había un `backdrop-filter` para desenfocar la foto de atrás, pero el
+ * desenfoque se aplica a la CAJA del elemento, no a la forma de las letras:
+ * dibujaba un rectángulo de bordes duros alrededor de la palabra. No hay forma
+ * de recortarlo a los glifos con una tipografía web (`background-clip: text` no
+ * alcanza al backdrop, y una máscara SVG no puede usar la fuente cargada).
  *
- * El `background-clip: text` recorta el desenfoque a la forma de las letras en
- * los motores que lo soportan; donde no, queda igual el blanco translúcido y
- * la pieza sigue leyéndose como en el diseño.
+ * El vidrio se resuelve entonces con relleno translúcido más un realce de
+ * canto arriba y sombra difusa abajo, que es exactamente lo que muestra el
+ * frame de Figma.
  */
 function GlassWordmark() {
     return (
         <span
             className="font-display leading-[0.82] font-medium tracking-[-0.03em] select-none"
             style={{
-                fontSize: "clamp(4rem, 26vw, 19rem)",
-                color: "rgba(255,255,255,0.44)",
-                WebkitBackdropFilter: "blur(10px) saturate(1.25) brightness(1.08)",
-                backdropFilter: "blur(10px) saturate(1.25) brightness(1.08)",
-                WebkitBackgroundClip: "text",
-                backgroundClip: "text",
+                fontSize: "clamp(4rem, 30vw, 19rem)",
+                color: "rgba(255,255,255,0.46)",
                 textShadow:
-                    "0 1px 1px rgba(255,255,255,0.30), 0 -1px 1px rgba(0,0,0,0.06), 0 24px 60px rgba(20,14,30,0.18)",
+                    "0 1.5px 0 rgba(255,255,255,0.34), 0 -1px 1px rgba(0,0,0,0.05), 0 28px 70px rgba(20,14,30,0.22)",
             }}
         >
             4her
