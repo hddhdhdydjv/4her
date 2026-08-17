@@ -1,160 +1,169 @@
-import type { CSSProperties } from "react";
-import { IsoCluster } from "@/components/graphics/iso";
+"use client";
+
 import { type } from "@/components/ui/section";
+import { useParallax } from "@/hooks/use-parallax";
 import { cx } from "@/utils/cx";
 
 /**
- * Figma `Hero` (61:6590) — 1280×880, bg neutral/200.
+ * Figma `Hero` (2205:2951) — paisaje en capas + logotipo en vidrio.
  *
- * La composición del titular está posicionada en absoluto tal cual el diseño:
- * los `left` son % del ancho de contenido (1152) y los `top` van en `em`,
- * de modo que todo escala junto con el tamaño de fuente.
+ * El diseño viene separado en tres planos dentro de `Background shapes`
+ * (1280×1600, top −266):
  *
- * Las ilustraciones isométricas del diseño no se pueden exportar desde este
- * entorno; se reconstruyen en SVG (`IsoCluster`) con el mismo lenguaje.
+ *   Shape 3 (2205:2953)  cielo + montañas lejanas   -> plano de fondo
+ *   Logo    (2205:2954)  "4her" translúcido          -> plano medio
+ *   Shape 1 (2205:2955)  lomas verdes del frente     -> primer plano
+ *
+ * El logo va DETRÁS del primer plano: ese solapamiento es lo que da la
+ * sensación de profundidad cuando las tres capas se mueven a distinta
+ * velocidad al hacer scroll.
+ *
+ * Los dos PNG viven en `public/images/hero/`. Si todavía no están, el
+ * degradado de `SCENE_FALLBACK` sostiene la composición sin romper nada.
  */
 
-/** Icono 35×18 del bloque de label (61:6744). */
-function SparkIcon({ className, style }: { className?: string; style?: CSSProperties }) {
-    return (
-        <svg viewBox="0 0 35 18" className={className} style={style} fill="none" aria-hidden="true">
-            <path
-                d="M11 17h13M13.5 17a4 4 0 1 1 8 0M17.5 5V1M11.2 7.2 8.4 4.4M23.8 7.2l2.8-2.8M8 13H4M27 13h4"
-                stroke="currentColor"
-                strokeWidth="1.2"
-                strokeLinecap="round"
-            />
-        </svg>
-    );
-}
+/* Rutas de las capas exportadas desde Figma. */
+const LAYER_BACK = "/images/hero/hero-back.png"; // Shape 3
+const LAYER_FRONT = "/images/hero/hero-front.png"; // Shape 1
 
-/* ---------- Paleta hero (inspiración Starling Bank: violeta profundo) ----------
-   Estos valores son locales al hero — el resto del sitio mantiene la paleta
-   cálida de brand.css. Si más adelante se quiere unificar, se mueven a tokens.   */
-const HERO_BG      = "#1B1247"; // fondo principal: violeta medianoche
-const HERO_STRIP1  = "#231866"; // franja ancha: violeta medio
-const HERO_STRIP2  = "#3427A4"; // franja angosta (acento): violeta vivo
-const HERO_CARD    = "#0A0820"; // tarjeta oscura: violeta casi negro
-const HERO_TEXT    = "var(--neutral-50)";  // crema sobre oscuro
+/* Degradado que imita el atardecer del diseño mientras faltan los PNG. */
+const SCENE_FALLBACK =
+    "linear-gradient(180deg, #E9CBD4 0%, #DCC2D2 26%, #B9AECB 48%, #8E93A8 62%, #6E7B6A 78%, #4A5A3E 100%)";
 
-const HEADLINE = "font-display font-medium leading-none tracking-[-0.02em]";
+/**
+ * Velocidad de rezago de cada plano (ver `useParallax`).
+ * Cuanto más lejos está el plano, más se queda atrás.
+ */
+const SPEED = {
+    back: 0.42,
+    logo: 0.24,
+    front: -0.06,
+} as const;
+
+/** Textura de trama de puntos: el diseño tiene un dithering fino sobre la foto. */
+const DITHER = {
+    backgroundImage:
+        "radial-gradient(circle, rgba(255,255,255,0.10) 0.5px, transparent 0.5px)",
+    backgroundSize: "3px 3px",
+} as const;
 
 export function Hero() {
+    const backRef = useParallax<HTMLDivElement>(SPEED.back);
+    const logoRef = useParallax<HTMLDivElement>(SPEED.logo);
+    const frontRef = useParallax<HTMLDivElement>(SPEED.front);
+
     return (
-        // Sin overflow-hidden: los cubos del borde inferior (más abajo) están
-        // pensados para asomar más allá del hero, sobre la sección siguiente.
-        <section
-            id="inicio"
-            className="relative min-h-screen lg:h-screen"
-            style={{ background: HERO_BG }}
-        >
-            {/* Mobile: franjas de textura en la parte inferior */}
-            <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[22%] sm:hidden" style={{ background: HERO_STRIP1 }} />
-            <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[7%] sm:hidden" style={{ background: HERO_STRIP2 }} />
+        <section id="inicio" className="relative isolate min-h-screen overflow-hidden">
+            {/* ---------- Plano de fondo: cielo y montañas (Shape 3) ---------- */}
             <div
+                ref={backRef}
                 aria-hidden="true"
-                className="absolute inset-x-0 bottom-0 top-[calc(70%-70px)] opacity-[0.18] sm:hidden"
+                className="absolute inset-x-0 -top-[12%] -z-30 h-[124%] will-change-transform"
+                style={{ background: SCENE_FALLBACK }}
             >
-                <IsoCluster className="h-full w-full" />
+                <img
+                    src={LAYER_BACK}
+                    alt=""
+                    className="size-full object-cover"
+                    // El fallback tiene que seguir viéndose si el PNG no está.
+                    onError={(e) => {
+                        e.currentTarget.style.display = "none";
+                    }}
+                />
             </div>
 
-            {/* Desktop/tablet: franjas que cortan el borde derecho */}
-            <div aria-hidden="true" className="absolute inset-y-0 right-0 hidden w-[26.17%] sm:block" style={{ background: HERO_STRIP1 }} />
-            <div aria-hidden="true" className="absolute inset-y-0 right-0 hidden w-[7.27%] sm:block" style={{ background: HERO_STRIP2 }} />
-
-            {/* Imagen (61:6593): campo isométrico al 26% */}
+            {/* ---------- Plano medio: logotipo en vidrio (Logo) ----------
+                Centro en 61.8% del ancho y 44.8% del alto del frame original.
+                El ancho tipográfico (~56% del viewport) sale de los 723px que
+                mide el logo sobre los 1280 del diseño. */}
             <div
-                aria-hidden="true"
-                className="absolute inset-y-0 right-0 left-[calc(25%+70px)] hidden opacity-[0.18] sm:block"
+                ref={logoRef}
+                className="absolute inset-x-0 top-[42%] -z-20 flex justify-center will-change-transform"
             >
-                <IsoCluster className="h-full w-full" />
+                <GlassWordmark />
             </div>
 
-            {/* Mismo ritmo que el resto: el titular arranca en y=144 y la tarjeta
-                oscura cierra en y=762, o sea 138 desde abajo (frame 2020:5677).
-                El padding va acá y el tope de 1280 en el div de adentro — si van
-                juntos, border-box se come los 160px de gutter. */}
-            <div className="relative flex min-h-screen flex-col px-6 pt-40 pb-24 sm:px-10 lg:h-full lg:min-h-0 lg:px-20 lg:pt-[clamp(88px,16vh,176px)] lg:pb-0">
-              <div className="relative mx-auto flex w-full max-w-[1280px] flex-1 flex-col">
-                {/* ---------- Heading 1 (2020:5697) — composición exacta en desktop.
-                    Los `left` son el centro de cada palabra sobre los 1280 del
-                    frame; los `top` van en em del Display/Large de 72px. ---------- */}
-                <div
-                    className="relative hidden h-[4.0278em] w-full lg:block"
-                    style={{ fontSize: "clamp(2.5rem, 5.625vw, 4.5rem)" }}
-                >
-                    <h1 className="contents">
-                        <span className={cx(HEADLINE, "absolute top-0 left-[16.25%] -translate-x-1/2 whitespace-pre")} style={{ color: HERO_TEXT }}>
-                            {"(  4her )"}
-                        </span>
-                        <span
-                            className={cx(HEADLINE, "absolute top-[1.3333em] left-[36.563%] -translate-x-1/2 whitespace-nowrap")}
-                            style={{ color: HERO_TEXT }}
-                        >
-                            Comunicación
-                        </span>
-                        <span
-                            className={cx(HEADLINE, "absolute top-[1.4583em] left-[60.469%] -translate-x-1/2 whitespace-nowrap")}
-                            style={{ color: HERO_TEXT }}
-                        >
-                            &
-                        </span>
-                        <span
-                            className={cx(HEADLINE, "absolute top-[2.6667em] left-[25.859%] -translate-x-1/2 whitespace-nowrap")}
-                            style={{ color: HERO_TEXT }}
-                        >
-                            Marketing
-                        </span>
-                    </h1>
-                </div>
+            {/* ---------- Primer plano: lomas verdes (Shape 1) ----------
+                Arranca al 51.41% del frame y se ancla abajo, que es donde el
+                recorte tiene sentido cuando cambia el alto de la ventana. */}
+            <div
+                ref={frontRef}
+                aria-hidden="true"
+                className="absolute inset-x-0 top-[46%] -bottom-[10%] -z-10 will-change-transform"
+            >
+                <img
+                    src={LAYER_FRONT}
+                    alt=""
+                    className="size-full object-cover object-top"
+                    onError={(e) => {
+                        e.currentTarget.style.display = "none";
+                    }}
+                />
+            </div>
 
-                {/* ---------- Titular apilado (mobile / tablet) ---------- */}
-                <h1
-                    className={cx(HEADLINE, "flex flex-col lg:hidden")}
-                    style={{ fontSize: "clamp(2.25rem, 9vw, 3.25rem)", color: HERO_TEXT }}
-                >
-                    <span className="whitespace-pre">{"(  4her )"}</span>
-                    <span className="pl-[8%]">Comunicación &</span>
-                    <span className="pl-[3%]">Marketing</span>
-                </h1>
+            {/* Trama de puntos sobre toda la escena. */}
+            <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10" style={DITHER} />
 
-                {/* ---------- Cubos que asoman por el borde inferior ----------
-                    z-10 para que se sigan viendo por encima del fondo opaco de
-                    la sección siguiente (Quiénes somos), tal cual el frame de
-                    Figma: los tres clusters miden más que los 900px del Hero. */}
-                <div
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-x-0 bottom-0 z-10 hidden lg:block"
-                >
-                    <IsoCluster className="absolute right-[calc(8.33%+93px)] bottom-[-88px] h-[321px] w-[362px]" />
-                    <IsoCluster className="absolute bottom-[-42px] left-[37.8%] h-[180px] w-[203px]" />
-                    <IsoCluster className="absolute bottom-[-50px] left-[13.44%] h-[180px] w-[203px]" />
-                </div>
+            {/* Velo inferior: asienta el texto y empalma con la sección siguiente. */}
+            <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-[42%]"
+                style={{
+                    background:
+                        "linear-gradient(180deg, transparent 0%, rgba(12,8,6,0.28) 55%, rgba(12,8,6,0.72) 100%)",
+                }}
+            />
 
-                {/* ---------- Container (61:6736): tarjeta oscura ---------- */}
-                {/* Articles (2020:5823): x=98 sobre los 1280, cierra en y=762. */}
-                <div className="relative mt-12 w-full max-w-[390px] lg:absolute lg:bottom-[clamp(64px,15.33vh,168px)] lg:left-[7.656%] lg:mt-0 lg:h-[208px]">
-                    {/* Cuadradito que asoma arriba a la derecha (61:6741) */}
-                    <div aria-hidden="true" className="absolute top-0 right-0 size-6" style={{ background: HERO_CARD }} />
-                    <div className="mt-6 mr-6 flex flex-col gap-4 p-6" style={{ background: HERO_CARD }}>
-                        <p className={cx(type.h3)} style={{ color: HERO_TEXT }}>Comunicación &amp; Marketing</p>
-                        <p className={cx(type.body)} style={{ color: "var(--neutral-300)" }}>
+            {/* ---------- Copy ---------- */}
+            <div className="relative flex min-h-screen flex-col justify-end px-6 pt-40 pb-16 sm:px-10 lg:px-20 lg:pb-24">
+                <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
+                    <div className="max-w-[420px]">
+                        <h1 className={cx(type.h3, "text-[var(--neutral-50)]")}>
+                            Comunicación &amp; Marketing
+                        </h1>
+                        <p className={cx(type.body, "mt-3 text-[var(--neutral-200)]")}>
                             Más estratégico que una agencia, más cercano que un freelance
                         </p>
                     </div>
-                </div>
 
-                {/* ---------- Container (61:6742): label con icono ---------- */}
-                {/* Container (2020:5830): x=903 sobre los 1280, alto 94, arranca
-                    en y=554 → cierra a 252 del piso de la sección. */}
-                <div className="mt-8 flex w-full max-w-[279px] flex-col items-end gap-3 p-4 lg:absolute lg:bottom-[calc(clamp(64px,15.33vh,168px)+114px)] lg:left-[70.547%] lg:mt-0">
-                    <SparkIcon className="h-[18px] w-[35px]" style={{ color: "var(--accent-subtle)" }} />
-                    <p className={cx(type.label, "text-right")} style={{ color: "var(--accent-subtle)" }}>
+                    <p
+                        className={cx(type.label, "max-w-[279px] text-[var(--neutral-200)] lg:text-right")}
+                    >
                         Marca, contenido y estrategia en un mismo equipo.
                     </p>
                 </div>
-              </div>
             </div>
         </section>
+    );
+}
+
+/**
+ * "4her" en vidrio esmerilado.
+ *
+ * Dos capas apiladas sobre el mismo glifo:
+ *   1. `backdrop-filter` — difumina y aclara el paisaje que queda detrás.
+ *   2. el texto en blanco translúcido — el cuerpo lechoso del vidrio.
+ *
+ * El `background-clip: text` recorta el desenfoque a la forma de las letras en
+ * los motores que lo soportan; donde no, queda igual el blanco translúcido y
+ * la pieza sigue leyéndose como en el diseño.
+ */
+function GlassWordmark() {
+    return (
+        <span
+            className="font-display leading-[0.82] font-medium tracking-[-0.03em] select-none"
+            style={{
+                fontSize: "clamp(4rem, 26vw, 19rem)",
+                color: "rgba(255,255,255,0.44)",
+                WebkitBackdropFilter: "blur(10px) saturate(1.25) brightness(1.08)",
+                backdropFilter: "blur(10px) saturate(1.25) brightness(1.08)",
+                WebkitBackgroundClip: "text",
+                backgroundClip: "text",
+                textShadow:
+                    "0 1px 1px rgba(255,255,255,0.30), 0 -1px 1px rgba(0,0,0,0.06), 0 24px 60px rgba(20,14,30,0.18)",
+            }}
+        >
+            4her
+        </span>
     );
 }
