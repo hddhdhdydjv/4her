@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { Logotipo } from "@/components/graphics/brand";
 import { type } from "@/components/ui/section";
 import { useParallax } from "@/hooks/use-parallax";
 import { cx } from "@/utils/cx";
@@ -56,8 +57,18 @@ const SPEED = {
  */
 const SCENE_BOX = "absolute inset-x-0 -top-[14%] h-[128%] will-change-transform";
 
-/** Altura del logotipo dentro de la escena: apoyado sobre la línea de montañas. */
-const RIDGE = "44%";
+/**
+ * El primer plano va corrido hacia arriba respecto del fondo, igual que en el
+ * diseño (ahí `Shape 1` está colocado aparte, no calzado con `Shape 3`). Es lo
+ * que hace que las lomas suban a tapar la base del logotipo: sin ese corrimiento
+ * la parte opaca de la capa recién aparece al ~88% del alto y el solapamiento
+ * no se lee. Al ser transparente por encima de las lomas, mover la capa sólo
+ * mueve el horizonte verde.
+ */
+const FRONT_BOX = "absolute inset-x-0 -top-[22%] h-[128%] will-change-transform";
+
+/** Fondo de la tarjeta de copy: el negro de la marca, no un velo sobre la foto. */
+const CARD_BG = "#141414";
 
 /** Textura de trama de puntos: el diseño tiene un dithering fino sobre la foto. */
 const DITHER = {
@@ -104,13 +115,8 @@ export function Hero() {
                 logotipo acompaña al encuadre en vez de flotar por su cuenta.
                 `RIDGE` lo apoya sobre la línea de las montañas: las lomas del
                 frente arrancan al ~62% de la foto y le tapan la base. */}
-            <div
-                ref={logoRef}
-                className={cx(SCENE_BOX, "-z-20 flex items-start justify-center")}
-            >
-                <span className="relative" style={{ top: RIDGE }}>
-                    <GlassWordmark />
-                </span>
+            <div ref={logoRef} aria-hidden="true" className={cx(SCENE_BOX, "-z-20")}>
+                <GlassWordmark />
             </div>
 
             {/* ---------- Primer plano: lomas verdes (Shape 1) ----------
@@ -118,7 +124,7 @@ export function Hero() {
                 salen del mismo lienzo (5120×3520), así que compartiendo
                 geometría quedan calzadas en cualquier viewport. La capa trae
                 el canal alfa: transparente hasta el ~60%, lomas abajo. */}
-            <div ref={frontRef} aria-hidden="true" className={cx(SCENE_BOX, "-z-10")}>
+            <div ref={frontRef} aria-hidden="true" className={cx(FRONT_BOX, "-z-10")}>
                 {!frontFailed && (
                     <Image
                         src={LAYER_FRONT}
@@ -135,33 +141,30 @@ export function Hero() {
             {/* Trama de puntos sobre toda la escena. */}
             <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10" style={DITHER} />
 
-            {/* Velo inferior: asienta el texto y empalma con la sección siguiente. */}
-            <div
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-[42%]"
-                style={{
-                    background:
-                        "linear-gradient(180deg, transparent 0%, rgba(12,8,6,0.28) 55%, rgba(12,8,6,0.72) 100%)",
-                }}
-            />
-
-            {/* ---------- Copy ---------- */}
-            <div className="relative flex min-h-screen flex-col justify-end px-6 pt-40 pb-16 sm:px-10 lg:px-20 lg:pb-24">
-                <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
-                    <div className="max-w-[420px]">
-                        <h1 className={cx(type.h3, "text-[var(--neutral-50)]")}>
-                            Comunicación &amp; Marketing
-                        </h1>
-                        <p className={cx(type.body, "mt-3 text-[var(--neutral-200)]")}>
-                            Más estratégico que una agencia, más cercano que un freelance
-                        </p>
+            {/* ---------- Copy: tarjeta oscura arriba a la izquierda ----------
+                El paisaje llega limpio hasta el borde inferior; el contraste
+                del texto lo da la tarjeta, no un velo sobre la foto. */}
+            <div className="relative flex min-h-screen flex-col px-6 pt-28 sm:px-10 lg:px-20 lg:pt-[19%]">
+                <div className="mx-auto w-full max-w-[1280px]">
+                    <div className="relative w-full max-w-[300px]">
+                        {/* Cuadradito que asoma arriba a la derecha (61:6741). */}
+                        <div
+                            aria-hidden="true"
+                            className="absolute top-0 right-0 size-5"
+                            style={{ background: CARD_BG }}
+                        />
+                        <div
+                            className="mt-4 mr-4 flex flex-col gap-3 p-6"
+                            style={{ background: CARD_BG }}
+                        >
+                            <h1 className={cx(type.h3, "text-[var(--neutral-50)]")}>
+                                Comunicación &amp; Marketing
+                            </h1>
+                            <p className={cx(type.body, "text-[var(--neutral-300)]")}>
+                                Más estratégico que una agencia, más cercano que un freelance
+                            </p>
+                        </div>
                     </div>
-
-                    <p
-                        className={cx(type.label, "max-w-[279px] text-[var(--neutral-200)] lg:text-right")}
-                    >
-                        Marca, contenido y estrategia en un mismo equipo.
-                    </p>
                 </div>
             </div>
         </section>
@@ -169,30 +172,25 @@ export function Hero() {
 }
 
 /**
- * "4her" en vidrio, como en el diseño: blanco translúcido sobre el paisaje.
+ * El logotipo de marca en vidrio, apoyado sobre la línea de montañas.
  *
- * Acá había un `backdrop-filter` para desenfocar la foto de atrás, pero el
- * desenfoque se aplica a la CAJA del elemento, no a la forma de las letras:
- * dibujaba un rectángulo de bordes duros alrededor de la palabra. No hay forma
- * de recortarlo a los glifos con una tipografía web (`background-clip: text` no
- * alcanza al backdrop, y una máscara SVG no puede usar la fuente cargada).
+ * Es el SVG real (`Logotipo`, recortado al contorno de las letras), no la
+ * tipografía: los glifos del logo están dibujados a mano y no coinciden con
+ * Funnel Display. Se tiñe con `currentColor`, así el vidrio es un blanco
+ * translúcido y no hace falta una segunda exportación.
  *
- * El vidrio se resuelve entonces con relleno translúcido más un realce de
- * canto arriba y sombra difusa abajo, que es exactamente lo que muestra el
- * frame de Figma.
+ * Medidas del diseño (frame 1280): ancho 723.7 = 56.5%, borde izquierdo en
+ * 430.1 = 33.6%. En mobile se agranda y se centra, que si no queda perdido.
+ *
+ * Sin sombra proyectada a propósito: la que había se despegaba de las letras
+ * al hacer scroll y se leía como una mancha suelta debajo del logo.
  */
 function GlassWordmark() {
     return (
-        <span
-            className="font-display leading-[0.82] font-medium tracking-[-0.03em] select-none"
-            style={{
-                fontSize: "clamp(4rem, 30vw, 19rem)",
-                color: "rgba(255,255,255,0.46)",
-                textShadow:
-                    "0 1.5px 0 rgba(255,255,255,0.34), 0 -1px 1px rgba(0,0,0,0.05), 0 28px 70px rgba(20,14,30,0.22)",
-            }}
-        >
-            4her
-        </span>
+        <Logotipo
+            tight
+            className="absolute top-[58%] left-1/2 w-[74%] -translate-x-1/2 sm:top-[54%] sm:left-[33.6%] sm:w-[56.5%] sm:translate-x-0"
+            style={{ color: "rgba(255,255,255,0.46)" }}
+        />
     );
 }

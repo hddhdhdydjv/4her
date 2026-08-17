@@ -84,13 +84,13 @@ export function Navbar() {
                     {/* Pill (40:3871) — bg transitions on scroll, blur stays constant */}
                     <div
                         className={cx(
-                            "flex items-center justify-between rounded-[48px] border border-[var(--border-strong)]",
+                            "flex items-center justify-between rounded-[48px] border border-[var(--neutral-800)]",
                             "py-2 pr-2 pl-4 backdrop-blur-[35px]",
                             "transition-colors duration-[250ms] ease-[cubic-bezier(0.4,0,0.2,1)]",
-                            scrolled ? "bg-[var(--bg-primary)]" : "bg-[var(--bg-primary)]/80",
+                            scrolled ? "bg-[#141414]" : "bg-[#141414]/85",
                         )}
                     >
-                        <Logo />
+                        <Logo dark />
 
                         {/* Desktop nav (40:3875) */}
                         <nav className="hidden items-center gap-6 lg:flex">
@@ -101,7 +101,7 @@ export function Navbar() {
                                     onClick={scrollTo}
                                     className={cx(
                                         type.body,
-                                        "text-center text-[var(--text-primary)] transition-opacity hover:opacity-60",
+                                        "text-center text-[var(--neutral-200)] transition-opacity hover:opacity-60",
                                     )}
                                 >
                                     {link.label}
@@ -112,7 +112,7 @@ export function Navbar() {
                                 onClick={scrollTo}
                                 className={cx(
                                     type.body,
-                                    "rounded-[31px] bg-[var(--bg-inverse)] px-3 py-2 text-center text-[var(--text-inverse)] transition-opacity hover:opacity-85",
+                                    "rounded-[31px] bg-[var(--neutral-50)] px-3 py-2 text-center text-[#141414] transition-opacity hover:opacity-85",
                                 )}
                             >
                                 Hablemos
@@ -126,7 +126,7 @@ export function Navbar() {
                                 onClick={scrollTo}
                                 className={cx(
                                     type.body,
-                                    "rounded-[31px] bg-[var(--bg-inverse)] px-3 py-2 text-center text-[var(--text-inverse)] transition-opacity hover:opacity-85",
+                                    "rounded-[31px] bg-[var(--neutral-50)] px-3 py-2 text-center text-[#141414] transition-opacity hover:opacity-85",
                                 )}
                             >
                                 Hablemos
@@ -136,7 +136,7 @@ export function Navbar() {
                                 aria-label={open ? "Cerrar menú" : "Abrir menú"}
                                 aria-expanded={open}
                                 onClick={() => setOpen((v) => !v)}
-                                className="flex size-10 shrink-0 items-center justify-center rounded-full text-[var(--text-primary)]"
+                                className="flex size-10 shrink-0 items-center justify-center rounded-full text-[var(--neutral-200)]"
                             >
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                                     <path
