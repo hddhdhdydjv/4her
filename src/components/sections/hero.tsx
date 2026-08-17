@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+import { useState } from "react";
 import { type } from "@/components/ui/section";
 import { useParallax } from "@/hooks/use-parallax";
 import { cx } from "@/utils/cx";
@@ -20,6 +22,10 @@ import { cx } from "@/utils/cx";
  *
  * Los dos PNG viven en `public/images/hero/`. Si todavía no están, el
  * degradado de `SCENE_FALLBACK` sostiene la composición sin romper nada.
+ *
+ * Las capas pasan por `next/image`: el visitante nunca recibe el PNG crudo,
+ * sino un AVIF/WebP recortado al ancho de SU pantalla (ver `sizes`). El peso
+ * del archivo fuente sólo afecta al repo, no a la carga de la página.
  */
 
 /* Rutas de las capas exportadas desde Figma. */
@@ -52,6 +58,10 @@ export function Hero() {
     const logoRef = useParallax<HTMLDivElement>(SPEED.logo);
     const frontRef = useParallax<HTMLDivElement>(SPEED.front);
 
+    // Mientras las capas no existan en public/, se muestra sólo el degradado.
+    const [backFailed, setBackFailed] = useState(false);
+    const [frontFailed, setFrontFailed] = useState(false);
+
     return (
         <section id="inicio" className="relative isolate min-h-screen overflow-hidden">
             {/* ---------- Plano de fondo: cielo y montañas (Shape 3) ---------- */}
@@ -61,15 +71,19 @@ export function Hero() {
                 className="absolute inset-x-0 -top-[12%] -z-30 h-[124%] will-change-transform"
                 style={{ background: SCENE_FALLBACK }}
             >
-                <img
-                    src={LAYER_BACK}
-                    alt=""
-                    className="size-full object-cover"
-                    // El fallback tiene que seguir viéndose si el PNG no está.
-                    onError={(e) => {
-                        e.currentTarget.style.display = "none";
-                    }}
-                />
+                {/* `priority`: es el LCP de la página, no puede cargar diferido. */}
+                {!backFailed && (
+                    <Image
+                        src={LAYER_BACK}
+                        alt=""
+                        fill
+                        priority
+                        sizes="100vw"
+                        className="object-cover"
+                        // Si el PNG todavía no está, se cae al degradado.
+                        onError={() => setBackFailed(true)}
+                    />
+                )}
             </div>
 
             {/* ---------- Plano medio: logotipo en vidrio (Logo) ----------
@@ -91,14 +105,17 @@ export function Hero() {
                 aria-hidden="true"
                 className="absolute inset-x-0 top-[46%] -bottom-[10%] -z-10 will-change-transform"
             >
-                <img
-                    src={LAYER_FRONT}
-                    alt=""
-                    className="size-full object-cover object-top"
-                    onError={(e) => {
-                        e.currentTarget.style.display = "none";
-                    }}
-                />
+                {!frontFailed && (
+                    <Image
+                        src={LAYER_FRONT}
+                        alt=""
+                        fill
+                        priority
+                        sizes="100vw"
+                        className="object-cover object-top"
+                        onError={() => setFrontFailed(true)}
+                    />
+                )}
             </div>
 
             {/* Trama de puntos sobre toda la escena. */}
