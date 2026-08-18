@@ -1,5 +1,5 @@
+import Image from "next/image";
 import { Screen, gutter, type, tone } from "@/components/ui/section";
-import { IsoCluster } from "@/components/graphics/iso";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitReveal } from "@/components/motion/split-reveal";
 import { cx } from "@/utils/cx";
@@ -26,7 +26,17 @@ export function About() {
                     variant="scale"
                     className="flex h-52 shrink-0 items-center justify-center sm:h-64 lg:h-auto lg:w-[47.5%] lg:flex-none lg:self-center"
                 >
-                    <IsoCluster className="h-full w-full max-w-[320px] lg:max-w-none" />
+                    {/* SVG: se sirve tal cual, sin pasar por el optimizador.
+                        Convertirlo a bitmap sólo agregaría peso y le sacaría
+                        la nitidez a cualquier tamaño. */}
+                    <Image
+                        src="/images/about/equipo.svg"
+                        alt=""
+                        width={512}
+                        height={512}
+                        unoptimized
+                        className="h-full w-full max-w-[320px] object-contain lg:max-w-[512px]"
+                    />
                 </Reveal>
 
                 {/* Content (2020:5893) — gap 24, bloque de titular con gap 16 */}
