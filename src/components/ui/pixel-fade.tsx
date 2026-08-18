@@ -1,6 +1,3 @@
-"use client";
-
-import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 import { cx } from "@/utils/cx";
 
 /**
@@ -12,7 +9,9 @@ import { cx } from "@/utils/cx";
  * una textura contra el fondo en pixel art.
  *
  * La franja es corta a propósito: es el remate del borde entre dos secciones,
- * no una capa que se come una parte de lo que hay arriba.
+ * no una capa que se come una parte de lo que hay arriba. Es fija, no crece
+ * con el scroll — la versión animada se probó y se sacó porque el efecto era
+ * de más; esto queda como una guarda quieta, igual en el hero que en el pie.
  */
 
 /** Lado del píxel. */
@@ -64,24 +63,14 @@ function scatterRow(p: number, seed: number, color: string) {
 export function PixelFade({
     color,
     edge,
-    reveal = false,
     className,
 }: {
     /** Color del que se disuelve: el de la sección del otro lado del borde. */
     color: string;
     /** Contra qué borde se apoya. `bottom` cierra hacia abajo; `top`, hacia arriba. */
     edge: "top" | "bottom";
-    /**
-     * Si la franja se arma con el scroll en vez de estar puesta desde el
-     * arranque. Sirve arriba de todo, donde una franja quieta se lee como una
-     * capa apoyada encima; en un borde al que se llega scrolleando, no hace
-     * falta.
-     */
-    reveal?: boolean;
     className?: string;
 }) {
-    const ref = useScrollReveal<HTMLDivElement>(0.4);
-
     const rows = Array.from({ length: SCATTER }, (_, i) => {
         // Exponente > 1: arranca muy salteado y cierra rápido, que es como se
         // ve el disolvido en pixel art. Lineal deja demasiado píxel suelto en
@@ -100,11 +89,9 @@ export function PixelFade({
         );
     });
 
-    // La zona transparente arranca en el borde macizo y avanza a medida que
-    // crece `--reveal`; los 28px extra son el degradado con el que entra.
+    // Degradado corto sólo para que la punta de la franja no corte seco.
     const from = edge === "bottom" ? "to bottom" : "to top";
-    const start = reveal ? "calc(100% - var(--reveal, 0) * 100%)" : "0%";
-    const mask = `linear-gradient(${from}, transparent ${start}, #000 calc(${start} + 28px))`;
+    const mask = `linear-gradient(${from}, transparent 0%, #000 28px)`;
 
     // Cola maciza contra el borde: evita una línea de subpíxel entre la última
     // fila y la sección de al lado.
@@ -112,7 +99,6 @@ export function PixelFade({
 
     return (
         <div
-            ref={reveal ? ref : undefined}
             aria-hidden="true"
             className={cx(
                 "pointer-events-none absolute inset-x-0 z-10 flex",

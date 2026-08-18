@@ -146,7 +146,7 @@ export function Hero() {
             <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10" style={DITHER} />
 
             {/* Disolvido en píxeles contra la sección siguiente. */}
-            <PixelFade color={PAGE_BG} edge="bottom" reveal />
+            <PixelFade color={PAGE_BG} edge="bottom" />
 
             {/* ---------- Copy: tarjeta oscura arriba a la izquierda ----------
                 El paisaje llega limpio hasta el borde inferior; el contraste
