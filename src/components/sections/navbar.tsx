@@ -87,7 +87,7 @@ export function Navbar() {
                             "flex items-center justify-between rounded-[48px] border border-[var(--neutral-800)]",
                             "py-2 pr-2 pl-4 backdrop-blur-[35px]",
                             "transition-colors duration-[250ms] ease-[cubic-bezier(0.4,0,0.2,1)]",
-                            scrolled ? "bg-[#141414]" : "bg-[#141414]/85",
+                            scrolled ? "bg-[var(--accent-default)]" : "bg-[var(--accent-default)]/85",
                         )}
                     >
                         <Logo dark />
@@ -112,7 +112,7 @@ export function Navbar() {
                                 onClick={scrollTo}
                                 className={cx(
                                     type.body,
-                                    "rounded-[31px] bg-[var(--neutral-50)] px-3 py-2 text-center text-[#141414] transition-opacity hover:opacity-85",
+                                    "rounded-[31px] bg-[var(--neutral-50)] px-3 py-2 text-center text-[var(--accent-default)] transition-opacity hover:opacity-85",
                                 )}
                             >
                                 Hablemos
@@ -126,7 +126,7 @@ export function Navbar() {
                                 onClick={scrollTo}
                                 className={cx(
                                     type.body,
-                                    "rounded-[31px] bg-[var(--neutral-50)] px-3 py-2 text-center text-[#141414] transition-opacity hover:opacity-85",
+                                    "rounded-[31px] bg-[var(--neutral-50)] px-3 py-2 text-center text-[var(--accent-default)] transition-opacity hover:opacity-85",
                                 )}
                             >
                                 Hablemos

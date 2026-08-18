@@ -1,33 +1,50 @@
 /* ============================================================================
    4HER — Design tokens
    ----------------------------------------------------------------------------
-   Espejo del sistema de variables de Figma (colecciones Primitives / Color /
-   Typography). ÚNICO lugar para reajustar la piel de la marca.
+   Espejo del sistema de variables de Figma (archivo "4Her — Claude Design",
+   frame 2103:5426). ÚNICO lugar para reajustar la piel de la marca.
 
-   Figma            ->  CSS
-   neutral/900      ->  --neutral-900
-   text/primary     ->  --text-primary
-   bg/secondary     ->  --bg-secondary
+   La escala neutral es gris casi puro, sin tinte cálido: son los valores que
+   Figma pinta de verdad en cada componente (fallback de cada `var()` en el
+   código exportado), no los que devuelve el inspector de variables — ese
+   resolvía en el modo oscuro del archivo y mostraba bg/primary y text/primary
+   invertidos. Cinco quedaron anclados uno a uno contra un componente real:
+
+     Figma (dato real)                  ->  acá
+     bg/primary   #F7F7F6 (page bg)     ->  --neutral-50
+     bg/secondary #ECECEA (card Valores)->  --neutral-100
+     text/tertiary #7C7C7A (subheadline)->  --neutral-500
+     text/secondary #434341 (eyebrow)   ->  --neutral-700
+     text/primary #161616 (H1)          ->  --neutral-900
+     bg/inverse   #0E0E0E (botón CTA)   ->  --neutral-950
+
+   Los pasos intermedios (200/300/400/600/800) interpolan entre esos anclajes;
+   no hay dato de Figma para ellos porque no aparecen solos en ningún
+   componente, sólo como parte de la escala.
    ============================================================================ */
 
 :root {
-    /* --- Primitives: escala neutral (warm caramel/chocolate) -------------- */
-    --neutral-50:  #F8F2EA;
-    --neutral-100: #EFE7DA;
-    --neutral-200: #DDD0BE;
-    --neutral-300: #C5B5A0;
-    --neutral-400: #A09080;
-    --neutral-500: #786858;
-    --neutral-600: #5C4E40;
-    --neutral-700: #3E3028;
-    --neutral-800: #261A14;
-    --neutral-900: #160E0A;
-    --neutral-950: #0C0806;
+    /* --- Primitives: escala neutral (gris, sin tinte) ---------------------- */
+    --neutral-50:  #F7F7F6;
+    --neutral-100: #ECECEA;
+    --neutral-200: #DEDEDC;
+    --neutral-300: #C7C7C4;
+    --neutral-400: #A3A3A0;
+    --neutral-500: #7C7C7A;
+    --neutral-600: #5C5C5A;
+    --neutral-700: #434341;
+    --neutral-800: #2C2C2A;
+    --neutral-900: #161616;
+    --neutral-950: #0E0E0E;
 
-    /* Acento: violeta oscuro (mismo tono del hero) */
-    --accent-subtle:  #EAE4F2;
-    --accent-default: #1B1247;
-    --accent-hover:   #0A0820;
+    /* Acento: negro de marca. Distinto de --neutral-950 a propósito: son dos
+       negros cercanos que Figma usa para cosas distintas — bg/inverse es la
+       superficie oscura grande (sección de contacto, botón CTA), accent es el
+       elemento de marca (píldora de nav, tarjetas, isotipo). accent/default
+       #141414 es el valor real del archivo. */
+    --accent-subtle:  var(--neutral-100);
+    --accent-default: #141414;
+    --accent-hover:   #000000;
 
     /* --- Semánticos (modo claro) ------------------------------------------ */
     --bg-primary: var(--neutral-50);
@@ -41,25 +58,12 @@
     --text-inverse: var(--neutral-50);
 
     --border-default: var(--neutral-200);
-    --border-strong: var(--neutral-300);
+    --border-strong: var(--neutral-700);
 
     --accent-on-accent: var(--neutral-50);
 
     /* --- Alias legacy (componentes que aún usan los nombres viejos) -------- */
-    --brand-cream: var(--bg-primary);
-    --brand-cream-2: var(--bg-secondary);
-    --brand-surface: var(--bg-secondary);
-    --brand-sage: var(--neutral-200);
-    --brand-sage-deep: var(--neutral-300);
-    --brand-olive: var(--neutral-500);
-    --brand-olive-deep: var(--neutral-600);
-    --brand-black: var(--bg-inverse);
-    --brand-black-soft: var(--neutral-900);
     --brand-ink: var(--text-primary);
-    --brand-muted: var(--text-tertiary);
-    --brand-accent: var(--accent-default);
-    --brand-accent-deep: var(--accent-hover);
-    --brand-line: var(--border-default);
 
     /* --- Escala "brand" de Untitled UI ------------------------------------ */
     --color-brand-50: var(--neutral-50);

@@ -20,25 +20,29 @@ const values = [
         title: "Estrategia antes que estética",
         body: "Pensamos qué decir y por qué, no solo cómo se ve.",
         gradient: "linear-gradient(160deg, #fde3b0 8%, #f9a94f 52%, #f7c98a 110%)",
-        image: undefined as string | undefined,
+        // valor-4: elementos sueltos que se filtran a formas ordenadas.
+        image: "/images/values/valor-4.svg",
     },
     {
         title: "Un equipo con varias cabezas",
         body: "Varias miradas trabajando tu marca, no una sola persona para todo.",
         gradient: "linear-gradient(160deg, #fdf189 8%, #75fcec 55%, #89a0fd 110%)",
-        image: undefined,
+        // valor-3: cuatro ojos mirando hacia un mismo centro.
+        image: "/images/values/valor-3.svg",
     },
     {
         title: "Medimos si comunica",
         body: "Nos importa el impacto real, no solo los likes.",
         gradient: "linear-gradient(160deg, #bfdcfc 8%, #75fcc0 55%, #a7f39a 110%)",
-        image: undefined,
+        // valor-2: señal -> engranajes -> barras de medición.
+        image: "/images/values/valor-2.svg",
     },
     {
         title: "Te acompañamos",
         body: "Seguimos después de entregar. No desaparecemos.",
         gradient: "linear-gradient(160deg, #75fcec 8%, #7de3a8 55%, #cdf5a0 110%)",
-        image: undefined,
+        // valor-1: vías, andén y señal — el recorrido sigue.
+        image: "/images/values/valor-1.svg",
     },
 ];
 
@@ -71,21 +75,27 @@ export function Values() {
 
                 <ul className="grid gap-8 sm:grid-cols-2">
                     {values.map((v, i) => (
-                        <li key={v.title}>
-                            <Reveal delay={120 + i * 110} y={22}>
-                                <article className="relative overflow-hidden rounded-2xl bg-[var(--bg-secondary)] pb-[60%] sm:aspect-[624/384] sm:pb-0">
-                                    <div className="flex flex-col gap-2 p-8">
-                                        <h3 className={cx(type.h3, tone.primary)}>{v.title}</h3>
-                                        <p className={cx(type.bodyLg, tone.secondary)}>{v.body}</p>
-                                    </div>
-
-                                    <div className="absolute top-[51.56%] left-1/2 h-[60.94%] w-[38.46%] -translate-x-1/2 overflow-hidden rounded-xl">
+                        <li key={v.title} className="flex">
+                            <Reveal delay={120 + i * 110} y={22} className="flex w-full">
+                                {/* `h-full` + el `items-stretch` que trae la grilla
+                                    por defecto: las cuatro cards miden lo mismo
+                                    aunque los títulos ocupen distinta cantidad
+                                    de líneas. */}
+                                <article
+                                    className={cx(
+                                        "flex h-full w-full flex-col items-center gap-8 rounded-2xl",
+                                        "bg-[var(--bg-secondary)] p-8 text-center",
+                                    )}
+                                >
+                                    {/* La ilustración va arriba y manda el alto;
+                                        el texto se apoya abajo con `mt-auto`. */}
+                                    <div className="relative aspect-square w-[58%] max-w-[240px] overflow-hidden rounded-xl">
                                         {v.image ? (
                                             // eslint-disable-next-line @next/next/no-img-element
                                             <img
                                                 src={v.image}
                                                 alt=""
-                                                className="absolute inset-0 h-full w-full object-cover"
+                                                className="absolute inset-0 h-full w-full object-contain"
                                             />
                                         ) : (
                                             <>
@@ -101,6 +111,11 @@ export function Values() {
                                                 />
                                             </>
                                         )}
+                                    </div>
+
+                                    <div className="mt-auto flex flex-col gap-2">
+                                        <h3 className={cx(type.h3, tone.primary, "text-balance")}>{v.title}</h3>
+                                        <p className={cx(type.bodyLg, tone.secondary, "text-balance")}>{v.body}</p>
                                     </div>
                                 </article>
                             </Reveal>

@@ -13,14 +13,14 @@ import { type CSSProperties, useId } from "react";
 /**
  * Isotipo (2205:2938) — círculo con el "4" recortado. 34.45×34.45.
  *
- * El original es círculo claro (#F7F7F6) con la marca oscura, pensado para
- * fondo oscuro. Sobre la crema del sitio (#F8F2EA) el círculo desaparece y
- * queda flotando sólo la marca, que se lee como una forma rota. `invert` da
- * vuelta los dos tonos para esos casos.
+ * El original es círculo claro (--neutral-50) con la marca oscura, pensado
+ * para fondo oscuro. Sobre la crema del sitio (--neutral-50 también, son casi
+ * el mismo tono) el círculo desaparece y queda flotando sólo la marca, que se
+ * lee como una forma rota. `invert` da vuelta los dos tonos para esos casos.
  */
 export function Isotipo({ className, invert = false }: { className?: string; invert?: boolean }) {
-    const disc = invert ? "#141414" : "#F7F7F6";
-    const mark = invert ? "#F7F7F6" : "#141414";
+    const disc = invert ? "var(--accent-default)" : "var(--neutral-50)";
+    const mark = invert ? "var(--neutral-50)" : "var(--accent-default)";
 
     // El lockup aparece más de una vez por página (nav y footer). Con un id
     // fijo, el segundo <svg> reusaba el clipPath del primero y el isotipo

@@ -20,7 +20,7 @@ import { cx } from "@/utils/cx";
  */
 
 /** Color de la página: es lo que se disuelve contra el borde de arriba. */
-const PAGE_BG = "#F8F2EA";
+const PAGE_BG = "#F7F7F6"; // = --neutral-50
 
 /** Misma capa que el hero: ya está en caché cuando el visitante llega acá. */
 const BACKDROP = "/images/hero/hero-back.png";
@@ -128,7 +128,7 @@ export function Contact() {
                             className={cx(
                                 type.bodyLg,
                                 "mt-1 w-full rounded-[45px] bg-[var(--neutral-50)] px-4 py-3",
-                                "text-center text-[#141414] transition-opacity hover:opacity-85",
+                                "text-center text-[var(--accent-default)] transition-opacity hover:opacity-85",
                             )}
                         >
                             Enviar

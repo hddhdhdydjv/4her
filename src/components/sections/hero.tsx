@@ -31,7 +31,7 @@ import { cx } from "@/utils/cx";
  */
 
 /** Color de la página: es contra esto que funde el hero. */
-const PAGE_BG = "#F8F2EA";
+const PAGE_BG = "#F7F7F6"; // = --neutral-50
 
 /* Rutas de las capas exportadas desde Figma. */
 const LAYER_BACK = "/images/hero/hero-back.png"; // Shape 3
@@ -72,7 +72,7 @@ const SCENE_BOX = "absolute inset-x-0 -top-[14%] h-[128%] will-change-transform"
 const FRONT_BOX = "absolute inset-x-0 -top-[22%] h-[128%] will-change-transform";
 
 /** Fondo de la tarjeta de copy: el negro de la marca, no un velo sobre la foto. */
-const CARD_BG = "#141414";
+const CARD_BG = "var(--accent-default)";
 
 /** Textura de trama de puntos: el diseño tiene un dithering fino sobre la foto. */
 const DITHER = {
