@@ -6,7 +6,6 @@ import { CaseWePiper } from "@/components/sections/case-wepiper";
 import { Values } from "@/components/sections/values";
 import { Process } from "@/components/sections/process";
 import { Contact } from "@/components/sections/contact";
-import { Footer } from "@/components/sections/footer";
 
 /** Orden del wireframe Desktop de Figma (40:3764). */
 export default function Home() {
@@ -23,8 +22,6 @@ export default function Home() {
                 <Process />
                 <Contact />
             </main>
-
-            <Footer />
         </>
     );
 }

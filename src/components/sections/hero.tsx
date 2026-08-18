@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Logotipo } from "@/components/graphics/brand";
 import { type } from "@/components/ui/section";
 import { useParallax } from "@/hooks/use-parallax";
+import { useScrollSteps } from "@/hooks/use-scroll-reveal";
 import { cx } from "@/utils/cx";
 
 /**
@@ -70,44 +71,43 @@ const FRONT_BOX = "absolute inset-x-0 -top-[22%] h-[128%] will-change-transform"
 /** Fondo de la tarjeta de copy: el negro de la marca, no un velo sobre la foto. */
 const CARD_BG = "#141414";
 
-/* ---------------- Disolvido en píxeles hacia la sección siguiente -----------
-   El hero cortaba seco contra la crema de la página. En vez de un degradado
-   liso —que sobre una foto con trama se nota como una mancha— el corte se
-   resuelve con el mismo lenguaje del dithering: cuadraditos de la crema que
-   van tapando la foto, ralos arriba y macizos abajo.
+/* ------------------ Disolvido en dither hacia la sección siguiente ----------
+   El hero cortaba seco contra la crema de la página. Un degradado liso sobre
+   una foto con trama se nota como una mancha, así que el corte usa el mismo
+   grano que ya tiene la foto: puntos de la crema que van tapando la imagen,
+   finos arriba y macizos abajo.
 
-   Cada banda es un patrón de un solo cuadrado repetido; lo que cambia entre
-   bandas es el LADO del cuadrado.
+   El grano es el del dithering de la foto (`DITHER`), no un cuadrado gordo:
+   la idea es que parezca la misma textura cerrándose, no una capa distinta
+   apoyada encima.
 
-   El lado crece LINEAL, no con la raíz del área. Repartir el área en partes
-   iguales parece lo correcto pero hace que los primeros pasos salten mucho de
-   tamaño (√ crece rápido cerca de cero) y las bandas se leen como rayas. Con
-   el lado lineal el cambio de un paso al siguiente es siempre el mismo puñado
-   de píxeles y el degradé se ve continuo; el área queda cuadrática, o sea
-   arranca muy sutil y cierra rápido, que es como se comporta un disolvido. */
+   Y no está quieto. El alto lo maneja `--reveal`, que sigue el scroll: en el
+   tope de la página el disolvido no existe y va creciendo hacia arriba a
+   medida que el hero sale. Así hace la transición en vez de estar plantado
+   desde el arranque. */
 
 /** Color de la página: es contra esto que funde el hero. */
 const PAGE_BG = "#F8F2EA";
 
-/** Lado de la celda del patrón. Más grande = píxel más gordo. */
-const CELL = 10;
+/** Celda del grano: la misma que el dithering de la foto. */
+const CELL = 3;
 
 /**
- * Cantidad de bandas. Cada banda mide exactamente una celda de alto, así que
- * equivale a una fila de píxeles y el alto total del disolvido es STEPS×CELL.
+ * Cantidad de filas del disolvido. Cada una mide una celda de alto, así que el
+ * alto total es STEPS×CELL.
  *
- * Que la banda mida lo mismo que la celda es lo que saca las rayas: con
- * cualquier otro alto la fila de cuadrados cae cortada o repetida dentro de la
- * banda y los bordes entre bandas se leen como líneas horizontales.
+ * Que la fila mida lo mismo que la celda es lo que saca las rayas: con
+ * cualquier otro alto el punto cae cortado adentro de la banda y los bordes se
+ * leen como líneas horizontales.
  */
-const STEPS = 28;
+const STEPS = 84;
 
-/** Un patrón de cuadrados de lado `side` centrados en celdas de `CELL`. */
-function pixelTile(side: number) {
-    const off = ((CELL - side) / 2).toFixed(2);
+/** Un patrón de puntos de diámetro `size` centrados en celdas de `CELL`. */
+function ditherTile(size: number) {
+    const c = (CELL / 2).toFixed(2);
     const svg =
         `%3Csvg xmlns='http://www.w3.org/2000/svg' width='${CELL}' height='${CELL}'%3E` +
-        `%3Crect x='${off}' y='${off}' width='${side.toFixed(2)}' height='${side.toFixed(2)}' ` +
+        `%3Ccircle cx='${c}' cy='${c}' r='${(size / 2).toFixed(3)}' ` +
         `fill='%23${PAGE_BG.slice(1)}'/%3E%3C/svg%3E`;
     return `url("data:image/svg+xml,${svg}")`;
 }
@@ -184,7 +184,7 @@ export function Hero() {
             <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10" style={DITHER} />
 
             {/* Disolvido en píxeles contra la sección siguiente. */}
-            <PixelDissolve />
+            <DitherDissolve />
 
             {/* ---------- Copy: tarjeta oscura arriba a la izquierda ----------
                 El paisaje llega limpio hasta el borde inferior; el contraste
@@ -217,29 +217,33 @@ export function Hero() {
 }
 
 /**
- * El corte de abajo del hero, resuelto como un disolvido de píxeles.
+ * El corte de abajo del hero, resuelto como un disolvido de dither.
  *
- * Va apoyado en el borde inferior y ocupa el último tramo de la sección. La
- * banda de más abajo es crema maciza, así que empalma exacto con la sección
- * siguiente y no queda una costura.
+ * Cuántas filas se dibujan lo decide el scroll: ninguna en el tope de la
+ * página, todas cuando el hero ya se fue. El disolvido se estira hacia arriba
+ * a medida que se baja, en vez de estar plantado desde el arranque.
  *
- * El desfase de cada banda evita que los cuadrados queden alineados en
- * columnas: alineados se leen como rayas verticales, desfasados se leen como
- * ruido, que es lo que se busca.
+ * Clave: la rampa se COMPRIME en las filas que haya, no se recorta. El tamaño
+ * del punto se reparte sobre `visible`, no sobre `STEPS`, así que en cualquier
+ * momento la primera fila es casi invisible y la última tapa del todo. Si en
+ * cambio se recortara una rampa fija, arriba se entraría por la mitad y el
+ * borde se leería como una línea.
  */
-function PixelDissolve() {
-    const bands = Array.from({ length: STEPS }, (_, i) => {
-        // Lado lineal: la última banda llega a la celda entera y queda maciza.
-        const side = (CELL * (i + 1)) / STEPS;
+function DitherDissolve() {
+    const visible = useScrollSteps(STEPS, 0.55);
+    if (visible === 0) return null;
+
+    const rows = Array.from({ length: visible }, (_, i) => {
+        // Diámetro lineal: la última fila llega a la celda entera y tapa todo.
+        const size = (CELL * (i + 1)) / visible;
         return (
             <div
                 key={i}
                 style={{
                     height: CELL,
-                    backgroundImage: pixelTile(side),
+                    flex: "0 0 auto",
+                    backgroundImage: ditherTile(size),
                     backgroundSize: `${CELL}px ${CELL}px`,
-                    // Corrimiento alterno para romper las columnas.
-                    backgroundPosition: `${(i % 2) * (CELL / 2)}px 0`,
                 }}
             />
         );
@@ -248,9 +252,9 @@ function PixelDissolve() {
     return (
         <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col"
+            className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col justify-end"
         >
-            {bands}
+            {rows}
         </div>
     );
 }
