@@ -1,3 +1,4 @@
+import { Valor1, Valor2, Valor3, Valor4 } from "@/components/graphics/illustrations";
 import { Screen, gutter, type, tone } from "@/components/ui/section";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitReveal } from "@/components/motion/split-reveal";
@@ -21,28 +22,28 @@ const values = [
         body: "Pensamos qué decir y por qué, no solo cómo se ve.",
         gradient: "linear-gradient(160deg, #fde3b0 8%, #f9a94f 52%, #f7c98a 110%)",
         // valor-4: elementos sueltos que se filtran a formas ordenadas.
-        image: "/images/values/valor-4.svg",
+        image: Valor4,
     },
     {
         title: "Un equipo con varias cabezas",
         body: "Varias miradas trabajando tu marca, no una sola persona para todo.",
         gradient: "linear-gradient(160deg, #fdf189 8%, #75fcec 55%, #89a0fd 110%)",
         // valor-3: cuatro ojos mirando hacia un mismo centro.
-        image: "/images/values/valor-3.svg",
+        image: Valor3,
     },
     {
         title: "Medimos si comunica",
         body: "Nos importa el impacto real, no solo los likes.",
         gradient: "linear-gradient(160deg, #bfdcfc 8%, #75fcc0 55%, #a7f39a 110%)",
         // valor-2: señal -> engranajes -> barras de medición.
-        image: "/images/values/valor-2.svg",
+        image: Valor2,
     },
     {
         title: "Te acompañamos",
         body: "Seguimos después de entregar. No desaparecemos.",
         gradient: "linear-gradient(160deg, #75fcec 8%, #7de3a8 55%, #cdf5a0 110%)",
         // valor-1: vías, andén y señal — el recorrido sigue.
-        image: "/images/values/valor-1.svg",
+        image: Valor1,
     },
 ];
 
@@ -91,12 +92,11 @@ export function Values() {
                                         el texto se apoya abajo con `mt-auto`. */}
                                     <div className="relative aspect-square w-[58%] max-w-[240px] overflow-hidden rounded-xl">
                                         {v.image ? (
-                                            // eslint-disable-next-line @next/next/no-img-element
-                                            <img
-                                                src={v.image}
-                                                alt=""
-                                                className="absolute inset-0 h-full w-full object-contain"
-                                            />
+                                            // Inlineada en el DOM, no <img src>: trae un
+                                            // filtro de trazo (feTurbulence) que como
+                                            // imagen externa rasteriza al tamaño nativo
+                                            // del archivo y sale pixelado al escalar.
+                                            <v.image className="absolute inset-0 h-full w-full object-contain" />
                                         ) : (
                                             <>
                                                 <div className="absolute inset-0" style={{ background: v.gradient }} />

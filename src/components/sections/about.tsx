@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { Equipo } from "@/components/graphics/illustrations";
 import { Screen, gutter, type, tone } from "@/components/ui/section";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitReveal } from "@/components/motion/split-reveal";
@@ -26,17 +26,11 @@ export function About() {
                     variant="scale"
                     className="flex h-52 shrink-0 items-center justify-center sm:h-64 lg:h-auto lg:w-[47.5%] lg:flex-none lg:self-center"
                 >
-                    {/* SVG: se sirve tal cual, sin pasar por el optimizador.
-                        Convertirlo a bitmap sólo agregaría peso y le sacaría
-                        la nitidez a cualquier tamaño. */}
-                    <Image
-                        src="/images/about/equipo.svg"
-                        alt=""
-                        width={512}
-                        height={512}
-                        unoptimized
-                        className="h-full w-full max-w-[320px] object-contain lg:max-w-[512px]"
-                    />
+                    {/* Inlineada en el DOM, no <img src>: trae un filtro de
+                        trazo (feTurbulence) que como imagen externa rasteriza
+                        al tamaño nativo del archivo y sale pixelado al
+                        escalar. Inline, se recalcula a la resolución real. */}
+                    <Equipo className="h-full w-full max-w-[320px] object-contain lg:max-w-[512px]" />
                 </Reveal>
 
                 {/* Content (2020:5893) — gap 24, bloque de titular con gap 16 */}

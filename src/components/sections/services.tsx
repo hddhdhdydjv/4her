@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-import Image from "next/image";
 import { DotGrid } from "@/components/ui/dot-grid";
+import { Servicio1, Servicio2, Servicio3, Servicio4 } from "@/components/graphics/illustrations";
 import { contentWidth, gutter, type, tone } from "@/components/ui/section";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitReveal } from "@/components/motion/split-reveal";
@@ -11,28 +11,28 @@ import { cx } from "@/utils/cx";
 const services = [
     {
         letter: "b",
-        art: "/images/services/servicio-1.svg",
+        art: Servicio1,
         title: "Branding & Rebranding",
         body1: "Creamos o renovamos la identidad de tu marca: naming, sistema visual y guías de uso.",
         body2: "Para que cada pieza que produzcas, la hagas vos o un tercero, se vea y se sienta igual.",
     },
     {
         letter: "e",
-        art: "/images/services/servicio-2.svg",
+        art: Servicio2,
         title: "Estrategia & Posicionamiento",
         body1: "Definimos qué decir, a quién y por qué, antes de producir cualquier pieza.",
         body2: "Mensajes clave que sostienen todo lo que comunicás después.",
     },
     {
         letter: "m",
-        art: "/images/services/servicio-3.svg",
+        art: Servicio3,
         title: "Marketing digital & Contenido",
         body1: "Contenido y campañas pensadas para comunicar, no solo para llenar el feed.",
         body2: "Estrategia de canales y calendario editorial a medida.",
     },
     {
         letter: "g",
-        art: "/images/services/servicio-4.svg",
+        art: Servicio4,
         title: "Growth & Prensa",
         body1: "Hacemos crecer la presencia de tu marca con growth y relaciones con prensa.",
         body2: "Comunicación institucional cuando tu marca lo necesita.",
@@ -47,19 +47,16 @@ const services = [
  * `object-contain`: cada uno se acomoda adentro sin deformarse y todos ocupan
  * el mismo lugar en la grilla.
  *
- * `unoptimized` porque son SVG: pasarlos por el optimizador los volvería
- * bitmap, con más peso y menos nitidez.
+ * Van inlineados en el DOM (ver `graphics/illustrations.tsx`), no como
+ * `<img src>`: cada uno trae un filtro de trazo (feTurbulence) que como
+ * imagen externa rasteriza al tamaño nativo del archivo y sale pixelado al
+ * escalar. Inline, se recalcula a la resolución real de pantalla.
  */
-function ServiceArt({ src, title }: { src: string; title: string }) {
+function ServiceArt({ art: Art, title }: { art: (props: { className?: string }) => React.JSX.Element; title: string }) {
     return (
         <div className="relative aspect-[544/432] w-full">
-            <Image
-                src={src}
-                alt={`Ilustración de ${title}`}
-                fill
-                unoptimized
-                className="object-contain"
-            />
+            <Art className="absolute inset-0 h-full w-full object-contain" />
+            <span className="sr-only">Ilustración de {title}</span>
         </div>
     );
 }
@@ -235,7 +232,7 @@ export function Services() {
                                         )}
                                         style={fade(i === active)}
                                     >
-                                        <ServiceArt src={s.art} title={s.title} />
+                                        <ServiceArt art={s.art} title={s.title} />
                                     </div>
                                 ))}
                             </div>
@@ -347,7 +344,7 @@ export function Services() {
                                     )}
                                     style={fade(i === active)}
                                 >
-                                    <ServiceArt src={s.art} title={s.title} />
+                                    <ServiceArt art={s.art} title={s.title} />
                                 </div>
                             ))}
                         </div>
