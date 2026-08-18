@@ -57,11 +57,12 @@ export function Contact() {
             <Logotipo
                 tight
                 className={cx(
-                    "pointer-events-none absolute -z-10 select-none",
-                    "-bottom-[3%] left-[-3%] w-[106%]",
-                    "sm:-bottom-[5%] sm:left-[4%] sm:w-[58%]",
+                    "pointer-events-none absolute -z-10 left-1/2 -translate-x-1/2 select-none",
+                    // Sigue anclado abajo: el corte contra el borde inferior es
+                    // lo que lo vuelve textura y no un logo apoyado al final.
+                    "-bottom-[3%] w-[112%] sm:-bottom-[5%] sm:w-[116%]",
                 )}
-                style={{ color: "rgba(255,255,255,0.10)" }}
+                style={{ color: "rgba(255,255,255,0.05)" }}
             />
 
             <div className="mx-auto w-full max-w-[1280px] px-6 pt-[clamp(88px,16vh,176px)] pb-10 sm:px-10 lg:px-20 lg:pb-14">

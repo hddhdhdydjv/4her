@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Logotipo } from "@/components/graphics/brand";
 import { type } from "@/components/ui/section";
 import { useParallax } from "@/hooks/use-parallax";
-import { useScrollSteps } from "@/hooks/use-scroll-reveal";
+import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 import { cx } from "@/utils/cx";
 
 /**
@@ -71,44 +71,64 @@ const FRONT_BOX = "absolute inset-x-0 -top-[22%] h-[128%] will-change-transform"
 /** Fondo de la tarjeta de copy: el negro de la marca, no un velo sobre la foto. */
 const CARD_BG = "#141414";
 
-/* ------------------ Disolvido en dither hacia la sección siguiente ----------
-   El hero cortaba seco contra la crema de la página. Un degradado liso sobre
-   una foto con trama se nota como una mancha, así que el corte usa el mismo
-   grano que ya tiene la foto: puntos de la crema que van tapando la imagen,
-   finos arriba y macizos abajo.
+/* ------------------ Disolvido en píxeles hacia la sección siguiente ---------
+   El hero cortaba seco contra la crema de la página.
 
-   El grano es el del dithering de la foto (`DITHER`), no un cuadrado gordo:
-   la idea es que parezca la misma textura cerrándose, no una capa distinta
-   apoyada encima.
+   No es un degradado ni una rampa de puntos que crecen: son píxeles sueltos,
+   todos del mismo tamaño, que aparecen salteados y se van juntando hacia
+   abajo hasta tapar del todo. Cada celda está o no está — el degradé lo hace
+   la CANTIDAD de píxeles encendidos, no su tamaño. Es lo que se ve en el
+   pixel art cuando una textura se disuelve contra el fondo.
 
-   Y no está quieto. El alto lo maneja `--reveal`, que sigue el scroll: en el
-   tope de la página el disolvido no existe y va creciendo hacia arriba a
-   medida que el hero sale. Así hace la transición en vez de estar plantado
-   desde el arranque. */
+   La franja es corta a propósito: el efecto tiene que ser el remate del
+   borde, no una capa que se come el cuarto de abajo de la foto. */
 
 /** Color de la página: es contra esto que funde el hero. */
 const PAGE_BG = "#F8F2EA";
 
-/** Celda del grano: la misma que el dithering de la foto. */
-const CELL = 3;
+/** Lado del píxel. */
+const CELL = 5;
+
+/** Filas salteadas. El alto de la franja es SCATTER×CELL. */
+const SCATTER = 16;
 
 /**
- * Cantidad de filas del disolvido. Cada una mide una celda de alto, así que el
- * alto total es STEPS×CELL.
+ * Celdas por baldosa.
  *
- * Que la fila mida lo mismo que la celda es lo que saca las rayas: con
- * cualquier otro alto el punto cae cortado adentro de la banda y los bordes se
- * leen como líneas horizontales.
+ * El patrón se repite cada TILE celdas; con pocas, el ojo engancha la
+ * repetición y el salpicado se lee como una secuencia. Con 48 el ciclo mide
+ * 240px y cada fila arranca de una semilla distinta, así que no hay dos
+ * iguales alineadas en vertical.
  */
-const STEPS = 84;
+const TILE = 48;
 
-/** Un patrón de puntos de diámetro `size` centrados en celdas de `CELL`. */
-function ditherTile(size: number) {
-    const c = (CELL / 2).toFixed(2);
+/**
+ * Generador pseudoaleatorio con semilla (mulberry32).
+ *
+ * Con semilla y no con `Math.random` porque esto corre en el servidor y otra
+ * vez en el cliente: si cada uno saca un salpicado distinto, React encuentra
+ * un HTML que no coincide con el que iba a pintar y tira el error de
+ * hidratación.
+ */
+function seeded(seed: number) {
+    let t = seed + 0x6d2b79f5;
+    return () => {
+        t = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+}
+
+/** Una fila de píxeles encendidos con probabilidad `p`. */
+function scatterRow(p: number, seed: number) {
+    const rnd = seeded(seed);
+    let rects = "";
+    for (let i = 0; i < TILE; i++) {
+        if (rnd() < p) rects += `%3Crect x='${i * CELL}' width='${CELL}' height='${CELL}'/%3E`;
+    }
     const svg =
-        `%3Csvg xmlns='http://www.w3.org/2000/svg' width='${CELL}' height='${CELL}'%3E` +
-        `%3Ccircle cx='${c}' cy='${c}' r='${(size / 2).toFixed(3)}' ` +
-        `fill='%23${PAGE_BG.slice(1)}'/%3E%3C/svg%3E`;
+        `%3Csvg xmlns='http://www.w3.org/2000/svg' width='${TILE * CELL}' height='${CELL}' ` +
+        `fill='%23${PAGE_BG.slice(1)}'%3E${rects}%3C/svg%3E`;
     return `url("data:image/svg+xml,${svg}")`;
 }
 
@@ -184,7 +204,7 @@ export function Hero() {
             <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10" style={DITHER} />
 
             {/* Disolvido en píxeles contra la sección siguiente. */}
-            <DitherDissolve />
+            <PixelFade />
 
             {/* ---------- Copy: tarjeta oscura arriba a la izquierda ----------
                 El paisaje llega limpio hasta el borde inferior; el contraste
@@ -217,44 +237,52 @@ export function Hero() {
 }
 
 /**
- * El corte de abajo del hero, resuelto como un disolvido de dither.
+ * El remate de abajo del hero: los píxeles se van salteando hacia arriba.
  *
- * Cuántas filas se dibujan lo decide el scroll: ninguna en el tope de la
- * página, todas cuando el hero ya se fue. El disolvido se estira hacia arriba
- * a medida que se baja, en vez de estar plantado desde el arranque.
+ * El DOM es estático — las filas se dibujan una sola vez y no se vuelven a
+ * tocar. Lo único que cambia con el scroll es `--reveal`, y lo único que esa
+ * variable mueve es la máscara. Cuando esto re-renderizaba las filas en cada
+ * paso del scroll, el navegador tenía que volver a decodificar el patrón de
+ * cada una y se sentía el tirón al bajar.
  *
- * Clave: la rampa se COMPRIME en las filas que haya, no se recorta. El tamaño
- * del punto se reparte sobre `visible`, no sobre `STEPS`, así que en cualquier
- * momento la primera fila es casi invisible y la última tapa del todo. Si en
- * cambio se recortara una rampa fija, arriba se entraría por la mitad y el
- * borde se leería como una línea.
+ * La máscara además evita el corte duro arriba: descubre la franja con un
+ * degradado en vez de cortarla.
  */
-function DitherDissolve() {
-    const visible = useScrollSteps(STEPS, 0.55);
-    if (visible === 0) return null;
+function PixelFade() {
+    const ref = useScrollReveal<HTMLDivElement>(0.4);
 
-    const rows = Array.from({ length: visible }, (_, i) => {
-        // Diámetro lineal: la última fila llega a la celda entera y tapa todo.
-        const size = (CELL * (i + 1)) / visible;
+    const rows = Array.from({ length: SCATTER }, (_, i) => {
+        // Exponente > 1: arranca muy salteado y cierra rápido, que es como se
+        // ve el disolvido en pixel art. Lineal deja demasiado píxel suelto
+        // arriba y el borde se ensucia en vez de desaparecer.
+        const p = Math.pow((i + 1) / SCATTER, 1.9);
         return (
             <div
                 key={i}
                 style={{
                     height: CELL,
                     flex: "0 0 auto",
-                    backgroundImage: ditherTile(size),
-                    backgroundSize: `${CELL}px ${CELL}px`,
+                    backgroundImage: scatterRow(p, i * 7919 + 13),
+                    backgroundRepeat: "repeat-x",
                 }}
             />
         );
     });
 
+    const edge = "calc(100% - var(--reveal, 0) * 100%)";
+    const mask = `linear-gradient(to bottom, transparent ${edge}, #000 calc(${edge} + 28px))`;
+
     return (
         <div
+            ref={ref}
             aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col justify-end"
+            className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col"
+            style={{ WebkitMaskImage: mask, maskImage: mask }}
         >
             {rows}
+            {/* Cola maciza: cierra contra la sección siguiente sin dejar una
+                línea de subpíxel entre la última fila y el borde. */}
+            <div style={{ height: CELL * 2, background: PAGE_BG }} />
         </div>
     );
 }

@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
+import Image from "next/image";
 import { contentWidth, gutter, type, tone } from "@/components/ui/section";
-import { ServiceCanvas } from "@/components/sections/service-canvas";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitReveal } from "@/components/motion/split-reveal";
 import { cx } from "@/utils/cx";
@@ -10,29 +10,58 @@ import { cx } from "@/utils/cx";
 const services = [
     {
         letter: "b",
+        art: "/images/services/servicio-1.svg",
         title: "Branding & Rebranding",
         body1: "Creamos o renovamos la identidad de tu marca: naming, sistema visual y guías de uso.",
         body2: "Para que cada pieza que produzcas, la hagas vos o un tercero, se vea y se sienta igual.",
     },
     {
         letter: "e",
+        art: "/images/services/servicio-2.svg",
         title: "Estrategia & Posicionamiento",
         body1: "Definimos qué decir, a quién y por qué, antes de producir cualquier pieza.",
         body2: "Mensajes clave que sostienen todo lo que comunicás después.",
     },
     {
         letter: "m",
+        art: "/images/services/servicio-3.svg",
         title: "Marketing digital & Contenido",
         body1: "Contenido y campañas pensadas para comunicar, no solo para llenar el feed.",
         body2: "Estrategia de canales y calendario editorial a medida.",
     },
     {
         letter: "g",
+        art: "/images/services/servicio-4.svg",
         title: "Growth & Prensa",
         body1: "Hacemos crecer la presencia de tu marca con growth y relaciones con prensa.",
         body2: "Comunicación institucional cuando tu marca lo necesita.",
     },
 ];
+
+/**
+ * Ilustración de un servicio.
+ *
+ * Los cuatro SVG vienen con relaciones distintas (472×432, 414×414, 544×432,
+ * 484×432), así que el hueco fija la del diseño y el dibujo entra con
+ * `object-contain`: cada uno se acomoda adentro sin deformarse y todos ocupan
+ * el mismo lugar en la grilla.
+ *
+ * `unoptimized` porque son SVG: pasarlos por el optimizador los volvería
+ * bitmap, con más peso y menos nitidez.
+ */
+function ServiceArt({ src, title }: { src: string; title: string }) {
+    return (
+        <div className="relative aspect-[544/432] w-full">
+            <Image
+                src={src}
+                alt={`Ilustración de ${title}`}
+                fill
+                unoptimized
+                className="object-contain"
+            />
+        </div>
+    );
+}
 
 function BarIndicator({
     count,
@@ -182,7 +211,7 @@ export function Services() {
                                             i === active ? "opacity-100" : "opacity-0",
                                         )}
                                     >
-                                        <ServiceCanvas letter={s.letter} offset={i} />
+                                        <ServiceArt src={s.art} title={s.title} />
                                     </div>
                                 ))}
                             </div>
@@ -293,7 +322,7 @@ export function Services() {
                                         i === active ? "opacity-100" : "opacity-0",
                                     )}
                                 >
-                                    <ServiceCanvas letter={s.letter} offset={i} />
+                                    <ServiceArt src={s.art} title={s.title} />
                                 </div>
                             ))}
                         </div>
