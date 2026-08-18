@@ -1,0 +1,31 @@
+<svg width="335" height="319" viewBox="0 0 335 319" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_g_2154_2762)">
+<path d="M35.2812 151.25H280.93" stroke="#141414" stroke-width="1.30664" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M275.703 146.023L282.236 151.25L275.703 156.477" stroke="#141414" stroke-width="1.30664" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M73.1738 157.783C76.782 157.783 79.707 154.858 79.707 151.25C79.707 147.642 76.782 144.717 73.1738 144.717C69.5656 144.717 66.6406 147.642 66.6406 151.25C66.6406 154.858 69.5656 157.783 73.1738 157.783Z" stroke="#141414" stroke-width="1.30664" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M135.893 157.783C139.501 157.783 142.426 154.858 142.426 151.25C142.426 147.642 139.501 144.717 135.893 144.717C132.284 144.717 129.359 147.642 129.359 151.25C129.359 154.858 132.284 157.783 135.893 157.783Z" stroke="#141414" stroke-width="1.30664" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M198.611 160.396C203.663 160.396 207.758 156.301 207.758 151.25C207.758 146.199 203.663 142.104 198.611 142.104C193.56 142.104 189.465 146.199 189.465 151.25C189.465 156.301 193.56 160.396 198.611 160.396Z" fill="#141414" stroke="#141414" stroke-width="1.30664" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M256.104 157.783C259.712 157.783 262.637 154.858 262.637 151.25C262.637 147.642 259.712 144.717 256.104 144.717C252.495 144.717 249.57 147.642 249.57 151.25C249.57 154.858 252.495 157.783 256.104 157.783Z" stroke="#141414" stroke-width="1.30664" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M198.609 80.6914V130.344" stroke="#141414" stroke-width="1.30664" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M216.904 61.0918H180.318C178.153 61.0918 176.398 62.8468 176.398 65.0117V76.7715C176.398 78.9364 178.153 80.6914 180.318 80.6914H216.904C219.069 80.6914 220.824 78.9364 220.824 76.7715V65.0117C220.824 62.8468 219.069 61.0918 216.904 61.0918Z" stroke="#141414" stroke-width="1.30664" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M184.238 70.8916H212.984" stroke="#141414" stroke-width="1.30664" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M198.609 172.156V212.662" stroke="#141414" stroke-width="1.30664" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M198.609 212.662C219 212.662 227 212.662 248.262 212.662" stroke="#141414" stroke-width="1.30664" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M248.265 217.235C250.79 217.235 252.838 215.188 252.838 212.662C252.838 210.136 250.79 208.089 248.265 208.089C245.739 208.089 243.691 210.136 243.691 212.662C243.691 215.188 245.739 217.235 248.265 217.235Z" fill="#141414" stroke="#141414" stroke-width="1.30664" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M50.9609 134.264H173.785" stroke="#141414" stroke-width="1.30664" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M50.9609 168.236H173.785" stroke="#141414" stroke-width="1.30664" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M223.438 134.264H270.477" stroke="#141414" stroke-width="1.30664" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M223.438 168.236H270.477" stroke="#141414" stroke-width="1.30664" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<filter id="filter0_g_2154_2762" x="-0.6" y="-16.6" width="335.7" height="335.7" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feTurbulence type="fractalNoise" baseFrequency="0.22727271914482117 0.22727271914482117" numOctaves="3" seed="9218" />
+<feDisplacementMap in="shape" scale="1.2000000476837158" xChannelSelector="R" yChannelSelector="G" result="displacedImage" width="100%" height="100%" />
+<feMerge result="effect1_texture_2154_2762">
+<feMergeNode in="displacedImage"/>
+</feMerge>
+</filter>
+</defs>
+</svg>
