@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Logotipo } from "@/components/graphics/brand";
 import { type } from "@/components/ui/section";
 import { useParallax } from "@/hooks/use-parallax";
-import { useScrollReveal } from "@/hooks/use-scroll-reveal";
+import { PixelFade } from "@/components/ui/pixel-fade";
 import { cx } from "@/utils/cx";
 
 /**
@@ -29,6 +29,9 @@ import { cx } from "@/utils/cx";
  * sino un AVIF/WebP recortado al ancho de SU pantalla (ver `sizes`). El peso
  * del archivo fuente sólo afecta al repo, no a la carga de la página.
  */
+
+/** Color de la página: es contra esto que funde el hero. */
+const PAGE_BG = "#F8F2EA";
 
 /* Rutas de las capas exportadas desde Figma. */
 const LAYER_BACK = "/images/hero/hero-back.png"; // Shape 3
@@ -70,67 +73,6 @@ const FRONT_BOX = "absolute inset-x-0 -top-[22%] h-[128%] will-change-transform"
 
 /** Fondo de la tarjeta de copy: el negro de la marca, no un velo sobre la foto. */
 const CARD_BG = "#141414";
-
-/* ------------------ Disolvido en píxeles hacia la sección siguiente ---------
-   El hero cortaba seco contra la crema de la página.
-
-   No es un degradado ni una rampa de puntos que crecen: son píxeles sueltos,
-   todos del mismo tamaño, que aparecen salteados y se van juntando hacia
-   abajo hasta tapar del todo. Cada celda está o no está — el degradé lo hace
-   la CANTIDAD de píxeles encendidos, no su tamaño. Es lo que se ve en el
-   pixel art cuando una textura se disuelve contra el fondo.
-
-   La franja es corta a propósito: el efecto tiene que ser el remate del
-   borde, no una capa que se come el cuarto de abajo de la foto. */
-
-/** Color de la página: es contra esto que funde el hero. */
-const PAGE_BG = "#F8F2EA";
-
-/** Lado del píxel. */
-const CELL = 5;
-
-/** Filas salteadas. El alto de la franja es SCATTER×CELL. */
-const SCATTER = 16;
-
-/**
- * Celdas por baldosa.
- *
- * El patrón se repite cada TILE celdas; con pocas, el ojo engancha la
- * repetición y el salpicado se lee como una secuencia. Con 48 el ciclo mide
- * 240px y cada fila arranca de una semilla distinta, así que no hay dos
- * iguales alineadas en vertical.
- */
-const TILE = 48;
-
-/**
- * Generador pseudoaleatorio con semilla (mulberry32).
- *
- * Con semilla y no con `Math.random` porque esto corre en el servidor y otra
- * vez en el cliente: si cada uno saca un salpicado distinto, React encuentra
- * un HTML que no coincide con el que iba a pintar y tira el error de
- * hidratación.
- */
-function seeded(seed: number) {
-    let t = seed + 0x6d2b79f5;
-    return () => {
-        t = Math.imul(t ^ (t >>> 15), t | 1);
-        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-    };
-}
-
-/** Una fila de píxeles encendidos con probabilidad `p`. */
-function scatterRow(p: number, seed: number) {
-    const rnd = seeded(seed);
-    let rects = "";
-    for (let i = 0; i < TILE; i++) {
-        if (rnd() < p) rects += `%3Crect x='${i * CELL}' width='${CELL}' height='${CELL}'/%3E`;
-    }
-    const svg =
-        `%3Csvg xmlns='http://www.w3.org/2000/svg' width='${TILE * CELL}' height='${CELL}' ` +
-        `fill='%23${PAGE_BG.slice(1)}'%3E${rects}%3C/svg%3E`;
-    return `url("data:image/svg+xml,${svg}")`;
-}
 
 /** Textura de trama de puntos: el diseño tiene un dithering fino sobre la foto. */
 const DITHER = {
@@ -204,7 +146,7 @@ export function Hero() {
             <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10" style={DITHER} />
 
             {/* Disolvido en píxeles contra la sección siguiente. */}
-            <PixelFade />
+            <PixelFade color={PAGE_BG} edge="bottom" reveal />
 
             {/* ---------- Copy: tarjeta oscura arriba a la izquierda ----------
                 El paisaje llega limpio hasta el borde inferior; el contraste
@@ -233,57 +175,6 @@ export function Hero() {
                 </div>
             </div>
         </section>
-    );
-}
-
-/**
- * El remate de abajo del hero: los píxeles se van salteando hacia arriba.
- *
- * El DOM es estático — las filas se dibujan una sola vez y no se vuelven a
- * tocar. Lo único que cambia con el scroll es `--reveal`, y lo único que esa
- * variable mueve es la máscara. Cuando esto re-renderizaba las filas en cada
- * paso del scroll, el navegador tenía que volver a decodificar el patrón de
- * cada una y se sentía el tirón al bajar.
- *
- * La máscara además evita el corte duro arriba: descubre la franja con un
- * degradado en vez de cortarla.
- */
-function PixelFade() {
-    const ref = useScrollReveal<HTMLDivElement>(0.4);
-
-    const rows = Array.from({ length: SCATTER }, (_, i) => {
-        // Exponente > 1: arranca muy salteado y cierra rápido, que es como se
-        // ve el disolvido en pixel art. Lineal deja demasiado píxel suelto
-        // arriba y el borde se ensucia en vez de desaparecer.
-        const p = Math.pow((i + 1) / SCATTER, 1.9);
-        return (
-            <div
-                key={i}
-                style={{
-                    height: CELL,
-                    flex: "0 0 auto",
-                    backgroundImage: scatterRow(p, i * 7919 + 13),
-                    backgroundRepeat: "repeat-x",
-                }}
-            />
-        );
-    });
-
-    const edge = "calc(100% - var(--reveal, 0) * 100%)";
-    const mask = `linear-gradient(to bottom, transparent ${edge}, #000 calc(${edge} + 28px))`;
-
-    return (
-        <div
-            ref={ref}
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col"
-            style={{ WebkitMaskImage: mask, maskImage: mask }}
-        >
-            {rows}
-            {/* Cola maciza: cierra contra la sección siguiente sin dejar una
-                línea de subpíxel entre la última fila y el borde. */}
-            <div style={{ height: CELL * 2, background: PAGE_BG }} />
-        </div>
     );
 }
 

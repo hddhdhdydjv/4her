@@ -1,7 +1,7 @@
 import Image from "next/image";
-import { Logotipo } from "@/components/graphics/brand";
 import { Footer } from "@/components/sections/footer";
 import { Input, Label, Textarea } from "@/components/ui/field";
+import { PixelFade } from "@/components/ui/pixel-fade";
 import { type } from "@/components/ui/section";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitReveal } from "@/components/motion/split-reveal";
@@ -18,6 +18,9 @@ import { cx } from "@/utils/cx";
  * El pie va adentro de esta sección, no como bloque aparte, para que las dos
  * cosas se lean como una sola franja.
  */
+
+/** Color de la página: es lo que se disuelve contra el borde de arriba. */
+const PAGE_BG = "#F8F2EA";
 
 /** Misma capa que el hero: ya está en caché cuando el visitante llega acá. */
 const BACKDROP = "/images/hero/hero-back.png";
@@ -51,19 +54,9 @@ export function Contact() {
                 }}
             />
 
-            {/* ---------- Logotipo gigante, cortado por el borde de abajo ----------
-                Sale del encuadre a propósito: el corte es lo que lo vuelve una
-                textura de cierre y no un logo suelto apoyado al final. */}
-            <Logotipo
-                tight
-                className={cx(
-                    "pointer-events-none absolute -z-10 left-1/2 -translate-x-1/2 select-none",
-                    // Sigue anclado abajo: el corte contra el borde inferior es
-                    // lo que lo vuelve textura y no un logo apoyado al final.
-                    "-bottom-[3%] w-[112%] sm:-bottom-[5%] sm:w-[116%]",
-                )}
-                style={{ color: "rgba(255,255,255,0.05)" }}
-            />
+            {/* Remate en píxeles contra la sección de arriba: la crema se
+                disuelve dentro de la foto en vez de cortar en una línea. */}
+            <PixelFade color={PAGE_BG} edge="top" />
 
             <div className="mx-auto w-full max-w-[1280px] px-6 pt-[clamp(88px,16vh,176px)] pb-10 sm:px-10 lg:px-20 lg:pb-14">
                 <div className="flex flex-col gap-10 lg:flex-row lg:gap-16">
@@ -143,7 +136,7 @@ export function Contact() {
                     </Reveal>
                 </div>
 
-                {/* Aire para que el logotipo del fondo respire antes del pie. */}
+                {/* Aire entre el formulario y el pie. */}
                 <div className="mt-[clamp(96px,18vh,220px)]">
                     <Footer />
                 </div>

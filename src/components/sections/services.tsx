@@ -63,6 +63,29 @@ function ServiceArt({ src, title }: { src: string; title: string }) {
     );
 }
 
+/**
+ * Fundido de un servicio al siguiente.
+ *
+ * El que sale se va primero y el que entra espera a que termine, en vez de
+ * cruzarse. Cruzados, en la mitad de la transición los dos están al 50% y se
+ * ve el bajón —y en las ilustraciones, que son línea sobre transparente, se
+ * llegan a ver los dos dibujos superpuestos. Eso era el salto.
+ *
+ * El retardo va sobre el que entra: CSS aplica el `transition-delay` del
+ * estado al que se va, así que el activo espera y el que se apaga arranca ya.
+ */
+const FADE_MS = 300;
+
+function fade(isActive: boolean) {
+    return {
+        transitionProperty: "opacity",
+        transitionDuration: `${FADE_MS}ms`,
+        transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)",
+        transitionDelay: isActive ? `${FADE_MS}ms` : "0ms",
+        opacity: isActive ? 1 : 0,
+    } as const;
+}
+
 function BarIndicator({
     count,
     active,
@@ -200,16 +223,15 @@ export function Services() {
                     )}>
                         <div className={cx("mx-auto flex w-full flex-1 flex-col", contentWidth)}>
                             {/* Image — fills remaining vertical space */}
-                            <div className="relative min-h-0 flex-1 overflow-hidden rounded-2xl bg-[var(--bg-secondary)]">
+                            <div className="relative min-h-0 flex-1">
                                 {services.map((s, i) => (
                                     <div
                                         key={s.title}
                                         aria-hidden="true"
                                         className={cx(
                                             "absolute inset-0 flex items-center",
-                                            "transition-opacity duration-[550ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
-                                            i === active ? "opacity-100" : "opacity-0",
                                         )}
+                                        style={fade(i === active)}
                                     >
                                         <ServiceArt src={s.art} title={s.title} />
                                     </div>
@@ -219,18 +241,16 @@ export function Services() {
                             {/* Service text — below image */}
                             <div className="flex shrink-0 flex-col gap-3 pt-3">
                                 <BarIndicator count={n} active={active} onSelect={goTo} />
-                                <div className="relative min-h-[108px]">
+                                <div className="grid">
                                     {services.map((s, i) => (
                                         <div
                                             key={s.title}
                                             aria-hidden={i !== active}
                                             className={cx(
-                                                "absolute inset-x-0 top-0 flex flex-col gap-1.5",
-                                                "transition-opacity duration-[550ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
-                                                i === active
-                                                    ? "opacity-100"
-                                                    : "pointer-events-none opacity-0",
+                                                "col-start-1 row-start-1 flex flex-col gap-1.5",
+                                                i !== active && "pointer-events-none",
                                             )}
+                                            style={fade(i === active)}
                                         >
                                             <h3 className={cx(type.h2, tone.primary)}>{s.title}</h3>
                                             <p className={cx(type.body, tone.secondary)}>{s.body1}</p>
@@ -278,18 +298,20 @@ export function Services() {
                         {/* Text column — left */}
                         <div className="flex w-[52.5%] shrink-0 flex-col gap-6">
                             <BarIndicator count={n} active={active} onSelect={goTo} />
-                            <div className="relative min-h-[201px]">
+                            {/* Pila en grid: todos los servicios comparten la
+                                misma celda, así que la caja mide lo que el más
+                                largo y ni el botón ni el stepper se corren al
+                                cambiar de servicio. */}
+                            <div className="grid">
                                 {services.map((s, i) => (
                                     <div
                                         key={s.title}
                                         aria-hidden={i !== active}
                                         className={cx(
-                                            "absolute inset-x-0 top-0 flex flex-col gap-3",
-                                            "transition-opacity duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
-                                            i === active
-                                                ? "opacity-100"
-                                                : "pointer-events-none opacity-0",
+                                            "col-start-1 row-start-1 flex flex-col gap-3",
+                                            i !== active && "pointer-events-none",
                                         )}
+                                        style={fade(i === active)}
                                     >
                                         <h3 className={cx(type.h2, tone.primary, "max-w-[376px] text-balance")}>
                                             {s.title}
@@ -311,16 +333,15 @@ export function Services() {
                         </div>
 
                         {/* Image column — right */}
-                        <div className="relative w-[42.5%] shrink-0 overflow-hidden rounded-2xl bg-[var(--bg-secondary)] aspect-[544/432]">
+                        <div className="relative aspect-[544/432] w-[42.5%] shrink-0">
                             {services.map((s, i) => (
                                 <div
                                     key={s.title}
                                     aria-hidden="true"
                                     className={cx(
                                         "absolute inset-0 flex items-center",
-                                        "transition-opacity duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
-                                        i === active ? "opacity-100" : "opacity-0",
                                     )}
+                                    style={fade(i === active)}
                                 >
                                     <ServiceArt src={s.art} title={s.title} />
                                 </div>
