@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import Image from "next/image";
+import { DotGrid } from "@/components/ui/dot-grid";
 import { contentWidth, gutter, type, tone } from "@/components/ui/section";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitReveal } from "@/components/motion/split-reveal";
@@ -224,6 +225,7 @@ export function Services() {
                         <div className={cx("mx-auto flex w-full flex-1 flex-col", contentWidth)}>
                             {/* Image — fills remaining vertical space */}
                             <div className="relative min-h-0 flex-1">
+                                <DotGrid />
                                 {services.map((s, i) => (
                                     <div
                                         key={s.title}
@@ -334,6 +336,8 @@ export function Services() {
 
                         {/* Image column — right */}
                         <div className="relative aspect-[544/432] w-[42.5%] shrink-0">
+                            {/* Trama de fondo, detrás de las cuatro ilustraciones. */}
+                            <DotGrid />
                             {services.map((s, i) => (
                                 <div
                                     key={s.title}
