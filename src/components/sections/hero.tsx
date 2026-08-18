@@ -179,8 +179,16 @@ export function Hero() {
  * Funnel Display. Se tiñe con `currentColor`, así el vidrio es un blanco
  * translúcido y no hace falta una segunda exportación.
  *
- * Medidas del diseño (frame 1280): ancho 723.7 = 56.5%, borde izquierdo en
- * 430.1 = 33.6%. En mobile se agranda y se centra, que si no queda perdido.
+ * Medidas del diseño (frame 1280×880): ancho 723.7 = 56.5%, centro horizontal
+ * en 61.8%, centro vertical en 64% del alto.
+ *
+ * Va anclado por el CENTRO, no por el borde: atado por arriba, el alto del
+ * logo (que sale del ancho en vw) lo empujaba hacia abajo en pantallas anchas
+ * y en 16:9 terminaba hundido en las lomas.
+ *
+ * Por lo mismo el ancho lleva tope en `vh`: 82vh da los mismos 723px del
+ * diseño en 1280×880 y evita que en 1920×1080 el logo crezca hasta ocupar un
+ * tercio del alto. Los dos límites coinciden en la proporción del diseño.
  *
  * Sin sombra proyectada a propósito: la que había se despegaba de las letras
  * al hacer scroll y se leía como una mancha suelta debajo del logo.
@@ -189,7 +197,14 @@ function GlassWordmark() {
     return (
         <Logotipo
             tight
-            className="absolute top-[58%] left-1/2 w-[74%] -translate-x-1/2 sm:top-[54%] sm:left-[33.6%] sm:w-[56.5%] sm:translate-x-0"
+            className={cx(
+                // Mobile: más grande y más abajo. La pantalla es mucho más alta
+                // que ancha, así que el tope en vh nunca entra en juego y el
+                // logo queda chico y despegado de las lomas si se deja el
+                // encuadre de desktop.
+                "absolute top-[66%] left-1/2 w-[86vw] -translate-x-1/2 -translate-y-1/2",
+                "sm:top-[61%] sm:left-[61.8%] sm:w-[min(56.5vw,82vh)]",
+            )}
             style={{ color: "rgba(255,255,255,0.46)" }}
         />
     );
