@@ -70,6 +70,48 @@ const FRONT_BOX = "absolute inset-x-0 -top-[22%] h-[128%] will-change-transform"
 /** Fondo de la tarjeta de copy: el negro de la marca, no un velo sobre la foto. */
 const CARD_BG = "#141414";
 
+/* ---------------- Disolvido en píxeles hacia la sección siguiente -----------
+   El hero cortaba seco contra la crema de la página. En vez de un degradado
+   liso —que sobre una foto con trama se nota como una mancha— el corte se
+   resuelve con el mismo lenguaje del dithering: cuadraditos de la crema que
+   van tapando la foto, ralos arriba y macizos abajo.
+
+   Cada banda es un patrón de un solo cuadrado repetido; lo que cambia entre
+   bandas es el LADO del cuadrado.
+
+   El lado crece LINEAL, no con la raíz del área. Repartir el área en partes
+   iguales parece lo correcto pero hace que los primeros pasos salten mucho de
+   tamaño (√ crece rápido cerca de cero) y las bandas se leen como rayas. Con
+   el lado lineal el cambio de un paso al siguiente es siempre el mismo puñado
+   de píxeles y el degradé se ve continuo; el área queda cuadrática, o sea
+   arranca muy sutil y cierra rápido, que es como se comporta un disolvido. */
+
+/** Color de la página: es contra esto que funde el hero. */
+const PAGE_BG = "#F8F2EA";
+
+/** Lado de la celda del patrón. Más grande = píxel más gordo. */
+const CELL = 10;
+
+/**
+ * Cantidad de bandas. Cada banda mide exactamente una celda de alto, así que
+ * equivale a una fila de píxeles y el alto total del disolvido es STEPS×CELL.
+ *
+ * Que la banda mida lo mismo que la celda es lo que saca las rayas: con
+ * cualquier otro alto la fila de cuadrados cae cortada o repetida dentro de la
+ * banda y los bordes entre bandas se leen como líneas horizontales.
+ */
+const STEPS = 28;
+
+/** Un patrón de cuadrados de lado `side` centrados en celdas de `CELL`. */
+function pixelTile(side: number) {
+    const off = ((CELL - side) / 2).toFixed(2);
+    const svg =
+        `%3Csvg xmlns='http://www.w3.org/2000/svg' width='${CELL}' height='${CELL}'%3E` +
+        `%3Crect x='${off}' y='${off}' width='${side.toFixed(2)}' height='${side.toFixed(2)}' ` +
+        `fill='%23${PAGE_BG.slice(1)}'/%3E%3C/svg%3E`;
+    return `url("data:image/svg+xml,${svg}")`;
+}
+
 /** Textura de trama de puntos: el diseño tiene un dithering fino sobre la foto. */
 const DITHER = {
     backgroundImage:
@@ -141,6 +183,9 @@ export function Hero() {
             {/* Trama de puntos sobre toda la escena. */}
             <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10" style={DITHER} />
 
+            {/* Disolvido en píxeles contra la sección siguiente. */}
+            <PixelDissolve />
+
             {/* ---------- Copy: tarjeta oscura arriba a la izquierda ----------
                 El paisaje llega limpio hasta el borde inferior; el contraste
                 del texto lo da la tarjeta, no un velo sobre la foto. */}
@@ -168,6 +213,45 @@ export function Hero() {
                 </div>
             </div>
         </section>
+    );
+}
+
+/**
+ * El corte de abajo del hero, resuelto como un disolvido de píxeles.
+ *
+ * Va apoyado en el borde inferior y ocupa el último tramo de la sección. La
+ * banda de más abajo es crema maciza, así que empalma exacto con la sección
+ * siguiente y no queda una costura.
+ *
+ * El desfase de cada banda evita que los cuadrados queden alineados en
+ * columnas: alineados se leen como rayas verticales, desfasados se leen como
+ * ruido, que es lo que se busca.
+ */
+function PixelDissolve() {
+    const bands = Array.from({ length: STEPS }, (_, i) => {
+        // Lado lineal: la última banda llega a la celda entera y queda maciza.
+        const side = (CELL * (i + 1)) / STEPS;
+        return (
+            <div
+                key={i}
+                style={{
+                    height: CELL,
+                    backgroundImage: pixelTile(side),
+                    backgroundSize: `${CELL}px ${CELL}px`,
+                    // Corrimiento alterno para romper las columnas.
+                    backgroundPosition: `${(i % 2) * (CELL / 2)}px 0`,
+                }}
+            />
+        );
+    });
+
+    return (
+        <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col"
+        >
+            {bands}
+        </div>
     );
 }
 
