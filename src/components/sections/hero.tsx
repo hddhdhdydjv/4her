@@ -9,18 +9,11 @@ import { cx } from "@/utils/cx";
  * Hero editorial: un aro gigante de puntos detrás del titular.
  *
  * La marca ya es un círculo dentro de un cuadrado, así que la página abre con
- * esa misma geometría a escala de pantalla: el aro sangra fuera del encuadre
- * y las hairlines del índice de abajo sostienen la retícula.
+ * esa misma geometría a escala de pantalla: el aro sangra fuera del encuadre.
  *
  * El titular mezcla la grotesca de marca con Fraunces itálica en las dos
  * palabras que lo definen — el contraste es el que hace de "editorial".
  */
-const services = [
-    { n: "01", label: "Posicionamiento de marca" },
-    { n: "02", label: "Marketing digital y campañas" },
-    { n: "03", label: "Estrategia comercial" },
-];
-
 export function Hero() {
     const scrollTo = useAnchorScroll();
 
@@ -37,9 +30,9 @@ export function Hero() {
 
             <div
                 className={cx(
-                    "relative flex flex-1 flex-col justify-end",
+                    "relative flex flex-1 flex-col",
                     gutter,
-                    "pt-28 pb-5 lg:pt-32 lg:pb-6",
+                    "pt-28 pb-16 lg:pt-32 lg:pb-20",
                 )}
             >
                 <div className={cx("mx-auto flex w-full flex-1 flex-col justify-center", contentWidth)}>
@@ -106,30 +99,6 @@ export function Hero() {
                         </div>
                     </div>
                 </div>
-
-                {/* Índice de servicios: la retícula del sitio, a pie de pantalla. */}
-                <ul
-                    className={cx(
-                        // Fondo propio: el aro pasa por detrás y sin esto los
-                        // números pierden contraste contra el desenfoque.
-                        "mx-auto grid w-full shrink-0 grid-cols-1 bg-[var(--bg-primary)]",
-                        "border-t border-[var(--border-default)] sm:grid-cols-3",
-                        contentWidth,
-                    )}
-                >
-                    {services.map((s, i) => (
-                        <li
-                            key={s.n}
-                            className={cx(
-                                "flex items-baseline gap-3 py-4 lg:py-5",
-                                i > 0 && "border-t border-[var(--border-default)] sm:border-t-0 sm:border-l sm:pl-6",
-                            )}
-                        >
-                            <span className={cx(type.label, tone.tertiary)}>{s.n}</span>
-                            <p className={cx(type.body, tone.primary)}>{s.label}</p>
-                        </li>
-                    ))}
-                </ul>
             </div>
         </section>
     );
