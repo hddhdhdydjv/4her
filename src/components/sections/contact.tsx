@@ -69,11 +69,11 @@ export function Contact() {
                             delay={120}
                             className={cx(type.h1, "text-balance text-[var(--neutral-50)]")}
                         >
-                            Contanos qué querés lograr
+                            Empecemos con un diagnóstico de 20 minutos
                         </SplitReveal>
                         <Reveal delay={260}>
                             <p className={cx(type.bodyLg, "text-white/70")}>
-                                Escribinos y arrancamos por una conversación, sin compromiso.
+                                Sin costo. Salís con un panorama claro de por dónde arrancar.
                             </p>
                         </Reveal>
                     </div>

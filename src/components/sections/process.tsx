@@ -22,23 +22,18 @@ import { cx } from "@/utils/cx";
 const steps = [
     {
         dots: 1,
-        title: "Nos conocemos",
-        body: "Escuchamos qué querés lograr y a quién querés llegar.",
+        title: "Diagnóstico",
+        body: "Una reunión inicial para entender tu negocio, tu marca actual y dónde está el problema real: ¿es de mensaje, de canal o de proceso comercial?",
     },
     {
         dots: 2,
-        title: "Definimos el rumbo",
-        body: "Acordamos qué decir y por qué antes de producir nada.",
+        title: "Propuesta",
+        body: "Te devolvemos un plan concreto: qué servicios, en qué orden, y qué vas a poder medir en los primeros 90 días.",
     },
     {
         dots: 3,
-        title: "Creamos juntos",
-        body: "Mostramos, ajustamos con tu feedback, iteramos rápido.",
-    },
-    {
-        dots: 4,
-        title: "Acompañamos",
-        body: "Seguimos midiendo y afinando. No entregamos y desaparecemos.",
+        title: "Ejecución y ajuste",
+        body: "Trabajamos en sprints cortos con reportes mensuales, para poder corregir el rumbo antes de que el presupuesto se vaya en algo que no funciona.",
     },
 ];
 

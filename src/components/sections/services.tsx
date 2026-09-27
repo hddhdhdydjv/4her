@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { DotGrid } from "@/components/ui/dot-grid";
-import { Servicio1, Servicio2, Servicio3, Servicio4 } from "@/components/graphics/illustrations";
+import { Servicio1, Servicio2, Servicio3 } from "@/components/graphics/illustrations";
 import { contentWidth, gutter, type, tone } from "@/components/ui/section";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitReveal } from "@/components/motion/split-reveal";
@@ -10,32 +10,25 @@ import { cx } from "@/utils/cx";
 
 const services = [
     {
-        letter: "b",
+        letter: "p",
         art: Servicio1,
-        title: "Branding & Rebranding",
-        body1: "Creamos o renovamos la identidad de tu marca: naming, sistema visual y guías de uso.",
-        body2: "Para que cada pieza que produzcas, la hagas vos o un tercero, se vea y se sienta igual.",
-    },
-    {
-        letter: "e",
-        art: Servicio2,
-        title: "Estrategia & Posicionamiento",
-        body1: "Definimos qué decir, a quién y por qué, antes de producir cualquier pieza.",
-        body2: "Mensajes clave que sostienen todo lo que comunicás después.",
+        title: "Posicionamiento de marca",
+        body1: "Definimos el territorio de marca, el tono de comunicación y la propuesta de valor que te diferencia de tu competencia.",
+        body2: "Lo bajamos a un manual aplicable a cada pieza que produzcas.",
     },
     {
         letter: "m",
-        art: Servicio3,
-        title: "Marketing digital & Contenido",
-        body1: "Contenido y campañas pensadas para comunicar, no solo para llenar el feed.",
-        body2: "Estrategia de canales y calendario editorial a medida.",
+        art: Servicio2,
+        title: "Marketing digital y campañas",
+        body1: "Diseñamos, ejecutamos y optimizamos campañas en los canales donde está tu cliente.",
+        body2: "Orientadas a un objetivo concreto: leads, tráfico calificado o ventas directas.",
     },
     {
-        letter: "g",
-        art: Servicio4,
-        title: "Growth & Prensa",
-        body1: "Hacemos crecer la presencia de tu marca con growth y relaciones con prensa.",
-        body2: "Comunicación institucional cuando tu marca lo necesita.",
+        letter: "e",
+        art: Servicio3,
+        title: "Estrategia comercial",
+        body1: "Miramos tu embudo de ventas de punta a punta e identificamos dónde se pierden oportunidades.",
+        body2: "Armamos un plan comercial con objetivos trimestrales medibles.",
     },
 ];
 

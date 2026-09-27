@@ -165,10 +165,13 @@ export function Hero() {
                             style={{ background: CARD_BG }}
                         >
                             <h1 className={cx(type.h3, "text-[var(--neutral-50)]")}>
-                                Comunicación &amp; Marketing
+                                Ayudamos a decidir qué decir, a quién, y cómo convertirlo en ventas.
                             </h1>
                             <p className={cx(type.body, "text-[var(--neutral-300)]")}>
-                                Más estratégico que una agencia, más cercano que un freelance
+                                Definimos el mensaje, ejecutamos la pauta y ponemos objetivos comerciales sobre la mesa.
+                            </p>
+                            <p className={cx(type.label, "text-[var(--neutral-300)]")}>
+                                Posicionamiento de marca · Marketing digital y campañas · Estrategia comercial
                             </p>
                         </div>
                     </div>
