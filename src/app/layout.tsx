@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Funnel_Display, Funnel_Sans } from "next/font/google";
+import { Fraunces, Funnel_Display, Funnel_Sans } from "next/font/google";
 import { LenisProvider } from "@/components/providers/lenis-provider";
 import { SectionFader } from "@/components/motion/section-fader";
 import "./globals.css";
@@ -19,6 +19,15 @@ const funnelSans = Funnel_Sans({
     display: "swap",
 });
 
+// Fraunces itálica: el contrapunto editorial. Sólo para las palabras que el
+// titular quiere marcar — no es una tipografía de cuerpo.
+const fraunces = Fraunces({
+    variable: "--font-fraunces",
+    subsets: ["latin"],
+    style: ["italic"],
+    display: "swap",
+});
+
 export const metadata: Metadata = {
     title: "4HER - Comunicación & Marketing",
     description:
@@ -33,7 +42,7 @@ export default function RootLayout({
     return (
         <html
             lang="es"
-            className={`${funnelDisplay.variable} ${funnelSans.variable} h-full antialiased`}
+            className={`${funnelDisplay.variable} ${funnelSans.variable} ${fraunces.variable} h-full antialiased`}
         >
             <body className="min-h-full bg-primary font-body text-primary">
                 <LenisProvider>

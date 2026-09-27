@@ -57,6 +57,66 @@ body {
     animation: line-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
+/* --- Anillo del hero ---------------------------------------------------
+   El aro gira siempre, y cada punto late con un desfase proporcional a su
+   posición: el resultado es una onda que recorre el arco en vez de un
+   parpadeo parejo. El arco sólido se dibuja una vez, al entrar. */
+@keyframes ring-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+.ring-spin {
+    transform-box: view-box;
+    transform-origin: center;
+    animation: ring-spin 90s linear infinite;
+}
+
+@keyframes ring-dot {
+    0%,
+    100% {
+        transform: scale(0.5);
+        opacity: 0.5;
+    }
+    50% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+.ring-dot {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: ring-dot 4.5s ease-in-out infinite;
+}
+
+@keyframes ring-draw {
+    from {
+        stroke-dashoffset: var(--ring-arc);
+    }
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+.ring-arc {
+    stroke-dashoffset: var(--ring-arc);
+    animation: ring-draw 1.8s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards;
+}
+
+@keyframes ring-in {
+    from {
+        opacity: 0;
+        transform: scale(0.92);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+.ring-in {
+    opacity: 0;
+    animation: ring-in 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
 /* --- Scrollbar oculta para los carruseles (mantiene el scroll táctil) --- */
 .no-scrollbar {
     -ms-overflow-style: none;
@@ -70,7 +130,11 @@ body {
 @media (prefers-reduced-motion: reduce) {
     .draw-line,
     .node-pulse,
-    .line-rise {
+    .line-rise,
+    .ring-spin,
+    .ring-dot,
+    .ring-arc,
+    .ring-in {
         animation: none;
     }
     .draw-line {
@@ -78,5 +142,11 @@ body {
     }
     .line-rise {
         transform: none;
+    }
+    .ring-arc {
+        stroke-dashoffset: 0;
+    }
+    .ring-in {
+        opacity: 1;
     }
 }

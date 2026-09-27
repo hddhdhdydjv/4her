@@ -30,6 +30,8 @@ export const type = {
     bodyLg: "font-body text-[clamp(1rem,1.56vw,1.125rem)] leading-[1.6]",
     body: "font-body text-[1rem] leading-[1.6]",
     label: "font-body font-medium text-[0.8125rem] leading-[1.2] tracking-[0.06em]",
+    /** Fraunces itálica: el énfasis dentro de un titular, nunca un bloque entero. */
+    serif: "font-[family-name:var(--font-fraunces)] font-normal italic",
 } as const;
 
 /** Colores semánticos de Figma, como clases listas para usar. */
