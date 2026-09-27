@@ -24,7 +24,10 @@ export function Logo({
             className={cx("flex shrink-0 items-center gap-2", className)}
             aria-label="4her — inicio"
         >
-            <Isotipo className="size-[34px] shrink-0" />
+            {/* El isotipo viene con disco claro, pensado para fondo oscuro.
+                Sobre la crema del sitio ese disco desaparece, así que ahí va
+                invertido: disco negro y marca en claro. */}
+            <Isotipo invert={!dark} className="size-[34px] shrink-0" />
             <Logotipo
                 className={cx(
                     "h-[34px] w-[61px] shrink-0",

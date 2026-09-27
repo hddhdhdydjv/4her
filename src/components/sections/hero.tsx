@@ -1,104 +1,105 @@
 "use client";
 
-import { DotRing } from "@/components/ui/dot-ring";
-import { contentWidth, gutter, type, tone } from "@/components/ui/section";
+import Image from "next/image";
+import { useState } from "react";
+import { ArrowIcon } from "@/components/ui/arrow-icon";
+import { type } from "@/components/ui/section";
 import { useAnchorScroll } from "@/hooks/use-anchor-scroll";
 import { cx } from "@/utils/cx";
 
 /**
- * Hero editorial: un aro gigante de puntos detrás del titular.
+ * Hero del archivo de diseño (153:17154): el paisaje dentro de una tarjeta de
+ * esquinas redondeadas, con el titular centrado encima.
  *
- * La marca ya es un círculo dentro de un cuadrado, así que la página abre con
- * esa misma geometría a escala de pantalla: el aro sangra fuera del encuadre.
- *
- * El titular mezcla la grotesca de marca con Fraunces itálica en las dos
- * palabras que lo definen — el contraste es el que hace de "editorial".
+ * La foto no va a sangre: la tarjeta deja margen por los cuatro lados y el
+ * fondo de página respira alrededor. El titular mezcla la grotesca de marca
+ * con Fraunces itálica en el tramo del medio.
  */
+
+/** Capa del paisaje — la misma que reusa la sección de contacto. */
+const BACKDROP = "/images/hero/hero-back.png";
+
+/** Mientras el PNG no esté, el degradado sostiene la composición. */
+const SCENE_FALLBACK =
+    "linear-gradient(180deg, #E9CBD4 0%, #DCC2D2 26%, #B9AECB 48%, #8E93A8 62%, #6E7B6A 78%, #4A5A3E 100%)";
+
+/** Trama de puntos: el diseño tiene un grano fino sobre la foto. */
+const DITHER = {
+    backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.10) 0.5px, transparent 0.5px)",
+    backgroundSize: "3px 3px",
+} as const;
+
 export function Hero() {
     const scrollTo = useAnchorScroll();
+    const [failed, setFailed] = useState(false);
 
     return (
-        <section id="inicio" className="relative flex min-h-screen flex-col overflow-hidden">
-            {/* El aro se apoya a la derecha y se sale del encuadre por arriba y
-                por el costado: lo que se ve es un recorte, no la figura entera. */}
-            <DotRing
-                className={cx(
-                    "absolute -top-[22%] -right-[38%] h-[125vh] w-auto",
-                    "sm:-right-[22%] lg:-top-[20%] lg:-right-[22%] lg:h-[150vh]",
-                )}
-            />
-
+        <section id="inicio" className="px-4 pt-20 pb-4 sm:px-6 sm:pb-6 lg:px-12 lg:pt-24 lg:pb-12">
             <div
                 className={cx(
-                    "relative flex flex-1 flex-col",
-                    gutter,
-                    "pt-28 pb-16 lg:pt-32 lg:pb-20",
+                    "relative isolate flex flex-col items-center justify-center overflow-hidden",
+                    "rounded-[20px] px-6 py-20 text-center sm:rounded-[28px] sm:py-24 lg:py-28",
+                    "min-h-[clamp(460px,72vh,680px)]",
                 )}
+                style={{ background: SCENE_FALLBACK }}
             >
-                <div className={cx("mx-auto flex w-full flex-1 flex-col justify-center", contentWidth)}>
-                    <h1
-                        className={cx(
-                            "font-display font-medium tracking-[-0.02em]",
-                            "text-[clamp(2.25rem,5vw,4rem)] leading-[1.04]",
-                            tone.primary,
-                            "max-w-[17ch] text-balance",
-                        )}
-                    >
-                        Ayudamos a decidir <span className={type.serif}>qué decir</span>,{" "}
-                        <span className={type.serif}>a quién</span>, y cómo convertirlo en ventas.
-                    </h1>
+                {/* `priority`: es el LCP de la página, no puede cargar diferido. */}
+                {!failed && (
+                    <Image
+                        src={BACKDROP}
+                        alt=""
+                        fill
+                        priority
+                        sizes="100vw"
+                        className="-z-20 object-cover object-center"
+                        onError={() => setFailed(true)}
+                    />
+                )}
 
-                    {/* Bloque de remate: etiqueta con hairline a la izquierda,
-                        párrafo a la derecha — la estructura de un pie editorial. */}
-                    <div className="mt-10 flex flex-col gap-8 sm:flex-row sm:gap-16 lg:mt-12">
-                        <div className="flex max-w-[18ch] flex-col gap-4 sm:w-[26%] sm:shrink-0">
-                            <p className={cx(type.title, tone.primary, "text-balance")}>
-                                Comunicación &amp; Marketing
-                            </p>
-                            <span className="h-px w-full bg-[var(--border-strong)]" />
-                        </div>
+                {/* Velo: la foto sola no da contraste parejo para el texto en
+                    claro. Lo justo para que se lea, sin apagar el atardecer. */}
+                <div
+                    aria-hidden="true"
+                    className="absolute inset-0 -z-10"
+                    style={{
+                        background:
+                            "linear-gradient(180deg, rgba(14,16,10,0.20) 0%, rgba(14,16,10,0.10) 45%, rgba(14,16,10,0.26) 100%)",
+                    }}
+                />
+                <div aria-hidden="true" className="absolute inset-0 -z-10" style={DITHER} />
 
-                        <div className="flex flex-col items-start gap-8">
-                            <p className={cx(type.bodyLg, tone.secondary, "max-w-[42ch]")}>
-                                Definimos el mensaje, ejecutamos la pauta y ponemos objetivos
-                                comerciales sobre la mesa. Más estratégico que una agencia, más
-                                cercano que un freelance.
-                            </p>
+                <h1
+                    className={cx(
+                        "font-display font-medium tracking-[-0.015em]",
+                        "text-[clamp(1.875rem,3.9vw,3.5rem)] leading-[1.1]",
+                        "max-w-[16ch] text-balance text-[var(--neutral-50)]",
+                    )}
+                >
+                    Ayudamos a decidir{" "}
+                    <span className={type.serif}>qué decir, a quién, y cómo</span> convertirlo en
+                    ventas.
+                </h1>
 
-                            {/* Pill + círculo con la flecha, pegados. */}
-                            <a
-                                href="#contacto"
-                                onClick={scrollTo}
-                                className="group flex items-center gap-1.5 transition-opacity hover:opacity-85"
-                            >
-                                <span
-                                    className={cx(
-                                        type.body,
-                                        "rounded-[45px] bg-[var(--bg-inverse)] px-6 py-3.5 text-[var(--text-inverse)]",
-                                    )}
-                                >
-                                    Agendar llamada
-                                </span>
-                                <span className="flex size-[50px] items-center justify-center rounded-full bg-[var(--bg-inverse)] text-[var(--text-inverse)]">
-                                    <svg
-                                        viewBox="0 0 24 24"
-                                        className="size-5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                                        fill="none"
-                                        aria-hidden="true"
-                                    >
-                                        <path
-                                            d="M7 17 17 7M9 7h8v8"
-                                            stroke="currentColor"
-                                            strokeWidth="1.6"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        />
-                                    </svg>
-                                </span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+                <p className="mt-6 max-w-[58ch] text-[0.9375rem] leading-[1.6] text-white/80">
+                    Trabajamos con marcas que están empezando y con empresas que ya venden pero no
+                    logran ordenar su comunicación. Definimos el mensaje, ejecutamos la pauta y
+                    ponemos objetivos comerciales sobre la mesa.
+                </p>
+
+                <a
+                    href="#contacto"
+                    onClick={scrollTo}
+                    className={cx(
+                        type.body,
+                        "group mt-10 flex items-center gap-2.5 rounded-full bg-[var(--bg-inverse)] py-2.5 pr-2.5 pl-6",
+                        "text-[var(--text-inverse)] transition-opacity hover:opacity-85",
+                    )}
+                >
+                    Hablemos
+                    <span className="flex size-8 items-center justify-center rounded-full bg-white/15">
+                        <ArrowIcon className="size-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+                    </span>
+                </a>
             </div>
         </section>
     );
