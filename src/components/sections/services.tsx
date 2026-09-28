@@ -1,71 +1,70 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { DotGrid } from "@/components/ui/dot-grid";
-import { Servicio1, Servicio2, Servicio3 } from "@/components/graphics/illustrations";
-import { contentWidth, gutter, type, tone } from "@/components/ui/section";
+import { useCallback, useState } from "react";
+import { ArrowIcon } from "@/components/ui/arrow-icon";
+import { Screen, gutter, type, tone } from "@/components/ui/section";
+import { ServicesOrbit } from "@/components/ui/services-orbit";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitReveal } from "@/components/motion/split-reveal";
+import { useAnchorScroll } from "@/hooks/use-anchor-scroll";
 import { cx } from "@/utils/cx";
 
+/**
+ * Servicios: la rueda a la izquierda manda, el detalle a la derecha responde.
+ *
+ * El servicio al frente de la rueda es el que se despliega. Los tres bloques
+ * de texto viven apilados en la misma celda de una grilla, así que la caja
+ * mide lo que el más largo y nada se corre al cambiar de servicio.
+ */
 const services = [
     {
-        letter: "p",
-        art: Servicio1,
-        title: "Posicionamiento de marca",
-        body1: "Definimos el territorio de marca, el tono de comunicación y la propuesta de valor que te diferencia de tu competencia.",
-        body2: "Lo bajamos a un manual aplicable a cada pieza que produzcas.",
+        tag: "identidad",
+        title: "Posicionamiento de",
+        em: "marca",
+        short: "Posicionamiento de marca",
+        body: "Definimos el territorio de marca, el tono de comunicación y la propuesta de valor que te diferencia de tu competencia. Lo bajamos a un manual aplicable a cada pieza que produzcas.",
+        items: [
+            "Auditoría de marca y análisis competitivo",
+            "Definición de propuesta de valor",
+            "Manual de identidad verbal y visual",
+            "Tono y lineamientos de comunicación",
+        ],
     },
     {
-        letter: "m",
-        art: Servicio2,
-        title: "Marketing digital y campañas",
-        body1: "Diseñamos, ejecutamos y optimizamos campañas en los canales donde está tu cliente.",
-        body2: "Orientadas a un objetivo concreto: leads, tráfico calificado o ventas directas.",
+        tag: "ejecución",
+        title: "Marketing digital y",
+        em: "campañas",
+        short: "Marketing digital y campañas",
+        body: "Diseñamos, ejecutamos y optimizamos campañas en los canales donde está tu cliente, orientadas a un objetivo concreto: leads, tráfico calificado o ventas directas.",
+        items: [
+            "Google Ads, Meta e Instagram Ads",
+            "Contenido y calendario para redes",
+            "Email marketing y automatización",
+            "Reporte mensual de resultados",
+        ],
     },
     {
-        letter: "e",
-        art: Servicio3,
-        title: "Estrategia comercial",
-        body1: "Miramos tu embudo de ventas de punta a punta e identificamos dónde se pierden oportunidades.",
-        body2: "Armamos un plan comercial con objetivos trimestrales medibles.",
+        tag: "negocio",
+        title: "Estrategia",
+        em: "comercial",
+        short: "Estrategia comercial",
+        body: "Miramos tu embudo de ventas de punta a punta, identificamos dónde se pierden oportunidades y armamos un plan comercial con objetivos trimestrales medibles.",
+        items: [
+            "Diagnóstico del proceso comercial",
+            "Definición de objetivos y KPIs",
+            "Plan trimestral de acción",
+            "Acompañamiento en la implementación",
+        ],
     },
 ];
 
-/**
- * Ilustración de un servicio.
- *
- * Los cuatro SVG vienen con relaciones distintas (472×432, 414×414, 544×432,
- * 484×432), así que el hueco fija la del diseño y el dibujo entra con
- * `object-contain`: cada uno se acomoda adentro sin deformarse y todos ocupan
- * el mismo lugar en la grilla.
- *
- * Van inlineados en el DOM (ver `graphics/illustrations.tsx`), no como
- * `<img src>`: cada uno trae un filtro de trazo (feTurbulence) que como
- * imagen externa rasteriza al tamaño nativo del archivo y sale pixelado al
- * escalar. Inline, se recalcula a la resolución real de pantalla.
- */
-function ServiceArt({ art: Art, title }: { art: (props: { className?: string }) => React.JSX.Element; title: string }) {
-    return (
-        <div className="relative aspect-[544/432] w-full">
-            <Art className="absolute inset-0 h-full w-full object-contain" />
-            <span className="sr-only">Ilustración de {title}</span>
-        </div>
-    );
-}
+const labels = services.map((s) => s.short);
 
 /**
- * Fundido de un servicio al siguiente.
- *
- * El que sale se va primero y el que entra espera a que termine, en vez de
- * cruzarse. Cruzados, en la mitad de la transición los dos están al 50% y se
- * ve el bajón —y en las ilustraciones, que son línea sobre transparente, se
- * llegan a ver los dos dibujos superpuestos. Eso era el salto.
- *
- * El retardo va sobre el que entra: CSS aplica el `transition-delay` del
- * estado al que se va, así que el activo espera y el que se apaga arranca ya.
+ * Fundido de un servicio al siguiente: el que sale se va primero y el que
+ * entra espera. Cruzados, en la mitad los dos están al 50% y se ve el bajón.
  */
-const FADE_MS = 300;
+const FADE_MS = 280;
 
 function fade(isActive: boolean) {
     return {
@@ -77,273 +76,102 @@ function fade(isActive: boolean) {
     } as const;
 }
 
-function BarIndicator({
-    count,
-    active,
-    onSelect,
-}: {
-    count: number;
-    active: number;
-    onSelect: (i: number) => void;
-}) {
-    return (
-        <div className="flex items-end gap-2" role="tablist" aria-label="Servicios">
-            {Array.from({ length: count }, (_, i) => (
-                <button
-                    key={i}
-                    type="button"
-                    role="tab"
-                    aria-selected={i === active}
-                    aria-label={services[i].title}
-                    onClick={() => onSelect(i)}
-                    className={cx(
-                        "relative w-px cursor-pointer transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]",
-                        "before:absolute before:-inset-x-2 before:-inset-y-3 before:content-['']",
-                        i === active ? "h-4 bg-[#646464]" : "h-2 bg-[#b4b8b4]",
-                    )}
-                />
-            ))}
-        </div>
-    );
-}
-
 export function Services() {
     const [active, setActive] = useState(0);
-    const n = services.length;
-    // Desktop: tracks the full section (n*100vh).
-    // Mobile: tracks only the sticky services container (n*100vh), after the normal-flow intro.
-    const trackRef = useRef<HTMLElement>(null);
-    const mobileTrackRef = useRef<HTMLDivElement>(null);
+    const scrollTo = useAnchorScroll();
 
-    useEffect(() => {
-        let frame = 0;
-
-        function read() {
-            frame = 0;
-            const isDesktop = window.innerWidth >= 1024;
-            const el = isDesktop ? trackRef.current : mobileTrackRef.current;
-            if (!el) return;
-
-            const distance = el.offsetHeight - window.innerHeight;
-            if (distance <= 0) return;
-
-            const progress = -el.getBoundingClientRect().top / distance;
-            const clamped = Math.min(Math.max(progress, 0), 1);
-
-            if (isDesktop) {
-                setActive(Math.round(clamped * (n - 1)));
-            } else {
-                setActive(Math.min(n - 1, Math.floor(clamped * n)));
-            }
-        }
-
-        function onScroll() {
-            if (frame) return;
-            frame = requestAnimationFrame(read);
-        }
-
-        read();
-        window.addEventListener("scroll", onScroll, { passive: true });
-        window.addEventListener("resize", onScroll, { passive: true });
-        return () => {
-            if (frame) cancelAnimationFrame(frame);
-            window.removeEventListener("scroll", onScroll);
-            window.removeEventListener("resize", onScroll);
-        };
-    }, [n]);
-
-    function goTo(i: number) {
-        const isDesktop = window.innerWidth >= 1024;
-        const el = isDesktop ? trackRef.current : mobileTrackRef.current;
-        if (!el) return;
-        const distance = el.offsetHeight - window.innerHeight;
-        if (distance <= 0) { setActive(i); return; }
-        const fraction = isDesktop ? i / (n - 1) : i / n;
-        const absoluteTop = window.scrollY + el.getBoundingClientRect().top;
-        window.scrollTo({ top: absoluteTop + fraction * distance, behavior: "smooth" });
-    }
+    // Memoizado: la rueda lo guarda en un ref, pero si cambiara de identidad
+    // en cada render el efecto que lo sincroniza correría de más.
+    const onFocus = useCallback((i: number) => setActive(i), []);
 
     return (
-        <section
+        <Screen
             id="servicios"
-            ref={trackRef}
-            style={{ "--track": `${n * 100}vh` } as CSSProperties}
-            className="relative lg:h-[var(--track)]"
+            inset={cx(gutter, "pt-[clamp(72px,13.33vh,147px)] pb-[clamp(72px,13.33vh,147px)]")}
         >
-            {/* ═══ MOBILE LAYOUT (< lg) ═══
-                Two separate parts:
-                - Part 1: Intro text — normal flow, fills one viewport, scrolls away naturally.
-                - Part 2: Sticky services panel — image top + indicator + service text bottom.
-                          Sticks while the user scrolls through n viewports.
-                No blank gap: intro exits like any normal content; sticky takes over immediately. */}
-            <div className="lg:hidden">
-
-                {/* Part 1 — intro, normal scroll */}
-                <div className={cx(
-                    "flex flex-col gap-6",
-                    gutter,
-                    "pt-[clamp(72px,13.72vh,151px)] pb-16",
-                )}>
-                    <div className={cx("mx-auto w-full", contentWidth)}>
-                        <div className="flex flex-col gap-6">
-                            <div className="flex flex-col gap-4">
-                                <Reveal delay={0}>
-                                    <p className={cx(type.title, tone.secondary)}>Nuestros servicios</p>
-                                </Reveal>
-                                <SplitReveal delay={120} className={cx(type.h1, tone.primary, "text-balance")}>
-                                    Servicios que se combinan según lo que tu marca necesita
-                                </SplitReveal>
-                            </div>
-                            <Reveal delay={260}>
-                                <p className={cx(type.h2, tone.tertiary)}>Vos elegís por dónde empezar</p>
-                            </Reveal>
-                        </div>
+            <div className="flex flex-col gap-14 lg:gap-20">
+                {/* Encabezado: rótulo, titular y remate en itálica a la derecha. */}
+                <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between lg:gap-16">
+                    <div className="flex max-w-[640px] flex-col gap-4">
+                        <Reveal delay={0}>
+                            <p className={cx(type.label, tone.tertiary, "uppercase")}>
+                                Qué podemos hacer juntos / 02
+                            </p>
+                        </Reveal>
+                        <SplitReveal delay={120} className={cx(type.h1, tone.primary, "text-balance")}>
+                            Servicios que hacen avanzar tu marca.
+                        </SplitReveal>
                     </div>
+                    <Reveal delay={260}>
+                        <p className={cx(type.serif, type.bodyLg, tone.secondary, "max-w-[28ch] lg:text-right")}>
+                            Del primer mensaje a la próxima venta, con una dirección compartida.
+                        </p>
+                    </Reveal>
                 </div>
 
-                {/* Part 2 — sticky services panel */}
-                <div
-                    ref={mobileTrackRef}
-                    style={{ height: `${n * 100}vh` }}
-                    className="relative"
-                >
-                    <div className={cx(
-                        "sticky top-0 flex h-screen min-h-0 flex-col",
-                        gutter,
-                        "pt-[clamp(72px,13.72vh,151px)] pb-[clamp(40px,7.5vh,83px)]",
-                    )}>
-                        <div className={cx("mx-auto flex w-full flex-1 flex-col", contentWidth)}>
-                            {/* Image — fills remaining vertical space */}
-                            <div className="relative min-h-0 flex-1">
-                                <DotGrid />
-                                {services.map((s, i) => (
-                                    <div
-                                        key={s.title}
-                                        aria-hidden="true"
-                                        className={cx(
-                                            "absolute inset-0 flex items-center",
-                                        )}
-                                        style={fade(i === active)}
-                                    >
-                                        <ServiceArt art={s.art} title={s.title} />
-                                    </div>
-                                ))}
-                            </div>
+                <div className="flex flex-col items-center gap-12 lg:flex-row lg:items-center lg:gap-[8%]">
+                    <div className="flex w-full justify-center lg:w-[46%] lg:shrink-0">
+                        <ServicesOrbit items={labels} onFocus={onFocus} />
+                    </div>
 
-                            {/* Service text — below image */}
-                            <div className="flex shrink-0 flex-col gap-3 pt-3">
-                                <BarIndicator count={n} active={active} onSelect={goTo} />
-                                <div className="grid">
-                                    {services.map((s, i) => (
-                                        <div
-                                            key={s.title}
-                                            aria-hidden={i !== active}
-                                            className={cx(
-                                                "col-start-1 row-start-1 flex flex-col gap-1.5",
-                                                i !== active && "pointer-events-none",
-                                            )}
-                                            style={fade(i === active)}
-                                        >
-                                            <h3 className={cx(type.h2, tone.primary)}>{s.title}</h3>
-                                            <p className={cx(type.body, tone.secondary)}>{s.body1}</p>
-                                        </div>
+                    {/* Pila en grilla: los tres comparten celda, así que la caja
+                        mide lo que el más largo y el botón no se mueve. */}
+                    <div className="grid w-full lg:w-[46%]">
+                        {services.map((s, i) => (
+                            <div
+                                key={s.tag}
+                                aria-hidden={i !== active}
+                                className={cx(
+                                    "col-start-1 row-start-1 flex flex-col items-start gap-5",
+                                    i !== active && "pointer-events-none",
+                                )}
+                                style={fade(i === active)}
+                            >
+                                <span
+                                    className={cx(
+                                        type.label,
+                                        "flex items-center gap-2 rounded-full bg-[var(--bg-secondary)] px-3 py-1.5",
+                                        tone.secondary,
+                                    )}
+                                >
+                                    <span className="size-1.5 rounded-full bg-[var(--text-primary)]" />
+                                    {s.tag}
+                                </span>
+
+                                <h3 className={cx(type.h2, tone.primary, "text-balance")}>
+                                    {s.title} <span className={type.serif}>{s.em}</span>
+                                </h3>
+
+                                <p className={cx(type.bodyLg, tone.secondary, "max-w-[46ch]")}>{s.body}</p>
+
+                                <ul className="flex flex-col gap-3 pt-1">
+                                    {s.items.map((item) => (
+                                        <li key={item} className="flex gap-3">
+                                            <span className={cx(type.body, tone.tertiary)}>+</span>
+                                            <span className={cx(type.body, tone.secondary)}>{item}</span>
+                                        </li>
                                     ))}
-                                </div>
+                                </ul>
+
                                 <a
                                     href="#contacto"
+                                    onClick={scrollTo}
                                     className={cx(
                                         type.body,
-                                        "w-fit rounded-[45px] bg-[var(--bg-inverse)] px-4 py-2.5 text-center text-[var(--text-inverse)] transition-opacity hover:opacity-85",
+                                        "group mt-3 flex items-center gap-2.5 rounded-full bg-[var(--bg-inverse)] py-2.5 pr-2.5 pl-6",
+                                        "text-[var(--text-inverse)] transition-opacity hover:opacity-85",
                                     )}
                                 >
                                     Hacé tu consulta
+                                    <span className="flex size-8 items-center justify-center rounded-full bg-white/15">
+                                        <ArrowIcon className="size-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+                                    </span>
                                 </a>
                             </div>
-                        </div>
+                        ))}
                     </div>
                 </div>
             </div>
-
-            {/* ═══ DESKTOP LAYOUT (≥ lg) ═══
-                Header above, services in two-column row. Entire section is n*100vh sticky. */}
-            <div className={cx(
-                "hidden sticky top-0 h-screen min-h-0 flex-col lg:flex",
-                gutter,
-                "pt-[clamp(72px,13.72vh,151px)] pb-[clamp(40px,7.5vh,83px)]",
-            )}>
-                <div className={cx("mx-auto flex w-full flex-1 flex-col gap-10 lg:gap-20", contentWidth)}>
-                    <div className="flex max-w-[800px] flex-col gap-6">
-                        <div className="flex flex-col gap-4">
-                            <Reveal delay={0}>
-                                <p className={cx(type.title, tone.secondary)}>Nuestros servicios</p>
-                            </Reveal>
-                            <SplitReveal delay={120} className={cx(type.h1, tone.primary, "text-balance")}>
-                                Servicios que se combinan según lo que tu marca necesita
-                            </SplitReveal>
-                        </div>
-                        <Reveal delay={260}>
-                            <p className={cx(type.h2, tone.tertiary)}>Vos elegís por dónde empezar</p>
-                        </Reveal>
-                    </div>
-
-                    <div className="flex items-start gap-[5%]">
-                        {/* Text column — left */}
-                        <div className="flex w-[52.5%] shrink-0 flex-col gap-6">
-                            <BarIndicator count={n} active={active} onSelect={goTo} />
-                            {/* Pila en grid: todos los servicios comparten la
-                                misma celda, así que la caja mide lo que el más
-                                largo y ni el botón ni el stepper se corren al
-                                cambiar de servicio. */}
-                            <div className="grid">
-                                {services.map((s, i) => (
-                                    <div
-                                        key={s.title}
-                                        aria-hidden={i !== active}
-                                        className={cx(
-                                            "col-start-1 row-start-1 flex flex-col gap-3",
-                                            i !== active && "pointer-events-none",
-                                        )}
-                                        style={fade(i === active)}
-                                    >
-                                        <h3 className={cx(type.h2, tone.primary, "max-w-[376px] text-balance")}>
-                                            {s.title}
-                                        </h3>
-                                        <p className={cx(type.bodyLg, tone.secondary)}>{s.body1}</p>
-                                        <p className={cx(type.bodyLg, tone.secondary)}>{s.body2}</p>
-                                    </div>
-                                ))}
-                            </div>
-                            <a
-                                href="#contacto"
-                                className={cx(
-                                    type.body,
-                                    "w-fit rounded-[45px] bg-[var(--bg-inverse)] px-4 py-2.5 text-center text-[var(--text-inverse)] transition-opacity hover:opacity-85",
-                                )}
-                            >
-                                Hacé tu consulta
-                            </a>
-                        </div>
-
-                        {/* Image column — right */}
-                        <div className="relative aspect-[544/432] w-[42.5%] shrink-0">
-                            {/* Trama de fondo, detrás de las cuatro ilustraciones. */}
-                            <DotGrid />
-                            {services.map((s, i) => (
-                                <div
-                                    key={s.title}
-                                    aria-hidden="true"
-                                    className={cx(
-                                        "absolute inset-0 flex items-center",
-                                    )}
-                                    style={fade(i === active)}
-                                >
-                                    <ServiceArt art={s.art} title={s.title} />
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+        </Screen>
     );
 }
