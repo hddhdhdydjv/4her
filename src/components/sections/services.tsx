@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { DotGrid } from "@/components/ui/dot-grid";
-import { Servicio1, Servicio2, Servicio3 } from "@/components/graphics/illustrations";
+import { Servicio1, Servicio2, Servicio3, Servicio4 } from "@/components/graphics/illustrations";
 import { contentWidth, gutter, type, tone } from "@/components/ui/section";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitReveal } from "@/components/motion/split-reveal";
@@ -29,6 +29,13 @@ const services = [
         title: "Estrategia comercial",
         body1: "Miramos tu embudo de ventas de punta a punta e identificamos dónde se pierden oportunidades.",
         body2: "Armamos un plan comercial con objetivos trimestrales medibles.",
+    },
+    {
+        letter: "s",
+        art: Servicio4,
+        title: "Gestión del Sello Verde",
+        body1: "Acompañamos todo el trámite: diagnóstico de las prácticas actuales, documentación, implementación de las mejoras que falten y seguimiento hasta la certificación.",
+        body2: "Un requisito cada vez más pedido en licitaciones y por grandes cuentas.",
     },
 ];
 
