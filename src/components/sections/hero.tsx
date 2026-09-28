@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { Logotipo } from "@/components/graphics/brand";
 import { type } from "@/components/ui/section";
 import { useParallax } from "@/hooks/use-parallax";
+import { LogoShatter } from "@/components/ui/logo-shatter";
 import { PixelFade } from "@/components/ui/pixel-fade";
 import { cx } from "@/utils/cx";
 
@@ -182,12 +182,8 @@ export function Hero() {
 }
 
 /**
- * El logotipo de marca en vidrio, apoyado sobre la línea de montañas.
- *
- * Es el SVG real (`Logotipo`, recortado al contorno de las letras), no la
- * tipografía: los glifos del logo están dibujados a mano y no coinciden con
- * Funnel Display. Se tiñe con `currentColor`, así el vidrio es un blanco
- * translúcido y no hace falta una segunda exportación.
+ * El logotipo de marca en vidrio, apoyado sobre la línea de montañas, que se
+ * rompe en esquirlas al scrollear (ver `LogoShatter`).
  *
  * Medidas del diseño (frame 1280×880): ancho 723.7 = 56.5%, centro horizontal
  * en 61.8%, centro vertical en 64% del alto.
@@ -205,8 +201,7 @@ export function Hero() {
  */
 function GlassWordmark() {
     return (
-        <Logotipo
-            tight
+        <LogoShatter
             className={cx(
                 // Mobile: más grande y más abajo. La pantalla es mucho más alta
                 // que ancha, así que el tope en vh nunca entra en juego y el
@@ -214,8 +209,10 @@ function GlassWordmark() {
                 // encuadre de desktop.
                 "absolute top-[66%] left-1/2 w-[86vw] -translate-x-1/2 -translate-y-1/2",
                 "sm:top-[61%] sm:left-[61.8%] sm:w-[min(56.5vw,82vh)]",
+                // La caja tiene que llevar la relación del logotipo: el canvas
+                // la hereda y la cámara se encuadra con ella.
+                "aspect-[61.3371/20.5441]",
             )}
-            style={{ color: "rgba(255,255,255,0.46)" }}
         />
     );
 }
