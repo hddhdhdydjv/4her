@@ -56,6 +56,19 @@ const services = [
             "Acompañamiento en la implementación",
         ],
     },
+    {
+        tag: "certificación",
+        title: "Gestión del",
+        em: "Sello Verde",
+        short: "Gestión del Sello Verde",
+        body: "Acompañamos a la empresa en todo el trámite: diagnóstico de las prácticas actuales, armado de la documentación, implementación de las mejoras que falten y seguimiento hasta obtener la certificación.",
+        items: [
+            "Mejora la imagen institucional y la percepción de marca",
+            "Requisito cada vez más pedido en licitaciones y grandes cuentas",
+            "Asesoría en gestión de residuos y economía circular",
+            "Diferenciación frente a competidores sin certificación",
+        ],
+    },
 ];
 
 const labels = services.map((s) => s.short);

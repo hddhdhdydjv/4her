@@ -134,8 +134,11 @@ export function ServicesOrbit({
                 const el = labelRefs.current[i];
                 if (el) {
                     el.style.transform = `translate(-50%, -50%) translateY(${lift * REACH * height}px) scale(${0.82 + t * 0.18})`;
-                    el.style.opacity = `${0.1 + t * 0.9}`;
-                    el.style.filter = `blur(${(1 - t) * 7}px)`;
+                    // Cuadrática, no lineal: con un número par de servicios el
+                    // de atrás cae justo detrás del de adelante, y en lineal
+                    // deja un fantasma borroso encima del que está en foco.
+                    el.style.opacity = `${0.02 + t * t * 0.96}`;
+                    el.style.filter = `blur(${(1 - t) * 8}px)`;
                     el.style.zIndex = `${Math.round(t * 10)}`;
                 }
 
