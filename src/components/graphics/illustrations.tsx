@@ -1,11 +1,19 @@
-/** Shared editorial artwork. SVG viewports isolate each tile without changing
- * the dimensions or behavior of the original section components. */
+import Image from "next/image";
+
+/** Monochrome ordered-dither exports. Each asset has a transparent background,
+ * so the drawing itself carries the texture instead of sitting on a white tile. */
 function Illustration({ tile, className }: { tile: number; className?: string }) {
-    const x = (tile % 3) * 100;
-    const y = Math.floor(tile / 3) * 100;
-    return <svg viewBox={`${x} ${y} 100 100`} className={className} aria-hidden="true" style={{ mixBlendMode: "multiply" }}>
-        <image href="/images/editorial-illustrations.webp" x="0" y="0" width="300" height="300" />
-    </svg>;
+    return (
+        <Image
+            src={`/images/dither-illustrations/illustration-${tile + 1}.png`}
+            className={className}
+            alt=""
+            width={418}
+            height={418}
+            unoptimized
+            draggable={false}
+        />
+    );
 }
 type Props = { className?: string };
 export function Equipo(props: Props) { return <Illustration tile={4} {...props} />; }

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { DotGrid } from "@/components/ui/dot-grid";
 import { Servicio1, Servicio2, Servicio3, Servicio4 } from "@/components/graphics/illustrations";
 import { contentWidth, gutter, type, tone } from "@/components/ui/section";
 import { Reveal } from "@/components/motion/reveal";
@@ -76,11 +75,13 @@ const FADE_MS = 300;
 
 function fade(isActive: boolean) {
     return {
-        transitionProperty: "opacity",
+        transitionProperty: "opacity, transform, filter",
         transitionDuration: `${FADE_MS}ms`,
         transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)",
         transitionDelay: isActive ? `${FADE_MS}ms` : "0ms",
         opacity: isActive ? 1 : 0,
+        transform: isActive ? "translate3d(0,0,0) scale(1)" : "translate3d(0,20px,0) scale(.96)",
+        filter: isActive ? "blur(0)" : "blur(3px)",
     } as const;
 }
 
@@ -222,7 +223,6 @@ export function Services() {
                         <div className={cx("mx-auto flex w-full flex-1 flex-col", contentWidth)}>
                             {/* Image — fills remaining vertical space */}
                             <div className="relative min-h-0 flex-1">
-                                <DotGrid />
                                 {services.map((s, i) => (
                                     <div
                                         key={s.title}
@@ -333,8 +333,6 @@ export function Services() {
 
                         {/* Image column — right */}
                         <div className="relative aspect-[544/432] w-[42.5%] shrink-0">
-                            {/* Trama de fondo, detrás de las cuatro ilustraciones. */}
-                            <DotGrid />
                             {services.map((s, i) => (
                                 <div
                                     key={s.title}
