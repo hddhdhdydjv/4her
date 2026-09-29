@@ -23,7 +23,7 @@ export const type = {
         "font-display font-medium text-[clamp(2.5rem,6.25vw,4.5rem)] leading-[1] tracking-[-0.02em]",
     displaySm:
         "font-display font-medium text-[clamp(2rem,4.86vw,3.5rem)] leading-[1.04] tracking-[-0.02em]",
-    h1: "font-display font-medium text-[clamp(1.75rem,3.82vw,2.75rem)] leading-[1.06] tracking-[-0.015em]",
+    h1: "font-display font-medium text-[clamp(2rem,4.4vw,4rem)] leading-[1.06] tracking-[-0.04em]",
     h2: "font-display font-medium text-[clamp(1.5rem,2.95vw,2.125rem)] leading-[1.1] tracking-[-0.01em]",
     h3: "font-display font-semibold text-[clamp(1.25rem,2.26vw,1.625rem)] leading-[1.18] tracking-[-0.005em]",
     title: "font-display font-semibold text-[clamp(1.0625rem,1.74vw,1.25rem)] leading-[1.3]",
@@ -97,7 +97,7 @@ export function Screen({
         <section
             id={id}
             className={cx(
-                "relative flex min-h-screen flex-col",
+                "relative flex flex-col",
                 inset,
                 className,
             )}

@@ -80,3 +80,62 @@ body {
         transform: none;
     }
 }
+
+/* Editorial exploration: space and hierarchy carry the structure. */
+:root { --editorial-ink: #392041; }
+html { scroll-padding-top: 100px; }
+a:focus-visible, button:focus-visible { outline: 2px solid #71467c; outline-offset: 6px; }
+.editorial-nav { border: 0; border-radius: 0; padding: 0.5rem 0; }
+.editorial-hero { padding-top: 160px; overflow: hidden; background: white; }
+.hero-copy { max-width: 1440px; padding: 0 5.5vw; margin: auto; display: grid; grid-template-columns: 1.65fr 1fr; gap: 9%; align-items: end; }
+.hero-copy h1 { font-family: var(--font-display); font-size: clamp(2.5rem,4.35vw,4.75rem); font-weight: 400; line-height: 1.07; letter-spacing: -0.045em; max-width: 850px; text-wrap: balance; }
+.hero-aside { max-width: 370px; font-size: 1.125rem; line-height: 1.55; }
+.hero-disciplines { margin-top: 28px; color: var(--text-secondary); font-size: 0.875rem; }
+.hero-wordmark { width: 106%; margin: 80px -3% 0; height: 30vw; overflow: hidden; color: var(--editorial-ink); }
+.dither-art { position: relative; width: 100%; }
+.dither-source { width: 100%; }
+.dither-source > svg { width: 100%; height: auto; display: block; }
+.dither-source.is-ready { visibility: hidden; }
+.dither-canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; opacity: 0; }
+.dither-canvas.is-ready { opacity: 1; }
+.editorial-section { max-width: 1440px; margin: auto; padding: 110px 5.5vw; }
+.editorial-intro { display: grid; grid-template-columns: 1fr 2fr; gap: 8%; margin-bottom: 80px; }
+.editorial-eyebrow { font-size: 0.875rem; padding-top: 10px; }
+.editorial-intro h2 { font-family: var(--font-display); font-weight: 400; font-size: clamp(2rem,4.1vw,4rem); line-height: 1.06; letter-spacing: -0.04em; text-wrap: balance; }
+.editorial-subtitle { margin-top: 24px; font-size: 1.25rem; color: var(--text-secondary); }
+.service-grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 12%; row-gap: 88px; }
+.service-art { position: relative; aspect-ratio: 1.55; display: flex; align-items: center; justify-content: center; margin-bottom: 28px; }
+.service-art .dither-art { width: 76%; max-width: 350px; }
+.service-art .editorial-number { position: absolute; top: 0; left: 0; }
+.editorial-number { font-family: monospace; color: #75647b; font-size: 0.875rem; }
+.service-article h3, .process-grid h3 { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.6rem,2.5vw,2.25rem); letter-spacing: -0.025em; line-height: 1.15; margin-bottom: 18px; }
+.service-article p, .process-grid p { font-size: 1.0625rem; line-height: 1.65; color: var(--text-secondary); max-width: 480px; }
+.service-article p + p { margin-top: 12px; }
+.editorial-cta { display: inline-flex; margin-top: 54px; background: var(--editorial-ink); color: white; padding: 14px 24px; border-radius: 30px; }
+.editorial-cta:hover { background: #54365e; }
+.process-grid { list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 6%; padding: 0; }
+.process-grid .dither-art { width: 85%; max-width: 260px; margin: 20px auto 34px; }
+#valores article { background: white; border-radius: 0; align-items: flex-start; text-align: left; padding: 24px 0; }
+#valores article > div:first-child { width: 70%; max-width: 280px; align-self: center; }
+#valores article .text-balance { text-wrap: pretty; }
+#valores ul { column-gap: 12%; }
+#quienes-somos > div > div { min-height: auto; }
+#contacto { background: white; }
+#contacto input, #contacto textarea { border-radius: 2px; }
+#contacto footer { font-size: 0.875rem; }
+@media (min-width: 1024px) { header { padding-left: 5.5vw !important; padding-right: 5.5vw !important; } }
+@media (max-width: 767px) {
+ .editorial-hero { padding-top: 130px; }
+ .hero-copy { grid-template-columns: 1fr; gap: 28px; padding: 0 24px; }
+ .hero-copy h1 { font-size: clamp(2.4rem,8.8vw,4rem); }
+ .hero-aside { max-width: 100%; font-size: 1rem; }
+ .hero-disciplines { margin-top: 18px; }
+ .hero-wordmark { margin-top: 56px; height: 31vw; }
+ .editorial-section { padding: 72px 24px; }
+ .editorial-intro { grid-template-columns: 1fr; gap: 24px; margin-bottom: 48px; }
+ .service-grid, .process-grid { grid-template-columns: 1fr; gap: 56px; }
+ .service-art { aspect-ratio: 1.4; }
+ .service-art .dither-art { max-width: 280px; }
+ .process-grid .dither-art { max-width: 240px; }
+ .hero-wordmark .dither-canvas { image-rendering: auto; }
+}

@@ -80,17 +80,17 @@ export function Navbar() {
     return (
         <>
             <header className="fixed inset-x-0 top-0 z-50 px-4 py-4 sm:px-6 lg:py-6">
-                <div className="mx-auto w-full max-w-[640px]">
+                <div className="mx-auto w-full max-w-[1440px]">
                     {/* Pill (40:3871) — bg transitions on scroll, blur stays constant */}
                     <div
                         className={cx(
-                            "flex items-center justify-between rounded-[48px] border border-[var(--neutral-800)]",
+                            "flex items-center justify-between editorial-nav",
                             "py-2 pr-2 pl-4 backdrop-blur-[35px]",
                             "transition-colors duration-[250ms] ease-[cubic-bezier(0.4,0,0.2,1)]",
-                            scrolled ? "bg-[var(--accent-default)]" : "bg-[var(--accent-default)]/85",
+                            scrolled ? "bg-white/95" : "bg-white/90",
                         )}
                     >
-                        <Logo dark />
+                        <Logo />
 
                         {/* Desktop nav (40:3875) */}
                         <nav className="hidden items-center gap-6 lg:flex">
@@ -101,7 +101,7 @@ export function Navbar() {
                                     onClick={scrollTo}
                                     className={cx(
                                         type.body,
-                                        "text-center text-[var(--neutral-200)] transition-opacity hover:opacity-60",
+                                        "text-center text-[var(--text-primary)] transition-opacity hover:opacity-60",
                                     )}
                                 >
                                     {link.label}
@@ -136,7 +136,7 @@ export function Navbar() {
                                 aria-label={open ? "Cerrar menú" : "Abrir menú"}
                                 aria-expanded={open}
                                 onClick={() => setOpen((v) => !v)}
-                                className="flex size-10 shrink-0 items-center justify-center rounded-full text-[var(--neutral-200)]"
+                                className="flex size-10 shrink-0 items-center justify-center rounded-full text-[var(--text-primary)]"
                             >
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                                     <path

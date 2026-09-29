@@ -39,7 +39,7 @@ const socials = [
             <>
                 <rect x="2" y="2" width="20" height="20" rx="3" fill="currentColor" />
                 <path
-                    fill="var(--accent-default)"
+                    fill="white"
                     d="M6.9 9.4h2.4v8.1H6.9zM8.1 5.6a1.4 1.4 0 1 1 0 2.8 1.4 1.4 0 0 1 0-2.8zM11.2 9.4h2.3v1.1h.03c.32-.6 1.1-1.24 2.27-1.24 2.43 0 2.88 1.6 2.88 3.68v4.56h-2.4v-4.04c0-.96-.02-2.2-1.34-2.2-1.34 0-1.55 1.05-1.55 2.13v4.11h-2.4z"
                 />
             </>
@@ -64,7 +64,7 @@ export function Footer() {
         <footer className="flex flex-col items-start gap-8 lg:flex-row lg:items-center lg:justify-between">
                 {/* Text (40:3855) */}
                 <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:gap-8">
-                    <Logo dark />
+                    <Logo />
                     <nav className="flex flex-wrap gap-x-8 gap-y-2">
                         {links.map((link) => (
                             <a
@@ -73,7 +73,7 @@ export function Footer() {
                                 onClick={scrollTo}
                                 className={cx(
                                     type.body,
-                                    "text-white/70 transition-colors hover:text-white",
+                                    "text-[var(--text-secondary)] transition-opacity hover:opacity-60",
                                 )}
                             >
                                 {link.label}
@@ -89,7 +89,7 @@ export function Footer() {
                             key={s.label}
                             href={s.href}
                             aria-label={s.label}
-                            className="text-white/80 transition-opacity hover:opacity-100"
+                            className="text-[var(--text-primary)] transition-opacity hover:opacity-100"
                         >
                             <svg viewBox="0 0 24 24" className="size-6" aria-hidden="true">
                                 {s.icon}

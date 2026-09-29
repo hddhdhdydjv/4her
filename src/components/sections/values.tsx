@@ -1,3 +1,4 @@
+import { DitherArt } from "@/components/ui/dither-art";
 import { Valor1, Valor2, Valor3, Valor4 } from "@/components/graphics/illustrations";
 import { Screen, gutter, type, tone } from "@/components/ui/section";
 import { Reveal } from "@/components/motion/reveal";
@@ -96,7 +97,7 @@ export function Values() {
                                             // filtro de trazo (feTurbulence) que como
                                             // imagen externa rasteriza al tamaño nativo
                                             // del archivo y sale pixelado al escalar.
-                                            <v.image className="absolute inset-0 h-full w-full object-contain" />
+                                            <DitherArt><v.image className="h-full w-full object-contain" /></DitherArt>
                                         ) : (
                                             <>
                                                 <div className="absolute inset-0" style={{ background: v.gradient }} />
