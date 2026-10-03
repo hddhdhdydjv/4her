@@ -15,7 +15,7 @@ export function SectionFader() {
             const sections = document.querySelectorAll<HTMLElement>("main > section[id]");
 
             for (const el of sections) {
-                if (el.id === "servicios") continue;
+                if (el.id === "servicios" || el.id === "inicio") continue;
 
                 const bottom = el.getBoundingClientRect().bottom;
 

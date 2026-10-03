@@ -47,7 +47,7 @@
     --accent-hover:   #000000;
 
     /* --- Semánticos (modo claro) ------------------------------------------ */
-    --bg-primary: var(--neutral-50);
+    --bg-primary: #fff;
     --bg-secondary: var(--neutral-100);
     --bg-tertiary: var(--neutral-200);
     --bg-inverse: var(--neutral-950);

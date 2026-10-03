@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { Servicio1, Servicio2, Servicio3, Servicio4 } from "@/components/graphics/illustrations";
+import Image from "next/image";
 import { contentWidth, gutter, type, tone } from "@/components/ui/section";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitReveal } from "@/components/motion/split-reveal";
@@ -10,52 +10,39 @@ import { cx } from "@/utils/cx";
 const services = [
     {
         letter: "p",
-        art: Servicio1,
+        art: "/images/gradients/service-1.webp",
         title: "Posicionamiento de marca",
         body1: "Definimos el territorio de marca, el tono de comunicación y la propuesta de valor que te diferencia de tu competencia.",
         body2: "Lo bajamos a un manual aplicable a cada pieza que produzcas.",
     },
     {
         letter: "m",
-        art: Servicio2,
+        art: "/images/gradients/service-2.webp",
         title: "Marketing digital y campañas",
         body1: "Diseñamos, ejecutamos y optimizamos campañas en los canales donde está tu cliente.",
         body2: "Orientadas a un objetivo concreto: leads, tráfico calificado o ventas directas.",
     },
     {
         letter: "e",
-        art: Servicio3,
+        art: "/images/gradients/service-3.webp",
         title: "Estrategia comercial",
         body1: "Miramos tu embudo de ventas de punta a punta e identificamos dónde se pierden oportunidades.",
         body2: "Armamos un plan comercial con objetivos trimestrales medibles.",
     },
     {
         letter: "s",
-        art: Servicio4,
+        art: "/images/gradients/service-4.webp",
         title: "Gestión del Sello Verde",
         body1: "Acompañamos todo el trámite: diagnóstico de las prácticas actuales, documentación, implementación de las mejoras que falten y seguimiento hasta la certificación.",
         body2: "Un requisito cada vez más pedido en licitaciones y por grandes cuentas.",
     },
 ];
 
-/**
- * Ilustración de un servicio.
- *
- * Los cuatro SVG vienen con relaciones distintas (472×432, 414×414, 544×432,
- * 484×432), así que el hueco fija la del diseño y el dibujo entra con
- * `object-contain`: cada uno se acomoda adentro sin deformarse y todos ocupan
- * el mismo lugar en la grilla.
- *
- * Van inlineados en el DOM (ver `graphics/illustrations.tsx`), no como
- * `<img src>`: cada uno trae un filtro de trazo (feTurbulence) que como
- * imagen externa rasteriza al tamaño nativo del archivo y sale pixelado al
- * escalar. Inline, se recalcula a la resolución real de pantalla.
- */
-function ServiceArt({ art: Art, title }: { art: (props: { className?: string }) => React.JSX.Element; title: string }) {
+/** Optical gradient photography, sharing the original service grid. */
+function ServiceArt({ art, title }: { art: string; title: string }) {
     return (
-        <div className="relative aspect-[544/432] w-full">
-            <Art className="absolute inset-0 h-full w-full object-contain" />
-            <span className="sr-only">Ilustración de {title}</span>
+        <div className="relative aspect-[544/432] max-h-full w-full overflow-hidden">
+            <Image src={art} alt={`Gradiente de luz — ${title}`} fill sizes="(min-width: 1024px) 42vw, 90vw" className="object-contain" />
         </div>
     );
 }
@@ -71,17 +58,17 @@ function ServiceArt({ art: Art, title }: { art: (props: { className?: string }) 
  * El retardo va sobre el que entra: CSS aplica el `transition-delay` del
  * estado al que se va, así que el activo espera y el que se apaga arranca ya.
  */
-const FADE_MS = 300;
+const FADE_MS = 450;
 
 function fade(isActive: boolean) {
     return {
-        transitionProperty: "opacity, transform, filter",
+        transitionProperty: "opacity, transform",
         transitionDuration: `${FADE_MS}ms`,
         transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)",
         transitionDelay: isActive ? `${FADE_MS}ms` : "0ms",
         opacity: isActive ? 1 : 0,
-        transform: isActive ? "translate3d(0,0,0) scale(1)" : "translate3d(0,20px,0) scale(.96)",
-        filter: isActive ? "blur(0)" : "blur(3px)",
+        transform: isActive ? "translate3d(0,0,0) scale(1)" : "translate3d(0,32px,0) scale(.92)",
+
     } as const;
 }
 
