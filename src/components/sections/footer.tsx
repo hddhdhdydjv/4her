@@ -1,23 +1,20 @@
 "use client";
 
-import { Logo } from "@/components/ui/logo";
+import { Logotipo } from "@/components/graphics/brand";
 import { type } from "@/components/ui/section";
 import { useAnchorScroll } from "@/hooks/use-anchor-scroll";
 import { cx } from "@/utils/cx";
 
 /**
- * Figma `Footer 1` (40:3854) — logo + nav | redes, sin línea divisoria arriba.
+ * Pie: logotipo | navegación | redes, sin línea divisoria arriba.
  *
- * No trae fondo propio: va apoyado dentro de la sección de contacto, sobre la
- * foto. Por eso todo el color es blanco con opacidad en vez de los tokens de
+ * No trae fondo propio: va apoyado dentro de la sección de contacto, sobre
+ * negro. Por eso todo el color es blanco con opacidad en vez de los tokens de
  * texto, que están calibrados para la crema de la página.
  */
 const links = [
-    { label: "Quiénes somos", href: "#quienes-somos" },
     { label: "Servicios", href: "#servicios" },
-    { label: "Valores", href: "#valores" },
     { label: "Proceso", href: "#proceso" },
-    { label: "Contacto", href: "#contacto" },
 ];
 
 const socials = [
@@ -61,10 +58,13 @@ export function Footer() {
     const scrollTo = useAnchorScroll();
 
     return (
-        <footer className="flex flex-col items-start gap-8 lg:flex-row lg:items-center lg:justify-between">
-                {/* Text (40:3855) */}
-                <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:gap-8">
-                    <Logo dark />
+        // Tres columnas en desktop: la navegación queda centrada en la página
+        // y no corrida hacia el lado que mida menos.
+        <footer className="flex flex-col items-start gap-8 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center">
+                <a href="#inicio" onClick={scrollTo} aria-label="4her — inicio">
+                    <Logotipo tight className="h-5 w-auto text-[var(--neutral-50)]" />
+                </a>
+                <div className="lg:justify-self-center">
                     <nav className="flex flex-wrap gap-x-8 gap-y-2">
                         {links.map((link) => (
                             <a
@@ -82,8 +82,7 @@ export function Footer() {
                     </nav>
                 </div>
 
-                {/* Social links (40:3863) */}
-                <nav className="flex items-center gap-6">
+                <nav className="flex items-center gap-6 lg:justify-self-end" aria-label="Redes">
                     {socials.map((s) => (
                         <a
                             key={s.label}

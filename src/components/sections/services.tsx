@@ -1,356 +1,126 @@
-"use client";
-
-import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { DotGrid } from "@/components/ui/dot-grid";
-import { Servicio1, Servicio2, Servicio3, Servicio4 } from "@/components/graphics/illustrations";
-import { contentWidth, gutter, type, tone } from "@/components/ui/section";
+import { Tilt } from "@/components/motion/tilt";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitReveal } from "@/components/motion/split-reveal";
+import { Screen, gutter, type, tone } from "@/components/ui/section";
+import { Visual } from "@/components/ui/visual";
 import { cx } from "@/utils/cx";
 
+/**
+ * Servicios apilados: imagen a la izquierda, texto a la derecha, uno debajo
+ * del otro. La columna de texto se estira al alto de la imagen, así la lista
+ * de entregables cierra a la misma línea que la foto.
+ */
 const services = [
     {
-        letter: "b",
-        art: Servicio1,
-        title: "Branding & Rebranding",
-        body1: "Creamos o renovamos la identidad de tu marca: naming, sistema visual y guías de uso.",
-        body2: "Para que cada pieza que produzcas, la hagas vos o un tercero, se vea y se sienta igual.",
+        image: "/images/services/posicionamiento",
+        title: "Posicionamiento de marca",
+        body: "Definimos el territorio de marca, el tono de comunicación y la propuesta de valor que te diferencia de tu competencia. Lo bajamos a un manual aplicable a cada pieza que produzcas.",
+        items: [
+            "Auditoría de marca y análisis competitivo",
+            "Definición de propuesta de valor",
+            "Manual de identidad verbal y visual",
+            "Tono y lineamientos de comunicación",
+        ],
     },
     {
-        letter: "e",
-        art: Servicio2,
-        title: "Estrategia & Posicionamiento",
-        body1: "Definimos qué decir, a quién y por qué, antes de producir cualquier pieza.",
-        body2: "Mensajes clave que sostienen todo lo que comunicás después.",
+        image: "/images/services/marketing",
+        title: "Marketing digital y campañas",
+        body: "Diseñamos, ejecutamos y optimizamos campañas en los canales donde está tu cliente, orientadas a un objetivo concreto: leads, tráfico calificado o ventas directas.",
+        items: [
+            "Google Ads, Meta e Instagram Ads",
+            "Contenido y calendario para redes",
+            "Email marketing y automatización",
+            "Reporte mensual de resultados",
+        ],
     },
     {
-        letter: "m",
-        art: Servicio3,
-        title: "Marketing digital & Contenido",
-        body1: "Contenido y campañas pensadas para comunicar, no solo para llenar el feed.",
-        body2: "Estrategia de canales y calendario editorial a medida.",
+        image: "/images/services/estrategia",
+        title: "Estrategia comercial",
+        body: "Miramos tu embudo de ventas de punta a punta, identificamos dónde se pierden oportunidades y armamos un plan comercial con objetivos trimestrales medibles.",
+        items: [
+            "Diagnóstico del proceso comercial",
+            "Definición de objetivos y KPIs",
+            "Plan trimestral de acción",
+            "Acompañamiento en la implementación",
+        ],
     },
     {
-        letter: "g",
-        art: Servicio4,
-        title: "Growth & Prensa",
-        body1: "Hacemos crecer la presencia de tu marca con growth y relaciones con prensa.",
-        body2: "Comunicación institucional cuando tu marca lo necesita.",
+        image: "/images/services/sello-verde",
+        title: "Gestión del Sello Verde",
+        body: "Acompañamos a la empresa en todo el trámite: diagnóstico de las prácticas actuales, armado de la documentación, implementación de las mejoras que falten y seguimiento hasta obtener la certificación.",
+        items: [
+            "Mejora la imagen institucional y la percepción de marca frente a clientes",
+            "Suma un requisito cada vez más pedido en licitaciones y por grandes cuentas",
+            "Incluye asesoría en gestión de residuos y economía circular",
+            "Diferencia a la empresa frente a competidores sin certificación",
+        ],
     },
 ];
 
-/**
- * Ilustración de un servicio.
- *
- * Los cuatro SVG vienen con relaciones distintas (472×432, 414×414, 544×432,
- * 484×432), así que el hueco fija la del diseño y el dibujo entra con
- * `object-contain`: cada uno se acomoda adentro sin deformarse y todos ocupan
- * el mismo lugar en la grilla.
- *
- * Van inlineados en el DOM (ver `graphics/illustrations.tsx`), no como
- * `<img src>`: cada uno trae un filtro de trazo (feTurbulence) que como
- * imagen externa rasteriza al tamaño nativo del archivo y sale pixelado al
- * escalar. Inline, se recalcula a la resolución real de pantalla.
- */
-function ServiceArt({ art: Art, title }: { art: (props: { className?: string }) => React.JSX.Element; title: string }) {
-    return (
-        <div className="relative aspect-[544/432] w-full">
-            <Art className="absolute inset-0 h-full w-full object-contain" />
-            <span className="sr-only">Ilustración de {title}</span>
-        </div>
-    );
-}
-
-/**
- * Fundido de un servicio al siguiente.
- *
- * El que sale se va primero y el que entra espera a que termine, en vez de
- * cruzarse. Cruzados, en la mitad de la transición los dos están al 50% y se
- * ve el bajón —y en las ilustraciones, que son línea sobre transparente, se
- * llegan a ver los dos dibujos superpuestos. Eso era el salto.
- *
- * El retardo va sobre el que entra: CSS aplica el `transition-delay` del
- * estado al que se va, así que el activo espera y el que se apaga arranca ya.
- */
-const FADE_MS = 300;
-
-function fade(isActive: boolean) {
-    return {
-        transitionProperty: "opacity",
-        transitionDuration: `${FADE_MS}ms`,
-        transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)",
-        transitionDelay: isActive ? `${FADE_MS}ms` : "0ms",
-        opacity: isActive ? 1 : 0,
-    } as const;
-}
-
-function BarIndicator({
-    count,
-    active,
-    onSelect,
-}: {
-    count: number;
-    active: number;
-    onSelect: (i: number) => void;
-}) {
-    return (
-        <div className="flex items-end gap-2" role="tablist" aria-label="Servicios">
-            {Array.from({ length: count }, (_, i) => (
-                <button
-                    key={i}
-                    type="button"
-                    role="tab"
-                    aria-selected={i === active}
-                    aria-label={services[i].title}
-                    onClick={() => onSelect(i)}
-                    className={cx(
-                        "relative w-px cursor-pointer transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]",
-                        "before:absolute before:-inset-x-2 before:-inset-y-3 before:content-['']",
-                        i === active ? "h-4 bg-[#646464]" : "h-2 bg-[#b4b8b4]",
-                    )}
-                />
-            ))}
-        </div>
-    );
-}
-
 export function Services() {
-    const [active, setActive] = useState(0);
-    const n = services.length;
-    // Desktop: tracks the full section (n*100vh).
-    // Mobile: tracks only the sticky services container (n*100vh), after the normal-flow intro.
-    const trackRef = useRef<HTMLElement>(null);
-    const mobileTrackRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        let frame = 0;
-
-        function read() {
-            frame = 0;
-            const isDesktop = window.innerWidth >= 1024;
-            const el = isDesktop ? trackRef.current : mobileTrackRef.current;
-            if (!el) return;
-
-            const distance = el.offsetHeight - window.innerHeight;
-            if (distance <= 0) return;
-
-            const progress = -el.getBoundingClientRect().top / distance;
-            const clamped = Math.min(Math.max(progress, 0), 1);
-
-            if (isDesktop) {
-                setActive(Math.round(clamped * (n - 1)));
-            } else {
-                setActive(Math.min(n - 1, Math.floor(clamped * n)));
-            }
-        }
-
-        function onScroll() {
-            if (frame) return;
-            frame = requestAnimationFrame(read);
-        }
-
-        read();
-        window.addEventListener("scroll", onScroll, { passive: true });
-        window.addEventListener("resize", onScroll, { passive: true });
-        return () => {
-            if (frame) cancelAnimationFrame(frame);
-            window.removeEventListener("scroll", onScroll);
-            window.removeEventListener("resize", onScroll);
-        };
-    }, [n]);
-
-    function goTo(i: number) {
-        const isDesktop = window.innerWidth >= 1024;
-        const el = isDesktop ? trackRef.current : mobileTrackRef.current;
-        if (!el) return;
-        const distance = el.offsetHeight - window.innerHeight;
-        if (distance <= 0) { setActive(i); return; }
-        const fraction = isDesktop ? i / (n - 1) : i / n;
-        const absoluteTop = window.scrollY + el.getBoundingClientRect().top;
-        window.scrollTo({ top: absoluteTop + fraction * distance, behavior: "smooth" });
-    }
-
     return (
-        <section
-            id="servicios"
-            ref={trackRef}
-            style={{ "--track": `${n * 100}vh` } as CSSProperties}
-            className="relative lg:h-[var(--track)]"
-        >
-            {/* ═══ MOBILE LAYOUT (< lg) ═══
-                Two separate parts:
-                - Part 1: Intro text — normal flow, fills one viewport, scrolls away naturally.
-                - Part 2: Sticky services panel — image top + indicator + service text bottom.
-                          Sticks while the user scrolls through n viewports.
-                No blank gap: intro exits like any normal content; sticky takes over immediately. */}
-            <div className="lg:hidden">
-
-                {/* Part 1 — intro, normal scroll */}
-                <div className={cx(
-                    "flex flex-col gap-6",
-                    gutter,
-                    "pt-[clamp(72px,13.72vh,151px)] pb-16",
-                )}>
-                    <div className={cx("mx-auto w-full", contentWidth)}>
-                        <div className="flex flex-col gap-6">
-                            <div className="flex flex-col gap-4">
-                                <Reveal delay={0}>
-                                    <p className={cx(type.title, tone.secondary)}>Nuestros servicios</p>
-                                </Reveal>
-                                <SplitReveal delay={120} className={cx(type.h1, tone.primary, "text-balance")}>
-                                    Servicios que se combinan según lo que tu marca necesita
-                                </SplitReveal>
-                            </div>
-                            <Reveal delay={260}>
-                                <p className={cx(type.h2, tone.tertiary)}>Vos elegís por dónde empezar</p>
-                            </Reveal>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Part 2 — sticky services panel */}
-                <div
-                    ref={mobileTrackRef}
-                    style={{ height: `${n * 100}vh` }}
-                    className="relative"
-                >
-                    <div className={cx(
-                        "sticky top-0 flex h-screen min-h-0 flex-col",
-                        gutter,
-                        "pt-[clamp(72px,13.72vh,151px)] pb-[clamp(40px,7.5vh,83px)]",
-                    )}>
-                        <div className={cx("mx-auto flex w-full flex-1 flex-col", contentWidth)}>
-                            {/* Image — fills remaining vertical space */}
-                            <div className="relative min-h-0 flex-1">
-                                <DotGrid />
-                                {services.map((s, i) => (
-                                    <div
-                                        key={s.title}
-                                        aria-hidden="true"
-                                        className={cx(
-                                            "absolute inset-0 flex items-center",
-                                        )}
-                                        style={fade(i === active)}
-                                    >
-                                        <ServiceArt art={s.art} title={s.title} />
-                                    </div>
-                                ))}
-                            </div>
-
-                            {/* Service text — below image */}
-                            <div className="flex shrink-0 flex-col gap-3 pt-3">
-                                <BarIndicator count={n} active={active} onSelect={goTo} />
-                                <div className="grid">
-                                    {services.map((s, i) => (
-                                        <div
-                                            key={s.title}
-                                            aria-hidden={i !== active}
-                                            className={cx(
-                                                "col-start-1 row-start-1 flex flex-col gap-1.5",
-                                                i !== active && "pointer-events-none",
-                                            )}
-                                            style={fade(i === active)}
-                                        >
-                                            <h3 className={cx(type.h2, tone.primary)}>{s.title}</h3>
-                                            <p className={cx(type.body, tone.secondary)}>{s.body1}</p>
-                                        </div>
-                                    ))}
-                                </div>
-                                <a
-                                    href="#contacto"
-                                    className={cx(
-                                        type.body,
-                                        "w-fit rounded-[45px] bg-[var(--bg-inverse)] px-4 py-2.5 text-center text-[var(--text-inverse)] transition-opacity hover:opacity-85",
-                                    )}
-                                >
-                                    Hacé tu consulta
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* ═══ DESKTOP LAYOUT (≥ lg) ═══
-                Header above, services in two-column row. Entire section is n*100vh sticky. */}
-            <div className={cx(
-                "hidden sticky top-0 h-screen min-h-0 flex-col lg:flex",
-                gutter,
-                "pt-[clamp(72px,13.72vh,151px)] pb-[clamp(40px,7.5vh,83px)]",
-            )}>
-                <div className={cx("mx-auto flex w-full flex-1 flex-col gap-10 lg:gap-20", contentWidth)}>
-                    <div className="flex max-w-[800px] flex-col gap-6">
-                        <div className="flex flex-col gap-4">
-                            <Reveal delay={0}>
-                                <p className={cx(type.title, tone.secondary)}>Nuestros servicios</p>
-                            </Reveal>
-                            <SplitReveal delay={120} className={cx(type.h1, tone.primary, "text-balance")}>
-                                Servicios que se combinan según lo que tu marca necesita
-                            </SplitReveal>
-                        </div>
-                        <Reveal delay={260}>
-                            <p className={cx(type.h2, tone.tertiary)}>Vos elegís por dónde empezar</p>
+        <Screen id="servicios" inset={cx(gutter, "pt-[clamp(88px,16vh,176px)] pb-[clamp(88px,16vh,176px)]")}>
+            <div className="flex flex-col gap-16 lg:gap-24">
+                <div className="flex max-w-[800px] flex-col gap-3">
+                    <div className="flex flex-col gap-4">
+                        <Reveal delay={0}>
+                            <p className={cx(type.body, tone.secondary)}>Nuestros servicios</p>
                         </Reveal>
+                        <SplitReveal delay={120} className={cx(type.h1, tone.primary, "text-balance")}>
+                            Servicios que se combinan según lo que tu marca necesita
+                        </SplitReveal>
                     </div>
-
-                    <div className="flex items-start gap-[5%]">
-                        {/* Text column — left */}
-                        <div className="flex w-[52.5%] shrink-0 flex-col gap-6">
-                            <BarIndicator count={n} active={active} onSelect={goTo} />
-                            {/* Pila en grid: todos los servicios comparten la
-                                misma celda, así que la caja mide lo que el más
-                                largo y ni el botón ni el stepper se corren al
-                                cambiar de servicio. */}
-                            <div className="grid">
-                                {services.map((s, i) => (
-                                    <div
-                                        key={s.title}
-                                        aria-hidden={i !== active}
-                                        className={cx(
-                                            "col-start-1 row-start-1 flex flex-col gap-3",
-                                            i !== active && "pointer-events-none",
-                                        )}
-                                        style={fade(i === active)}
-                                    >
-                                        <h3 className={cx(type.h2, tone.primary, "max-w-[376px] text-balance")}>
-                                            {s.title}
-                                        </h3>
-                                        <p className={cx(type.bodyLg, tone.secondary)}>{s.body1}</p>
-                                        <p className={cx(type.bodyLg, tone.secondary)}>{s.body2}</p>
-                                    </div>
-                                ))}
-                            </div>
-                            <a
-                                href="#contacto"
-                                className={cx(
-                                    type.body,
-                                    "w-fit rounded-[45px] bg-[var(--bg-inverse)] px-4 py-2.5 text-center text-[var(--text-inverse)] transition-opacity hover:opacity-85",
-                                )}
-                            >
-                                Hacé tu consulta
-                            </a>
-                        </div>
-
-                        {/* Image column — right */}
-                        <div className="relative aspect-[544/432] w-[42.5%] shrink-0">
-                            {/* Trama de fondo, detrás de las cuatro ilustraciones. */}
-                            <DotGrid />
-                            {services.map((s, i) => (
-                                <div
-                                    key={s.title}
-                                    aria-hidden="true"
-                                    className={cx(
-                                        "absolute inset-0 flex items-center",
-                                    )}
-                                    style={fade(i === active)}
-                                >
-                                    <ServiceArt art={s.art} title={s.title} />
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+                    <Reveal delay={260}>
+                        <p className={cx(type.lead, tone.tertiary)}>Vos elegís por dónde empezar</p>
+                    </Reveal>
                 </div>
+
+                <ol className="flex flex-col gap-[clamp(72px,11vw,176px)]">
+                    {services.map((s, i) => (
+                        <li key={s.title} className="flex flex-col gap-8 lg:flex-row lg:items-stretch lg:gap-[5%]">
+                            <Reveal delay={0} variant="scale" className="w-full lg:w-[47.5%] lg:shrink-0">
+                                <Tilt className="aspect-[11/8] w-full">
+                                    <Visual
+                                        name={s.image}
+                                        alt={s.title}
+                                        sizes="(min-width: 1024px) 608px, 100vw"
+                                        spec="1216 × 884 · WebP o JPG"
+                                        placeholderClassName="bg-[#E7E7E5]"
+                                    />
+                                </Tilt>
+                            </Reveal>
+
+                            <Reveal
+                                delay={140}
+                                className="flex flex-col justify-between gap-8 lg:w-[47.5%] lg:shrink-0"
+                            >
+                                <div className="flex flex-col gap-4">
+                                    <span className={cx(type.label, tone.tertiary)}>
+                                        [ {String(i + 1).padStart(2, "0")} ]
+                                    </span>
+                                    <h3 className={cx(type.h2, tone.primary, "text-balance")}>{s.title}</h3>
+                                    <p className={cx(type.bodySm, tone.secondary, "max-w-[52ch]")}>{s.body}</p>
+                                </div>
+
+                                <ul className="flex flex-col">
+                                    {s.items.map((item) => (
+                                        <li
+                                            key={item}
+                                            className="flex items-baseline gap-3 border-t border-[var(--border-default)] py-3"
+                                        >
+                                            <span
+                                                aria-hidden="true"
+                                                className="size-1 shrink-0 translate-y-[-3px] rounded-full bg-[var(--text-tertiary)]"
+                                            />
+                                            <span className={cx(type.bodySm, tone.secondary)}>{item}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </Reveal>
+                        </li>
+                    ))}
+                </ol>
             </div>
-        </section>
+        </Screen>
     );
 }

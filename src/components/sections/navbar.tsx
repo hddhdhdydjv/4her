@@ -1,17 +1,15 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Logo } from "@/components/ui/logo";
+import { Logotipo } from "@/components/graphics/brand";
 import { type } from "@/components/ui/section";
 import { useAnchorScroll } from "@/hooks/use-anchor-scroll";
 import { useLenisInstance } from "@/components/providers/lenis-provider";
 import { cx } from "@/utils/cx";
 
-/** Figma `Header 1` (40:3870) — pill centrada de 640px, py-24. */
+/** Píldora centrada: logotipo a la izquierda, links y CTA a la derecha. */
 const links = [
-    { label: "Quiénes somos", href: "#quienes-somos" },
     { label: "Servicios", href: "#servicios" },
-    { label: "Valores", href: "#valores" },
     { label: "Proceso", href: "#proceso" },
 ];
 
@@ -80,7 +78,7 @@ export function Navbar() {
     return (
         <>
             <header className="fixed inset-x-0 top-0 z-50 px-4 py-4 sm:px-6 lg:py-6">
-                <div className="mx-auto w-full max-w-[640px]">
+                <div className="mx-auto w-full max-w-[680px]">
                     {/* Pill (40:3871) — bg transitions on scroll, blur stays constant */}
                     <div
                         className={cx(
@@ -90,7 +88,9 @@ export function Navbar() {
                             scrolled ? "bg-[var(--accent-default)]" : "bg-[var(--accent-default)]/85",
                         )}
                     >
-                        <Logo dark />
+                        <a href="#inicio" onClick={scrollTo} aria-label="4her — inicio" className="shrink-0">
+                            <Logotipo tight className="h-5 w-auto text-[var(--neutral-50)]" />
+                        </a>
 
                         {/* Desktop nav (40:3875) */}
                         <nav className="hidden items-center gap-6 lg:flex">

@@ -23,13 +23,18 @@ export const type = {
         "font-display font-medium text-[clamp(2.5rem,6.25vw,4.5rem)] leading-[1] tracking-[-0.02em]",
     displaySm:
         "font-display font-medium text-[clamp(2rem,4.86vw,3.5rem)] leading-[1.04] tracking-[-0.02em]",
-    h1: "font-display font-medium text-[clamp(1.75rem,3.82vw,2.75rem)] leading-[1.06] tracking-[-0.015em]",
-    h2: "font-display font-medium text-[clamp(1.5rem,2.95vw,2.125rem)] leading-[1.1] tracking-[-0.01em]",
+    // H1 y H2 en Regular, no Medium: así los dibuja el diseño 2254:5501.
+    h1: "font-display font-normal text-[clamp(1.75rem,3.82vw,2.75rem)] leading-[1.12] tracking-[-0.015em]",
+    h2: "font-display font-normal text-[clamp(1.5rem,2.95vw,2.125rem)] leading-[1.15] tracking-[-0.01em]",
     h3: "font-display font-semibold text-[clamp(1.25rem,2.26vw,1.625rem)] leading-[1.18] tracking-[-0.005em]",
     title: "font-display font-semibold text-[clamp(1.0625rem,1.74vw,1.25rem)] leading-[1.3]",
     bodyLg: "font-body text-[clamp(1rem,1.56vw,1.125rem)] leading-[1.6]",
     body: "font-body text-[1rem] leading-[1.6]",
     label: "font-body font-medium text-[0.8125rem] leading-[1.2] tracking-[0.06em]",
+    /** Cuerpo compacto: descripciones y listas de las secciones de contenido. */
+    bodySm: "font-body text-[0.9375rem] leading-[1.6]",
+    /** Bajada gris bajo un titular de sección. */
+    lead: "font-body text-[clamp(1.0625rem,1.6vw,1.375rem)] leading-[1.4]",
 } as const;
 
 /** Colores semánticos de Figma, como clases listas para usar. */
