@@ -28,7 +28,8 @@ recortadas y en AVIF/WebP según la pantalla de cada visitante.
 | --- | --- | --- | --- |
 | `hero/hero-video.webm` | Mismo video, en WebM | 1920 × 1080 | Los navegadores que lo soportan lo prefieren y pesa menos. Si no lo subís, usan el MP4. |
 | `hero/hero-poster.webp` | Primer cuadro del video | 1920 × 1080 | Se ve mientras el video carga, y siempre para quien tiene activado reducir movimiento. |
-| `wepiper/wepiper.webp` | Caso WePiper | 2560 × 1440 | La composición completa del caso, proporción 16:9. |
+| `wepiper/wepiper.webp` | Caso WePiper, desktop y tablet | 2560 × 1440 | La composición completa del caso, horizontal 16:9. |
+| `wepiper/wepiper-mobile.webp` | Caso WePiper, celular | 1200 × 1500 | La misma composición rearmada vertical, 4:5. Si no la subís, el celular usa la horizontal, más chica. |
 
 ## Lo que no lleva imagen
 
