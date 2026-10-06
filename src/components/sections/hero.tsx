@@ -44,9 +44,12 @@ const VIDEO_BG = "linear-gradient(180deg, #8BAFE2 0%, #9CC2F8 19%, #B9DFFE 50%, 
  */
 const VIDEO_BG_MOBILE = "linear-gradient(180deg, #BDE1FE 0%, #B7D8FC 100%)";
 
-/** Fundido del video en mobile: largo y con curva suave arriba; los costados sólo cuentan en tablet. */
-const MOBILE_MASK =
-    "linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.12) 14%, rgba(0,0,0,0.4) 28%, rgba(0,0,0,0.75) 40%, #000 52%), linear-gradient(90deg, transparent 0%, #000 12%, #000 88%, transparent 100%)";
+/**
+ * Fundido del video en mobile: una elipse alrededor del anillo. Se apaga el
+ * fondo del propio video (que a la derecha es violeta y dejaba una franja
+ * oscura contra el borde) y queda sólo el objeto sobre el celeste del hero.
+ */
+const MOBILE_MASK = "radial-gradient(ellipse 50% 47% at 50% 52%, #000 74%, transparent 100%)";
 
 const VIDEO = "/images/hero/hero-video";
 const POSTER = "/images/hero/hero-poster";
@@ -87,7 +90,14 @@ export function Hero() {
                 </div>
             )}
 
-            <div className="relative z-10 flex flex-1 px-6 pt-28 sm:px-10 lg:px-20 lg:pt-32 lg:pb-28">
+            {/* Con video, en mobile el texto no se estira ni se centra: queda
+                arriba y el video pega contra él; si sobra alto, sobra al final. */}
+            <div
+                className={cx(
+                    "relative z-10 flex px-6 pt-28 sm:px-10 lg:flex-1 lg:px-20 lg:pt-32 lg:pb-28",
+                    !hasVideo && "flex-1",
+                )}
+            >
                 <div className="mx-auto flex w-full max-w-[1280px] flex-col justify-center">
                     <TextsReveal className="flex max-w-[470px] flex-col gap-5">
                         <p className={cx("t-stagger-line t-stagger-line--1", type.body, tone.secondary)}>
@@ -111,18 +121,15 @@ export function Hero() {
                 despejado: `object-right` recorta por la izquierda, que está
                 vacía, y no por donde está el objeto. */}
             {hasVideo ? (
-                /* Mobile con video: debajo del texto, fundido hacia arriba. En
-                   tablet no ocupa todo el ancho (en 4:5 sería altísimo): se
-                   centra y los costados también se funden con el fondo. */
+                /* Mobile con video: sube hasta quedar apenas por debajo del final
+                   del texto (el texto va encima, z-10). La parte de arriba de la
+                   caja es fondo ya fundido, así que el anillo arranca justo
+                   después del párrafo. Puede pasarse del alto de la pantalla.
+                   En tablet no ocupa todo el ancho: en 4:5 sería altísimo. */
                 <div
                     aria-hidden="true"
-                    className="relative mx-auto mt-4 aspect-[4/5] w-full max-w-[560px] shrink-0 lg:hidden"
-                    style={{
-                        maskImage: MOBILE_MASK,
-                        WebkitMaskImage: MOBILE_MASK,
-                        maskComposite: "intersect",
-                        WebkitMaskComposite: "source-in",
-                    }}
+                    className="pointer-events-none relative mx-auto -mt-[22vw] aspect-[4/5] w-full max-w-[560px] shrink-0 sm:-mt-16 lg:hidden"
+                    style={{ maskImage: MOBILE_MASK, WebkitMaskImage: MOBILE_MASK }}
                 >
                     <HeroVideo on="mobile" mp4={mp4} webm={webm} poster={poster} />
                 </div>
