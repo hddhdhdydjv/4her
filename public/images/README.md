@@ -15,8 +15,7 @@ recortadas y en AVIF/WebP según la pantalla de cada visitante.
 
 | Archivo | Dónde va | Tamaño sugerido | Notas |
 | --- | --- | --- | --- |
-| `hero/hero-video.mp4` | Hero **desktop**, de fondo detrás de la tipografía | 1920 × 1080 | MP4 (H.264), sin audio, loop de 10 a 20 s, idealmente menos de 8 MB. Mobile no lo descarga. |
-| `hero/hero.png` | Hero **mobile**, debajo del texto | 1800 × 1600 | Fondo transparente o el mismo verde del hero (`#EBF2F2`). En mobile se ve entera, sin recortar. |
+| `hero/hero.png` | Hero: a sangre detrás del texto en desktop, y debajo del texto en mobile | 3840 × 2160 (16:9) | Objeto a la derecha y lado izquierdo despejado para el texto. En mobile se recorta por la izquierda, así que el objeto tiene que quedar del lado derecho. |
 | `services/posicionamiento.webp` | Servicio 01 | 1216 × 884 | Proporción 11:8. |
 | `services/marketing.webp` | Servicio 02 | 1216 × 884 | Proporción 11:8. |
 | `services/estrategia.webp` | Servicio 03 | 1216 × 884 | Proporción 11:8. |
@@ -26,6 +25,7 @@ recortadas y en AVIF/WebP según la pantalla de cada visitante.
 
 | Archivo | Dónde va | Tamaño sugerido | Notas |
 | --- | --- | --- | --- |
+| `hero/hero-video.mp4` | Video para el hero de desktop | 1920 × 1080 | Si existe, reemplaza a `hero.png` en desktop y va detrás de la tipografía. MP4 (H.264), sin audio, loop de 10 a 20 s, idealmente menos de 8 MB. Mobile no lo descarga. |
 | `hero/hero-video.webm` | Mismo video, en WebM | 1920 × 1080 | Los navegadores que lo soportan lo prefieren y pesa menos. Si no lo subís, usan el MP4. |
 | `hero/hero-poster.webp` | Primer cuadro del video | 1920 × 1080 | Se ve mientras el video carga, y siempre para quien tiene activado reducir movimiento. |
 | `wepiper/wepiper.webp` | Caso WePiper, desktop y tablet | 2560 × 1440 | La composición completa del caso, horizontal 16:9. |
