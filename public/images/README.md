@@ -24,7 +24,6 @@ recortadas y en AVIF/WebP según la pantalla de cada visitante.
 | Archivo | Dónde va | Tamaño sugerido | Notas |
 | --- | --- | --- | --- |
 | `wepiper/wepiper.webp` | Caso WePiper | 2560 × 1440 | La composición completa del caso, proporción 16:9. |
-| `hero/logos/logo-1.svg` (y `-2`, `-3`) | Tira de logos del hero | SVG, ~24 px de alto | Logos de clientes. Se muestran en gris; mientras no estén, queda una barra neutra. |
 
 ## Lo que no lleva imagen
 

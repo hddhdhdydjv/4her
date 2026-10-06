@@ -6,9 +6,12 @@ import { Visual } from "@/components/ui/visual";
 import { cx } from "@/utils/cx";
 
 /**
- * Servicios apilados: imagen a la izquierda, texto a la derecha, uno debajo
- * del otro. La columna de texto se estira al alto de la imagen, así la lista
- * de entregables cierra a la misma línea que la foto.
+ * Servicios apilados en zigzag: la imagen alterna de lado en cada servicio
+ * (izquierda, derecha, izquierda…). En mobile van siempre con la imagen
+ * arriba: no hay ancho para alternar.
+ *
+ * La columna de texto se estira al alto de la imagen, así la lista de
+ * entregables cierra a la misma línea que la foto.
  */
 const services = [
     {
@@ -77,7 +80,13 @@ export function Services() {
 
                 <ol className="flex flex-col gap-[clamp(72px,11vw,176px)]">
                     {services.map((s, i) => (
-                        <li key={s.title} className="flex flex-col gap-8 lg:flex-row lg:items-stretch lg:gap-[5%]">
+                        <li
+                            key={s.title}
+                            className={cx(
+                                "flex flex-col gap-8 lg:items-stretch lg:gap-[5%]",
+                                i % 2 === 0 ? "lg:flex-row" : "lg:flex-row-reverse",
+                            )}
+                        >
                             <Reveal delay={0} variant="scale" className="w-full lg:w-[47.5%] lg:shrink-0">
                                 <Tilt className="aspect-[11/8] w-full">
                                     <Visual
@@ -95,9 +104,6 @@ export function Services() {
                                 className="flex flex-col justify-between gap-8 lg:w-[47.5%] lg:shrink-0"
                             >
                                 <div className="flex flex-col gap-4">
-                                    <span className={cx(type.label, tone.tertiary)}>
-                                        [ {String(i + 1).padStart(2, "0")} ]
-                                    </span>
                                     <h3 className={cx(type.h2, tone.primary, "text-balance")}>{s.title}</h3>
                                     <p className={cx(type.bodySm, tone.secondary, "max-w-[52ch]")}>{s.body}</p>
                                 </div>
