@@ -4,7 +4,7 @@ import { useRef, type CSSProperties, type ElementType, type ReactNode } from "re
 import { useRevealTrigger } from "@/hooks/use-reveal-trigger";
 import { cx } from "@/utils/cx";
 
-type RevealVariant = "up" | "scale" | "side" | "grow";
+type RevealVariant = "up" | "scale" | "side";
 
 type RevealProps = {
     children: ReactNode;

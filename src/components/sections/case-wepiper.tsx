@@ -1,4 +1,3 @@
-import { GrowIn } from "@/components/motion/grow-in";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitReveal } from "@/components/motion/split-reveal";
 import { Screen, gutter, type, tone } from "@/components/ui/section";
@@ -41,7 +40,8 @@ export function CaseWePiper() {
                 </Reveal>
             </div>
 
-            <GrowIn
+            <Reveal
+                variant="scale"
                 className={cx(
                     "relative w-full overflow-hidden rounded-2xl bg-[#E7E7E5] sm:aspect-[16/9]",
                     mobilePortrait ? "aspect-[4/5]" : "aspect-[16/9]",
@@ -65,7 +65,7 @@ export function CaseWePiper() {
                         placeholderClassName="bg-[#E7E7E5]"
                     />
                 </div>
-            </GrowIn>
+            </Reveal>
         </Screen>
     );
 }

@@ -20,7 +20,6 @@
 
     /* reveal (entradas al scroll) y split: una sola duración y curva para todo */
     --motion-dur: 800ms;
-    --motion-dur-lg: 1000ms;
     --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
 
     /* texts-reveal */
@@ -140,11 +139,6 @@
 .t-reveal--side {
     transform: translateX(var(--reveal-x, 28px));
 }
-/* "grow" no aparece de la nada: sólo escala. */
-.t-reveal--grow {
-    opacity: 1;
-    transform: scale(0.92);
-}
 /* Oculto pero sin desplazar: ver `Reveal`. Va antes de `.is-shown` y gana por
    especificidad a las variantes. */
 .t-reveal.is-reset {
@@ -157,9 +151,6 @@
         opacity var(--motion-dur) var(--motion-ease),
         transform var(--motion-dur) var(--motion-ease);
     transition-delay: var(--reveal-delay, 0ms);
-}
-.t-reveal--grow.is-shown {
-    transition-duration: var(--motion-dur-lg);
 }
 
 /* Titulares partidos en palabras (SplitReveal): ocultos hasta que el JS los
@@ -187,7 +178,6 @@
 
 @media (prefers-reduced-motion: reduce) {
     .t-reveal,
-    .t-reveal--grow,
     .t-split {
         opacity: 1;
         transform: none;
