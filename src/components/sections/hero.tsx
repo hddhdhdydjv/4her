@@ -33,7 +33,7 @@ const HERO_BG = "#EBF2F2";
  * (se ve del ~18% al ~82% del alto del video), así el video se funde con el
  * fondo sin costura.
  */
-const VIDEO_BG = "linear-gradient(180deg, #8AADE4 0%, #9BBFF6 19%, #B7DCFE 50%, #BCE0FE 81%, #B8D9FE 100%)";
+const VIDEO_BG = "linear-gradient(180deg, #8BAFE2 0%, #9CC2F8 19%, #B9DFFE 50%, #BDE0FE 81%, #BADCFE 100%)";
 
 const VIDEO = "/images/hero/hero-video";
 const POSTER = "/images/hero/hero-poster";
