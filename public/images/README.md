@@ -25,9 +25,9 @@ recortadas y en AVIF/WebP según la pantalla de cada visitante.
 
 | Archivo | Dónde va | Tamaño sugerido | Notas |
 | --- | --- | --- | --- |
-| `hero/hero-video.mp4` | Video para el hero de desktop | 1920 × 1080 | Si existe, reemplaza a `hero.png` en desktop y va detrás de la tipografía. MP4 (H.264), sin audio, loop de 10 a 20 s, idealmente menos de 8 MB. Mobile no lo descarga. |
-| `hero/hero-video.webm` | Mismo video, en WebM | 1920 × 1080 | Los navegadores que lo soportan lo prefieren y pesa menos. Si no lo subís, usan el MP4. |
-| `hero/hero-poster.webp` | Primer cuadro del video | 1920 × 1080 | Se ve mientras el video carga, y siempre para quien tiene activado reducir movimiento. |
+| `hero/hero-video.mp4` | Video para el hero de desktop | 1080 × 1920 (vertical 9:16) | Si existe, reemplaza a `hero.png` en desktop: va en un panel a la derecha que se funde con el fondo, recortado arriba y abajo (el objeto tiene que quedar en el centro del cuadro). MP4 (H.264), sin audio, loop de 10 a 20 s, idealmente menos de 8 MB. Mobile no lo descarga. |
+| `hero/hero-video.webm` | Mismo video, en WebM | 1080 × 1920 | Los navegadores que lo soportan lo prefieren y pesa menos. Si no lo subís, usan el MP4. |
+| `hero/hero-poster.webp` | Primer cuadro del video | 1080 × 1920 | Se ve mientras el video carga, y siempre para quien tiene activado reducir movimiento. |
 | `wepiper/wepiper.webp` | Caso WePiper, desktop y tablet | 2560 × 1440 | La composición completa del caso, horizontal 16:9. |
 | `wepiper/wepiper-mobile.webp` | Caso WePiper, celular | 1200 × 1500 | La misma composición rearmada vertical, 4:5. Si no la subís, el celular usa la horizontal, más chica. |
 

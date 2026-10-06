@@ -15,10 +15,9 @@ import { cx } from "@/utils/cx";
  *    debajo del texto, recortada por la izquierda (que está vacía) para que
  *    el objeto se vea entero. Cuando haya una versión vertical, la usa.
  *  - Video (`hero-video.mp4|webm`), opcional: si existe, en desktop reemplaza
- *    a la imagen y va a sangre detrás de la tipografía, con un velo del color
- *    del hero desde la izquierda para que el texto se lea sobre cualquier
- *    cuadro. El video no existe en el DOM en mobile (ver `HeroVideo`), que
- *    sigue con la imagen.
+ *    a la imagen. Es vertical (9:16): va en un panel a la derecha que se
+ *    funde con el fondo hacia el texto. El video no existe en el DOM en
+ *    mobile (ver `HeroVideo`), que sigue con la imagen.
  *
  * Este archivo es del servidor a propósito: resuelve qué archivos ya están
  * subidos y le pasa a cada pieza lo que existe.
@@ -42,17 +41,21 @@ export function Hero() {
             className="relative isolate flex min-h-[100svh] flex-col overflow-hidden"
             style={{ background: HERO_BG }}
         >
-            {/* Desktop con video: detrás de todo. */}
+            {/* Desktop con video: panel a la derecha, detrás de todo. El video es
+                vertical (9:16), así que no va a sangre: ocupa un poco más de la
+                mitad derecha y se recorta arriba y abajo, donde sólo hay degradé.
+                El borde izquierdo se funde con el fondo del hero con una máscara,
+                así el texto queda siempre sobre el verde agua. */}
             {hasVideo && (
-                <div aria-hidden="true" className="absolute inset-0 -z-10 hidden lg:block">
+                <div
+                    aria-hidden="true"
+                    className="absolute inset-y-0 right-0 -z-10 hidden w-[55vw] lg:block"
+                    style={{
+                        maskImage: "linear-gradient(90deg, transparent 0%, #000 40%)",
+                        WebkitMaskImage: "linear-gradient(90deg, transparent 0%, #000 40%)",
+                    }}
+                >
                     <HeroVideo mp4={mp4} webm={webm} poster={poster} />
-                    {/* Velo: el color del hero, fuerte atrás del texto y transparente hacia la derecha. */}
-                    <div
-                        className="absolute inset-0"
-                        style={{
-                            background: `linear-gradient(90deg, ${HERO_BG}E6 0%, ${HERO_BG}B3 34%, ${HERO_BG}00 66%)`,
-                        }}
-                    />
                 </div>
             )}
 
