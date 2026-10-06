@@ -50,6 +50,12 @@ const VIDEO_BG_MOBILE = `linear-gradient(180deg, ${LIGHT} 0%, ${LIGHT} 25%, ${VI
 const MOBILE_MASK =
     "linear-gradient(180deg, transparent 0%, #000 22%, #000 94%, transparent 100%), linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%)";
 
+/**
+ * Titular del hero: un paso arriba de H1 en la rampa (Display/Small, 56),
+ * pero en Regular como el resto de los titulares del diseño.
+ */
+const HERO_TITLE = type.displaySm.replace("font-medium", "font-normal");
+
 const VIDEO = "/images/hero/hero-video";
 const POSTER = "/images/hero/hero-poster";
 
@@ -98,14 +104,14 @@ export function Hero() {
                 )}
             >
                 <div className="mx-auto flex w-full max-w-[1280px] flex-col justify-center">
-                    <TextsReveal className="flex max-w-[470px] flex-col gap-5">
+                    <TextsReveal className="flex max-w-[560px] flex-col gap-5">
                         <p className={cx("t-stagger-line t-stagger-line--1", type.body, tone.secondary)}>
                             Comunicación y marketing
                         </p>
-                        <h1 className={cx("t-stagger-line t-stagger-line--2", type.h1, tone.primary)}>
+                        <h1 className={cx("t-stagger-line t-stagger-line--2", HERO_TITLE, tone.primary)}>
                             Ayudamos a decidir qué decir, a quién, y cómo convertirlo en ventas
                         </h1>
-                        <p className={cx("t-stagger-line t-stagger-line--3", type.bodySm, tone.secondary, "max-w-[48ch]")}>
+                        <p className={cx("t-stagger-line t-stagger-line--3", type.bodyLg, tone.secondary, "max-w-[48ch]")}>
                             Trabajamos con marcas que están empezando y con empresas que ya venden pero no
                             logran ordenar su comunicación. Definimos el mensaje, ejecutamos la pauta y
                             ponemos objetivos comerciales sobre la mesa.
