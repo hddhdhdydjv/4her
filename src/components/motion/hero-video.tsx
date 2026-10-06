@@ -3,11 +3,10 @@
 import { useEffect, useRef, useSyncExternalStore } from "react";
 
 /**
- * Video de fondo del hero, sólo en desktop.
- *
- * El `<video>` recién se monta cuando la pantalla es de desktop: en mobile no
- * existe en el DOM, así que el celular no descarga ni un byte del archivo (un
- * video oculto con CSS igual se pide).
+ * Video del hero. Se usa dos veces (panel de desktop y bloque de mobile) y
+ * cada instancia sólo se monta cuando su pantalla coincide: nunca hay dos
+ * `<video>` a la vez ni se descarga el archivo dos veces (un video oculto con
+ * CSS igual se pide).
  *
  * Arranca muteado y en loop, que es la única forma en que los navegadores
  * permiten reproducir solo. Con `prefers-reduced-motion` no se reproduce:
@@ -27,8 +26,24 @@ function useMedia(query: string) {
     );
 }
 
-export function HeroVideo({ mp4, webm, poster }: { mp4: string | null; webm: string | null; poster: string | null }) {
-    const desktop = useMedia("(min-width: 1024px)");
+const QUERY = {
+    desktop: "(min-width: 1024px)",
+    mobile: "(max-width: 1023.98px)",
+} as const;
+
+export function HeroVideo({
+    mp4,
+    webm,
+    poster,
+    on,
+}: {
+    mp4: string | null;
+    webm: string | null;
+    poster: string | null;
+    /** En qué pantallas se monta. */
+    on: keyof typeof QUERY;
+}) {
+    const active = useMedia(QUERY[on]);
     const reduce = useMedia("(prefers-reduced-motion: reduce)");
     const ref = useRef<HTMLVideoElement>(null);
 
@@ -40,9 +55,9 @@ export function HeroVideo({ mp4, webm, poster }: { mp4: string | null; webm: str
         if (!video || reduce) return;
         video.muted = true;
         video.play().catch(() => {});
-    }, [desktop, reduce]);
+    }, [active, reduce]);
 
-    if (!desktop || (!mp4 && !webm)) return null;
+    if (!active || (!mp4 && !webm)) return null;
 
     return (
         <video
