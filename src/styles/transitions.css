@@ -18,6 +18,11 @@
     --acc-icon: 250ms;
     --acc-ease: cubic-bezier(0.22, 1, 0.36, 1);
 
+    /* reveal (entradas al scroll) y split: una sola duración y curva para todo */
+    --motion-dur: 800ms;
+    --motion-dur-lg: 1000ms;
+    --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
     /* texts-reveal */
     --stagger-dur: 500ms;
     --stagger-distance: 12px;
@@ -116,6 +121,76 @@
 
 @media (prefers-reduced-motion: reduce) {
     .t-stagger-line {
+        transition: none !important;
+    }
+}
+
+/* --- Reveal al scroll ---------------------------------------------------- */
+
+/* El estado base es el oculto y NO tiene transición: al sacar `.is-shown`
+   (cuando el bloque ya salió del viewport) vuelve de golpe sin que se note,
+   y listo para animarse de nuevo. La transición vive sólo en `.is-shown`. */
+.t-reveal {
+    opacity: 0;
+    transform: translateY(var(--reveal-y, 24px));
+}
+.t-reveal--scale {
+    transform: scale(0.95);
+}
+.t-reveal--side {
+    transform: translateX(var(--reveal-x, 28px));
+}
+/* "grow" no aparece de la nada: sólo escala. */
+.t-reveal--grow {
+    opacity: 1;
+    transform: scale(0.92);
+}
+/* Oculto pero sin desplazar: ver `Reveal`. Va antes de `.is-shown` y gana por
+   especificidad a las variantes. */
+.t-reveal.is-reset {
+    transform: none;
+}
+.t-reveal.is-shown {
+    opacity: 1;
+    transform: none;
+    transition:
+        opacity var(--motion-dur) var(--motion-ease),
+        transform var(--motion-dur) var(--motion-ease);
+    transition-delay: var(--reveal-delay, 0ms);
+}
+.t-reveal--grow.is-shown {
+    transition-duration: var(--motion-dur-lg);
+}
+
+/* Titulares partidos en palabras (SplitReveal): ocultos hasta que el JS los
+   parte y los esconde palabra por palabra. */
+.t-split {
+    opacity: 0;
+}
+.t-split.is-ready {
+    opacity: 1;
+}
+
+/* Sin JS no hay quién prenda `.is-shown`: todo visible. */
+@media (scripting: none) {
+    .t-reveal,
+    .t-split {
+        opacity: 1;
+        transform: none;
+    }
+    .t-stagger-line {
+        opacity: 1;
+        transform: none;
+        filter: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .t-reveal,
+    .t-reveal--grow,
+    .t-split {
+        opacity: 1;
+        transform: none;
         transition: none !important;
     }
 }

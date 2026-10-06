@@ -2,14 +2,14 @@
 
 import { Screen, gutter, type, tone } from "@/components/ui/section";
 import { SplitReveal } from "@/components/motion/split-reveal";
-import { useInViewOnce } from "@/hooks/use-in-view-once";
+import { Reveal } from "@/components/motion/reveal";
 import { cx } from "@/utils/cx";
 
 /**
  * Proceso: tres tarjetas en fila. El número de cada paso va enorme y casi del
  * color de la tarjeta, de fondo; el título arriba y la descripción abajo.
  *
- * Cada tarjeta entra por separado la primera vez que pisa el viewport, así
+ * Cada tarjeta entra por separado cada vez que pisa el viewport, así
  * "van apareciendo una a una" con el scroll.
  */
 const steps = [
@@ -28,17 +28,14 @@ const steps = [
 ];
 
 function StepCard({ step, index }: { step: (typeof steps)[number]; index: number }) {
-    const { ref, inView } = useInViewOnce<HTMLLIElement>();
-
     return (
-        <li
-            ref={ref}
-            style={{ transitionDelay: inView ? `${index * 130}ms` : "0ms" }}
+        <Reveal
+            as="li"
+            delay={index * 110}
+            y={32}
             className={cx(
                 "relative isolate flex min-h-[clamp(280px,30vw,430px)] flex-col justify-between gap-10 overflow-hidden",
                 "rounded-2xl bg-[var(--bg-secondary)] p-6 lg:p-8",
-                "transition-all duration-[850ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
-                inView ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0",
             )}
         >
             {/* Numeral de fondo: apenas más claro que la tarjeta. */}
@@ -50,7 +47,7 @@ function StepCard({ step, index }: { step: (typeof steps)[number]; index: number
             </span>
             <h3 className={cx(type.title, tone.primary)}>{step.title}</h3>
             <p className={cx(type.bodySm, tone.secondary, "max-w-[34ch]")}>{step.body}</p>
-        </li>
+        </Reveal>
     );
 }
 
