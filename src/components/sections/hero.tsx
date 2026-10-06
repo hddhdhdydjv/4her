@@ -28,28 +28,27 @@ import { cx } from "@/utils/cx";
 const HERO_BG = "#EBF2F2";
 
 /**
- * Fondo de desktop cuando hay video: el degradé del borde izquierdo del
- * video, medido cuadro a cuadro (es fijo, no cambia en todo el loop). Las
- * paradas están reubicadas al recorte que hace `object-cover` en el panel
- * (se ve del ~18% al ~82% del alto del video), así el video se funde con el
- * fondo sin costura.
+ * El video tiene el fondo reemplazado por este celeste sólido (se calculó el
+ * degradé original, que es fijo en todo el loop, y se corrió cada cuadro a
+ * este color). Es la base del hero: donde está el video el fondo es este
+ * mismo color, así no hay costura, y desde ahí aclara hacia el texto.
  */
-const VIDEO_BG = "linear-gradient(180deg, #8BAFE2 0%, #9CC2F8 19%, #B9DFFE 50%, #BDE0FE 81%, #BADCFE 100%)";
+const VIDEO_SOLID = "#C4E0FB";
+const LIGHT = "#E4F0FD";
+
+/** Desktop: claro detrás del texto, el sólido del video desde la mitad. */
+const VIDEO_BG = `linear-gradient(90deg, ${LIGHT} 0%, ${LIGHT} 22%, ${VIDEO_SOLID} 55%)`;
+
+/** Mobile: claro arriba (texto), el sólido del video desde donde arranca. */
+const VIDEO_BG_MOBILE = `linear-gradient(180deg, ${LIGHT} 0%, ${LIGHT} 25%, ${VIDEO_SOLID} 58%)`;
 
 /**
- * Mobile con video: fondo celeste claro, el mismo de la zona clara del video.
- * No se copia el borde superior del video (a la derecha es violeta oscuro y
- * dejaba una franja dura entre el texto y el video): en cambio, el video se
- * funde largo hacia arriba y el violeta aparece de a poco, recién con el anillo.
+ * Bordes del video en mobile: como su fondo ya es el color del hero, sólo se
+ * suavizan los bordes de la caja (arriba un poco más, porque ahí el fondo del
+ * hero todavía está aclarando).
  */
-const VIDEO_BG_MOBILE = "linear-gradient(180deg, #BDE1FE 0%, #B7D8FC 100%)";
-
-/**
- * Fundido del video en mobile: una elipse alrededor del anillo. Se apaga el
- * fondo del propio video (que a la derecha es violeta y dejaba una franja
- * oscura contra el borde) y queda sólo el objeto sobre el celeste del hero.
- */
-const MOBILE_MASK = "radial-gradient(ellipse 50% 47% at 50% 52%, #000 74%, transparent 100%)";
+const MOBILE_MASK =
+    "linear-gradient(180deg, transparent 0%, #000 22%, #000 94%, transparent 100%), linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%)";
 
 const VIDEO = "/images/hero/hero-video";
 const POSTER = "/images/hero/hero-poster";
@@ -129,7 +128,12 @@ export function Hero() {
                 <div
                     aria-hidden="true"
                     className="pointer-events-none relative mx-auto -mt-[22vw] aspect-[4/5] w-full max-w-[560px] shrink-0 sm:-mt-16 lg:hidden"
-                    style={{ maskImage: MOBILE_MASK, WebkitMaskImage: MOBILE_MASK }}
+                    style={{
+                        maskImage: MOBILE_MASK,
+                        WebkitMaskImage: MOBILE_MASK,
+                        maskComposite: "intersect",
+                        WebkitMaskComposite: "source-in",
+                    }}
                 >
                     <HeroVideo on="mobile" mp4={mp4} webm={webm} poster={poster} />
                 </div>
