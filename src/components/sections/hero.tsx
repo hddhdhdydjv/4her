@@ -26,6 +26,15 @@ import { cx } from "@/utils/cx";
 /** Fondo del hero, tomado del diseño. */
 const HERO_BG = "#EBF2F2";
 
+/**
+ * Fondo de desktop cuando hay video: el degradé del borde izquierdo del
+ * video, medido cuadro a cuadro (es fijo, no cambia en todo el loop). Las
+ * paradas están reubicadas al recorte que hace `object-cover` en el panel
+ * (se ve del ~18% al ~82% del alto del video), así el video se funde con el
+ * fondo sin costura.
+ */
+const VIDEO_BG = "linear-gradient(180deg, #8AADE4 0%, #9BBFF6 19%, #B7DCFE 50%, #BCE0FE 81%, #B8D9FE 100%)";
+
 const VIDEO = "/images/hero/hero-video";
 const POSTER = "/images/hero/hero-poster";
 
@@ -46,6 +55,9 @@ export function Hero() {
                 mitad derecha y se recorta arriba y abajo, donde sólo hay degradé.
                 El borde izquierdo se funde con el fondo del hero con una máscara,
                 así el texto queda siempre sobre el verde agua. */}
+            {hasVideo && (
+                <div aria-hidden="true" className="absolute inset-0 -z-20 hidden lg:block" style={{ background: VIDEO_BG }} />
+            )}
             {hasVideo && (
                 <div
                     aria-hidden="true"
