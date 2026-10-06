@@ -46,7 +46,7 @@ function Item({ q, a, defaultOpen }: { q: string; a: string; defaultOpen: boolea
                 onClick={() => setOpen((v) => !v)}
                 className={cx(
                     "t-acc-head flex w-full cursor-pointer items-center justify-between gap-6 py-[clamp(24px,3.2vw,46px)] text-left lg:px-6",
-                    type.body,
+                    type.bodyLg,
                     tone.primary,
                 )}
             >
