@@ -37,22 +37,16 @@ const HERO_BG = "#EBF2F2";
 const VIDEO_BG = "linear-gradient(180deg, #8BAFE2 0%, #9CC2F8 19%, #B9DFFE 50%, #BDE0FE 81%, #BADCFE 100%)";
 
 /**
- * Mobile con video: el video va debajo del texto, en una caja 4:5 que lo
- * recorta a partir del ~15% de su alto. Esta es la fila de colores de ese
- * borde superior (azul a la izquierda, violeta a la derecha): es el fondo del
- * hero en mobile, así el video se funde hacia arriba sin costura.
+ * Mobile con video: fondo celeste claro, el mismo de la zona clara del video.
+ * No se copia el borde superior del video (a la derecha es violeta oscuro y
+ * dejaba una franja dura entre el texto y el video): en cambio, el video se
+ * funde largo hacia arriba y el violeta aparece de a poco, recién con el anillo.
  */
-const VIDEO_BG_MOBILE = "linear-gradient(90deg, #88ACDE 0%, #819BDA 25%, #7989D2 50%, #7277CA 75%, #6F69C3 100%)";
+const VIDEO_BG_MOBILE = "linear-gradient(180deg, #BDE1FE 0%, #B7D8FC 100%)";
 
-/**
- * Detrás del texto en mobile: el celeste claro del video, que se apaga hacia
- * abajo hasta dejar ver el fondo de arriba justo donde arranca el video. El
- * gris del texto no tiene contraste suficiente sobre el violeta.
- */
-const TEXT_BG_MOBILE = "linear-gradient(180deg, #B9DFFE 0%, #B9DFFE 62%, rgba(185,223,254,0) 100%)";
-
+/** Fundido del video en mobile: largo y con curva suave arriba; los costados sólo cuentan en tablet. */
 const MOBILE_MASK =
-    "linear-gradient(180deg, transparent 0%, #000 28%), linear-gradient(90deg, transparent 0%, #000 12%, #000 88%, transparent 100%)";
+    "linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.12) 14%, rgba(0,0,0,0.4) 28%, rgba(0,0,0,0.75) 40%, #000 52%), linear-gradient(90deg, transparent 0%, #000 12%, #000 88%, transparent 100%)";
 
 const VIDEO = "/images/hero/hero-video";
 const POSTER = "/images/hero/hero-poster";
@@ -94,9 +88,6 @@ export function Hero() {
             )}
 
             <div className="relative z-10 flex flex-1 px-6 pt-28 sm:px-10 lg:px-20 lg:pt-32 lg:pb-28">
-                {hasVideo && (
-                    <div aria-hidden="true" className="absolute inset-0 -z-10 lg:hidden" style={{ background: TEXT_BG_MOBILE }} />
-                )}
                 <div className="mx-auto flex w-full max-w-[1280px] flex-col justify-center">
                     <TextsReveal className="flex max-w-[470px] flex-col gap-5">
                         <p className={cx("t-stagger-line t-stagger-line--1", type.body, tone.secondary)}>
