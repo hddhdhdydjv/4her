@@ -22,8 +22,8 @@ import { cx } from "@/utils/cx";
 const EXTENSIONS = ["webp", "avif", "png", "jpg", "jpeg", "svg"];
 
 /** Archivo de `public/` que corresponde a `name` en alguna extensión, o null. */
-function resolvePublic(name: string) {
-    for (const ext of EXTENSIONS) {
+export function resolvePublic(name: string, extensions: string[] = EXTENSIONS) {
+    for (const ext of extensions) {
         const file = `${name}.${ext}`;
         if (fs.existsSync(path.join(process.cwd(), "public", file))) return file;
     }
