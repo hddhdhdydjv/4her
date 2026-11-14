@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Funnel_Display, Funnel_Sans } from "next/font/google";
+import { Funnel_Display, Funnel_Sans, Instrument_Serif } from "next/font/google";
 import { LenisProvider } from "@/components/providers/lenis-provider";
 import { SectionFader } from "@/components/motion/section-fader";
 import "./globals.css";
@@ -19,6 +19,14 @@ const funnelSans = Funnel_Sans({
     display: "swap",
 });
 
+const instrumentSerif = Instrument_Serif({
+    variable: "--font-instrument-serif",
+    subsets: ["latin"],
+    weight: ["400"],
+    style: ["normal", "italic"],
+    display: "swap",
+});
+
 export const metadata: Metadata = {
     title: "Fogline — Lift the fog around your code",
     description:
@@ -33,7 +41,7 @@ export default function RootLayout({
     return (
         <html
             lang="en"
-            className={`${funnelDisplay.variable} ${funnelSans.variable} h-full antialiased`}
+            className={`${funnelDisplay.variable} ${funnelSans.variable} ${instrumentSerif.variable} h-full antialiased`}
         >
             <body className="min-h-full bg-primary font-body text-primary">
                 <LenisProvider>
