@@ -1,5 +1,3 @@
-import type { ReactNode } from "react";
-
 type TimeOfDay="fog"|"day"|"coast"|"sunset";
 
 const schemes={
@@ -64,7 +62,7 @@ function GoldenGate({variant}:{variant:TimeOfDay}){
    <path d="M437 269h45M985 269h42" strokeWidth="7"/>
    <path d="M350 457h835" strokeWidth="8"/>
    <path d="M350 279C535 475 896 475 1185 281" strokeWidth="3"/>
-   {Array.from({length:25},(_,i)=>{let x=380+i*32;return <path key={i} d={`M${x} 452V${302+Math.floor(Math.abs(780-x)*.22)}`} strokeWidth="2.2"/ >})}
+   {Array.from({length:25},(_,i)=>{let x=380+i*32;return <path key={i} d={`M${x} 452V${302+Math.floor(Math.abs(780-x)*.22)}`} strokeWidth="2.2"/>})}
  </g>;
 }
 
@@ -91,7 +89,7 @@ function CableTracks(){
  return <g>
    <path d="M0 796C280 750 500 718 705 712s570-53 895-82" stroke="#5B6662" strokeWidth="7" fill="none"/>
    <path d="M0 812C280 766 500 734 705 728s570-53 895-82" stroke="#C6B4A0" strokeWidth="5" fill="none"/>
-   {Array.from({length:20},(_,i)=><path key={i} d={`M${i*85} ${801-i*5}l3 14`} stroke="#879288" strokeWidth="3"/ >)}
+   {Array.from({length:20},(_,i)=><path key={i} d={`M${i*85} ${801-i*5}l3 14`} stroke="#879288" strokeWidth="3"/>)}
  </g>
 }
 
