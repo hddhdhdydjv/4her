@@ -240,6 +240,8 @@
  .fg-ship-card{margin-left:0}
  .fg-footer p{display:none}
 }
+/* Desktop: when the waitlist folds away, restore the artwork width. */
+.fg-site--panel-closed{--fg-panel-width:46px}
 @media(max-width:760px){
  .fg-site{--fg-panel-width:0px;--fg-content-width:100vw}
  .fg-header{width:100%;padding:17px 17px 10px 22px;background:linear-gradient(180deg,rgba(242,242,235,.91),transparent)}
