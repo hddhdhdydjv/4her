@@ -38,9 +38,9 @@ function MiniTram() {
   </svg>;
 }
 
-function JourneyRail({ active, progress, onVisit }: { active: number; progress: number; onVisit: (id: string) => void }) {
+function JourneyRail({ active, onVisit }: { active: number; onVisit: (id: string) => void }) {
   return <nav className="fg-rail" aria-label="Journey through Fogline">
-    <div className="fg-rail-line"><span className="fg-rail-progress" style={{height: `${progress * 100}%`}}/><span className="fg-rail-tram" style={{top: `${progress * 100}%`}}><MiniTram/></span></div>
+    <div className="fg-rail-line"><span className="fg-rail-progress"/><span className="fg-rail-tram"><MiniTram/></span></div>
     {stops.map((stop, index)=><button type="button" key={stop.id} className={`fg-stop ${active===index?"is-active":""}`} onClick={()=>onVisit(stop.id)} aria-current={active===index?"step":undefined}>
       <span className="fg-stop-no">{stop.number}</span>
       <span className="fg-stop-bullet"/>
@@ -160,7 +160,6 @@ function WaitlistPanel({ open, setOpen }: { open: boolean; setOpen: (open:boolea
 export function FoglineLanding(){
   const [panelOpen,setPanelOpen]=useState(true);
   const [active,setActive]=useState(0);
-  const [progress,setProgress]=useState(0);
   const lenis=useLenisInstance();
   const scrollTo=useAnchorScroll();
 
@@ -172,7 +171,11 @@ export function FoglineLanding(){
       const index=sections.reduce((current,section,i)=>section&&section.getBoundingClientRect().top<=pivot?i:current,0);
       setActive(index);
       const max=Math.max(1,document.documentElement.scrollHeight-window.innerHeight);
-      setProgress(Math.min(1,Math.max(0,window.scrollY/max)));
+      const progress=Math.min(1,Math.max(0,window.scrollY/max));
+      const bar=document.querySelector<HTMLElement>(".fg-rail-progress");
+      const tram=document.querySelector<HTMLElement>(".fg-rail-tram");
+      if(bar)bar.style.height=`${progress*100}%`;
+      if(tram)tram.style.top=`${progress*100}%`;
     };
     update();
     if(lenis){lenis.on("scroll",update);return()=>{lenis.off("scroll",update)}}
@@ -181,7 +184,7 @@ export function FoglineLanding(){
   },[lenis]);
 
   function visit(id:string){const node=document.getElementById(id);if(!node)return;if(lenis)lenis.scrollTo(node);else node.scrollIntoView({behavior:"smooth"});}
-  const siteStyle={"--fg-progress":progress,"--fg-panel-width":panelOpen?"330px":"46px"} as CSSProperties;
+  const siteStyle={"--fg-panel-width":panelOpen?"330px":"46px"} as CSSProperties;
 
   return <div className="fg-site" style={siteStyle}>
     <header className="fg-header">
@@ -189,7 +192,7 @@ export function FoglineLanding(){
       <nav className="fg-header-nav" aria-label="Main navigation"><a href="#connections" onClick={scrollTo}>Why Fogline</a><a href="#review" onClick={scrollTo}>The product</a><button type="button" onClick={()=>setPanelOpen(true)}>Early access <span>↗</span></button></nav>
     </header>
 
-    <JourneyRail active={active} progress={progress} onVisit={visit}/>
+    <JourneyRail active={active} onVisit={visit}/>
     <main className="fg-main">
       <section id="morning" className="fg-section fg-section--morning" aria-label="Discover Fogline">
         <div className="fg-landscape"><FoglineScene time="fog"/><div className="fg-scene-vignette fg-scene-vignette--morning"/></div>
