@@ -1,5 +1,5 @@
-import { LiteboxLanding } from "@/components/sections/litebox-landing";
+import { FoglineLanding } from "@/components/sections/fogline-landing";
 
 export default function Home() {
-  return <LiteboxLanding />;
+  return <FoglineLanding />;
 }
