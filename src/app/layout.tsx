@@ -20,9 +20,9 @@ const funnelSans = Funnel_Sans({
 });
 
 export const metadata: Metadata = {
-    title: "Organic — Work in a natural flow | Litebox concept",
+    title: "Fogline — Lift the fog around your code",
     description:
-        "A conceptual developer productivity platform connecting tasks, code and context. Join the early access waitlist.",
+        "A calm, connected workspace for pull requests, code review and everything behind the change. Early access concept for Litebox.",
 };
 
 export default function RootLayout({
