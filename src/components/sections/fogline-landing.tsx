@@ -8,6 +8,7 @@ import { useLenisInstance } from "@/components/providers/lenis-provider";
 import { FoglinePixelScene } from "@/components/graphics/fogline-pixel-scenes";
 import "@/styles/fogline.css";
 import "@/styles/fogline-pixel.css";
+import "@/styles/fogline-editorial.css";
 
 const stops = [
   { id: "morning", number: "01", label: "The fog", place: "Golden Gate · 6:42 AM" },
