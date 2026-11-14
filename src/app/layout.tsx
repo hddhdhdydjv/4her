@@ -20,9 +20,9 @@ const funnelSans = Funnel_Sans({
 });
 
 export const metadata: Metadata = {
-    title: "4HER - Comunicación & Marketing",
+    title: "Organic — Work in a natural flow | Litebox concept",
     description:
-        "Marca y comunicación con criterio. Más estratégico que una agencia tradicional, más cercano que un freelance.",
+        "A conceptual developer productivity platform connecting tasks, code and context. Join the early access waitlist.",
 };
 
 export default function RootLayout({
@@ -32,7 +32,7 @@ export default function RootLayout({
 }>) {
     return (
         <html
-            lang="es"
+            lang="en"
             className={`${funnelDisplay.variable} ${funnelSans.variable} h-full antialiased`}
         >
             <body className="min-h-full bg-primary font-body text-primary">
