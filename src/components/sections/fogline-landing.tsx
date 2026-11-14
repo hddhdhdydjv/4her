@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useState, type CSSProperties, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { Reveal } from "@/components/motion/reveal";
 import { TextsReveal } from "@/components/motion/texts-reveal";
 import { useAnchorScroll } from "@/hooks/use-anchor-scroll";
 import { useLenisInstance } from "@/components/providers/lenis-provider";
 import { FoglineScene } from "@/components/graphics/fogline-scenes";
+import { FoglinePixelScene } from "@/components/graphics/fogline-pixel-scenes";
 import "@/styles/fogline.css";
+import "@/styles/fogline-pixel.css";
 
 const stops = [
   { id: "morning", number: "01", label: "The fog", place: "Golden Gate · 6:42 AM" },
@@ -170,6 +172,14 @@ export function FoglineLanding(){
       const pivot=window.innerHeight*.4;
       const index=sections.reduce((current,section,i)=>section&&section.getBoundingClientRect().top<=pivot?i:current,0);
       setActive(index);
+      // This changes scenery and fog composition during the journey without
+      // triggering React re-renders on every animation frame.
+      for (const section of sections) {
+        if (!section) continue;
+        const rect=section.getBoundingClientRect();
+        const local=Math.max(0,Math.min(1,(window.innerHeight-rect.top)/(rect.height+window.innerHeight)));
+        section.style.setProperty("--fg-visual-shift",`${((local-.5)*88).toFixed(1)}px`);
+      }
       const max=Math.max(1,document.documentElement.scrollHeight-window.innerHeight);
       const progress=Math.min(1,Math.max(0,window.scrollY/max));
       const bar=document.querySelector<HTMLElement>(".fg-rail-progress");
@@ -184,9 +194,9 @@ export function FoglineLanding(){
   },[lenis]);
 
   function visit(id:string){const node=document.getElementById(id);if(!node)return;if(lenis)lenis.scrollTo(node);else node.scrollIntoView({behavior:"smooth"});}
-  const siteStyle={"--fg-panel-width":panelOpen?"330px":"46px"} as CSSProperties;
 
-  return <div className="fg-site" style={siteStyle}>
+
+  return <div className={`fg-site ${panelOpen?"fg-site--panel-open":"fg-site--panel-closed"}`}>
     <header className="fg-header">
       <a href="#morning" aria-label="Fogline home" onClick={scrollTo}><FoglineLogo/></a>
       <nav className="fg-header-nav" aria-label="Main navigation"><a href="#connections" onClick={scrollTo}>Why Fogline</a><a href="#review" onClick={scrollTo}>The product</a><button type="button" onClick={()=>setPanelOpen(true)}>Early access <span>↗</span></button></nav>
@@ -195,7 +205,7 @@ export function FoglineLanding(){
     <JourneyRail active={active} onVisit={visit}/>
     <main className="fg-main">
       <section id="morning" className="fg-section fg-section--morning" aria-label="Discover Fogline">
-        <div className="fg-landscape"><FoglineScene time="fog"/><div className="fg-scene-vignette fg-scene-vignette--morning"/></div>
+        <div className="fg-landscape"><FoglineScene time="fog"/><FoglinePixelScene time="fog"/><div className="fg-scene-vignette fg-scene-vignette--morning"/></div>
         <div className="fg-hero-inner">
           <TextsReveal><p className="fg-eyebrow t-stagger-line t-stagger-line--1">A CLEARER WAY TO REVIEW. &nbsp; / &nbsp; SAN FRANCISCO, CA</p>
             <h1 className="t-stagger-line t-stagger-line--2">Lift the fog<br/>around <span>your code.</span></h1>
@@ -207,7 +217,7 @@ export function FoglineLanding(){
       </section>
 
       <section id="connections" className="fg-section fg-section--connections" aria-label="Connect your reviews">
-        <div className="fg-landscape"><FoglineScene time="day"/><div className="fg-scene-vignette fg-scene-vignette--day"/></div>
+        <div className="fg-landscape"><FoglineScene time="day"/><FoglinePixelScene time="day"/><div className="fg-scene-vignette fg-scene-vignette--day"/></div>
         <div className="fg-section-content">
           <Reveal><p className="fg-eyebrow">02 / PAINTED LADIES &nbsp; • &nbsp; 10:15 AM</p><h2>Every change has<br/><span>a bigger picture.</span></h2><p className="fg-description">Open a review and see the full story: related tasks, the latest decisions and the docs your team needs. No digging through tabs.</p></Reveal>
           <div className="fg-two-up"><Reveal delay={120}><ReviewQueue/></Reveal><Reveal delay={220}><ContextCards/></Reveal></div>
@@ -216,7 +226,7 @@ export function FoglineLanding(){
       </section>
 
       <section id="review" className="fg-section fg-section--review" aria-label="Review code with clarity">
-        <div className="fg-landscape"><FoglineScene time="coast"/><div className="fg-scene-vignette fg-scene-vignette--coast"/></div>
+        <div className="fg-landscape"><FoglineScene time="coast"/><FoglinePixelScene time="coast"/><div className="fg-scene-vignette fg-scene-vignette--coast"/></div>
         <div className="fg-section-content fg-section-content--wide">
           <Reveal><p className="fg-eyebrow">03 / CRISSY FIELD &nbsp; • &nbsp; GOLDEN HOUR</p><h2>Less back-and-forth.<br/><span>Better reviews.</span></h2><p className="fg-description">Discuss changes right beside the diff. Spot blockers early, keep relevant context close and know exactly what&apos;s left before merge.</p></Reveal>
           <Reveal delay={180} className="fg-review-container"><FullReview/></Reveal>
@@ -225,7 +235,7 @@ export function FoglineLanding(){
       </section>
 
       <section id="sunset" className="fg-section fg-section--sunset" aria-label="Ship with confidence">
-        <div className="fg-landscape"><FoglineScene time="sunset"/><div className="fg-scene-vignette fg-scene-vignette--sunset"/></div>
+        <div className="fg-landscape"><FoglineScene time="sunset"/><FoglinePixelScene time="sunset"/><div className="fg-scene-vignette fg-scene-vignette--sunset"/></div>
         <div className="fg-section-content fg-section-content--end"><Reveal><p className="fg-eyebrow">04 / ABOVE THE CITY &nbsp; • &nbsp; SUNSET</p><h2>A better view of<br/><span>what&apos;s next.</span></h2><p className="fg-description">Less uncertainty between first commit and final approval. Keep the work moving, without losing the thread.</p><button type="button" className="fg-end-cta" onClick={()=>setPanelOpen(true)}>Request early access <span>↗</span></button></Reveal>
           <Reveal delay={160} className="fg-ship-container"><ShipCard/></Reveal>
         </div>
