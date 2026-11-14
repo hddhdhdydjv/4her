@@ -1,0 +1,160 @@
+/*
+ * FOG LINE / SAN FRANCISCO JOURNEY
+ * Four cropped image assets, parallax driven by 4HER's Lenis instance.
+ * The original FoglineScene SVGs remain as a fallback atmosphere.
+ * Intentionally avoid full-bleed artificial mockup shadows or perspective.
+ */
+.fg-pixel-scene {
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  z-index:1;
+  pointer-events:none;
+  isolation:isolate;
+}
+.fg-pixel-sky {
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
+.fg-pixel-window {
+  position:absolute;
+  overflow:hidden;
+  transform:translate3d(var(--fg-visual-shift, 0px),0,0);
+  will-change:transform;
+  pointer-events:none;
+}
+.fg-pixel-image {
+  object-fit:cover;
+  object-position:center center;
+  display:block;
+  image-rendering:pixelated;
+  width:100%;
+  height:100%;
+}
+.fg-pixel-mist {
+  position:absolute;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
+}
+.fg-pixel-filmgrain {
+  position:absolute;
+  inset:0;
+  z-index:3;
+  opacity:.075;
+  background-image:repeating-linear-gradient(
+    19deg,transparent 0 2px,rgba(54,68,56,.16) 2px 2.5px,transparent 2.5px 6px
+  );
+  mix-blend-mode:multiply;
+  pointer-events:none;
+}
+/* 01 · Foggy sunrise. Blue-grey wash cools the source sunset. */
+.fg-pixel-scene--fog .fg-pixel-sky {
+  background:linear-gradient(180deg,rgba(225,232,227,.26),rgba(184,201,200,.13) 56%,rgba(203,208,200,.04));
+}
+.fg-pixel-scene--fog .fg-pixel-window {
+  left:-7%;
+  bottom:-12%;
+  width:118%;
+  height:72%;
+  opacity:.83;
+  mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.50) 19%,#000 43%,#000 85%,transparent 100%);
+  -webkit-mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.50) 19%,#000 43%,#000 85%,transparent 100%);
+}
+.fg-pixel-scene--fog .fg-pixel-image {
+  object-position:center 57%;
+  filter:saturate(.48) contrast(.88) brightness(1.12);
+}
+.fg-pixel-scene--fog .fg-pixel-mist {
+  background:linear-gradient(90deg,rgba(228,232,225,.58),rgba(219,226,224,.10) 66%),
+    linear-gradient(180deg,rgba(228,233,227,.28),transparent 51%);
+  animation:fg-photo-fog 19s ease-in-out infinite alternate;
+}
+/* 02 · Midmorning, Painted Ladies, sunlight. */
+.fg-pixel-scene--day .fg-pixel-sky {
+  background:linear-gradient(180deg,rgba(232,233,221,.22),transparent);
+}
+.fg-pixel-scene--day .fg-pixel-window {
+  width:72%;
+  height:79%;
+  right:-7%;
+  bottom:-9%;
+  opacity:.85;
+  mask-image:radial-gradient(ellipse 90% 86% at 79% 78%,#000 30%,rgba(0,0,0,.78) 52%,transparent 96%);
+  -webkit-mask-image:radial-gradient(ellipse 90% 86% at 79% 78%,#000 30%,rgba(0,0,0,.78) 52%,transparent 96%);
+}
+.fg-pixel-scene--day .fg-pixel-image {
+  object-position:center 54%;
+  filter:saturate(.76) brightness(1.07);
+}
+.fg-pixel-scene--day .fg-pixel-mist {
+  background:linear-gradient(180deg,rgba(240,240,227,.08),rgba(244,237,227,.13) 62%,transparent 100%);
+}
+/* 03 · Golden Gate at Crissy Field. Quiet shoreline. */
+.fg-pixel-scene--coast .fg-pixel-sky {
+  background:linear-gradient(180deg,rgba(235,221,211,.2),transparent);
+}
+.fg-pixel-scene--coast .fg-pixel-window {
+  width:82%;
+  height:79%;
+  right:-9%;
+  bottom:-5%;
+  opacity:.76;
+  mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.66) 28%,#000 58%,rgba(0,0,0,.82) 81%,transparent 100%);
+  -webkit-mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.66) 28%,#000 58%,rgba(0,0,0,.82) 81%,transparent 100%);
+}
+.fg-pixel-scene--coast .fg-pixel-image {
+  object-position:55% 49%;
+  filter:saturate(.73) brightness(1.10);
+}
+.fg-pixel-scene--coast .fg-pixel-mist {
+  background:linear-gradient(180deg,rgba(241,232,217,.07) 0%,rgba(236,216,207,.1) 70%,rgba(241,218,198,.15) 100%);
+}
+/* 04 · Panorama over the city at dusk. */
+.fg-pixel-scene--sunset .fg-pixel-sky {
+  background:linear-gradient(180deg,rgba(228,208,196,.15),rgba(203,191,181,.05));
+}
+.fg-pixel-scene--sunset .fg-pixel-window {
+  width:116%;
+  height:77%;
+  left:-5%;
+  bottom:-7%;
+  opacity:.88;
+  mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.64) 26%,#000 54%,#000 82%,rgba(0,0,0,.22) 100%);
+  -webkit-mask-image:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.64) 26%,#000 54%,#000 82%,rgba(0,0,0,.22) 100%);
+}
+.fg-pixel-scene--sunset .fg-pixel-image {
+  object-position:62% 48%;
+  filter:saturate(.72) contrast(.92);
+}
+.fg-pixel-scene--sunset .fg-pixel-mist {
+  background:linear-gradient(180deg,rgba(215,217,211,.12),transparent 48%,rgba(232,205,186,.12));
+}
+@keyframes fg-photo-fog {
+  from {opacity:.96;transform:translate3d(-1.2%,0,0)}
+  to {opacity:.50;transform:translate3d(1.4%,0,0)}
+}
+/* Text and mockups remain optically separate from the layered scenery. */
+.fg-landscape > .fg-scene-vignette {z-index:3}
+.fg-hero-inner,.fg-section-content,.fg-footer{z-index:5}
+.fg-review-container,.fg-two-up{position:relative;z-index:5}
+@media(max-width:1100px){
+ .fg-pixel-scene--day .fg-pixel-window {width:88%;right:-15%;height:68%;bottom:-8%}
+ .fg-pixel-scene--coast .fg-pixel-window {width:92%;right:-19%;height:75%}
+}
+@media(max-width:760px){
+ .fg-pixel-scene--fog .fg-pixel-window {left:-43%;width:170%;height:49%;bottom:6%}
+ .fg-pixel-scene--day .fg-pixel-window {right:-37%;width:123%;height:58%;bottom:1%}
+ .fg-pixel-scene--coast .fg-pixel-window {right:-37%;width:127%;height:58%;bottom:2%}
+ .fg-pixel-scene--sunset .fg-pixel-window {left:-24%;width:155%;height:57%;bottom:2%}
+ .fg-pixel-scene--fog .fg-pixel-image {object-position:60% 55%}
+ .fg-pixel-scene--day .fg-pixel-image {object-position:40% 70%}
+ .fg-pixel-scene--coast .fg-pixel-image {object-position:40% 54%}
+ .fg-pixel-scene--sunset .fg-pixel-image {object-position:63% 44%}
+ .fg-pixel-filmgrain {opacity:.045}
+}
+@media(prefers-reduced-motion:reduce){
+ .fg-pixel-window{transform:none!important;will-change:auto}
+ .fg-pixel-scene--fog .fg-pixel-mist{animation:none}
+}
