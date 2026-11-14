@@ -5,7 +5,6 @@ import { Reveal } from "@/components/motion/reveal";
 import { TextsReveal } from "@/components/motion/texts-reveal";
 import { useAnchorScroll } from "@/hooks/use-anchor-scroll";
 import { useLenisInstance } from "@/components/providers/lenis-provider";
-import { FoglineScene } from "@/components/graphics/fogline-scenes";
 import { FoglinePixelScene } from "@/components/graphics/fogline-pixel-scenes";
 import "@/styles/fogline.css";
 import "@/styles/fogline-pixel.css";
@@ -21,28 +20,19 @@ type Stop = (typeof stops)[number];
 
 function FoglineLogo({ light = false, compact = false }: { light?: boolean; compact?: boolean }) {
   return <span className={`fg-logo ${light ? "fg-logo--light" : ""}`} aria-label="Fogline">
-    <svg width="33" height="30" viewBox="0 0 33 30" aria-hidden="true" fill="none">
-      <path d="M3 21h4v-4h4v-4h4V9h5v4h4v4h5v4h-4v4H7v-4H3Z" stroke="currentColor" strokeWidth="1.65" strokeLinejoin="miter"/>
-      <path d="M7 25h2v2H7Zm5 2h2v2h-2Zm8 0h2v2h-2ZM2 16h2v2H2Zm27 0h2v2h-2Z" fill="currentColor"/>
-      <path d="M11 21h14M15 17h9" stroke="currentColor" strokeWidth="1.2"/>
+    <svg className="fg-logo-mark" width="36" height="27" viewBox="0 0 36 27" aria-hidden="true" fill="none">
+      <path d="M1 21.4 11.9 6.4l7.3 9 4.4-5.7L35 22.2H1Z" fill="#B9D9DF"/>
+      <path d="M4.9 21.7 15.1 8.2l11 13.5H4.9Z" fill="#7EB4C0" opacity=".87"/>
+      <path d="M16 21.7 25.1 12 33 21.7H16Z" fill="#548F9F" opacity=".82"/>
+      <path d="M4 23.4h29" stroke="#8FB6BE" strokeWidth="1.1" strokeLinecap="round"/>
     </svg>
-    {!compact && <span>fogline<span className="fg-logo-period">.</span></span>}
+    {!compact && <span>Fogline</span>}
   </span>;
-}
-
-function MiniTram() {
-  return <svg width="24" height="19" viewBox="0 0 24 19" aria-hidden="true">
-    <path d="M5 4h14l2 3v7H3V7Z" fill="#454a46" stroke="#454a46" strokeWidth="1"/>
-    <path d="M6 7h4v4H6Zm6 0h4v4h-4Zm6 0h2v4h-2Z" fill="#e9ded1"/>
-    <path d="M3 14h18" stroke="#e9ded1" strokeWidth="1.2"/>
-    <path d="M12 4V1h3" stroke="#454a46" strokeWidth="1.2" fill="none"/>
-    <circle cx="7" cy="16" r="1.5" fill="#454a46"/><circle cx="18" cy="16" r="1.5" fill="#454a46"/>
-  </svg>;
 }
 
 function JourneyRail({ active, onVisit }: { active: number; onVisit: (id: string) => void }) {
   return <nav className="fg-rail" aria-label="Journey through Fogline">
-    <div className="fg-rail-line"><span className="fg-rail-progress"/><span className="fg-rail-tram"><MiniTram/></span></div>
+    <div className="fg-rail-line"><span className="fg-rail-progress"/><span className="fg-rail-tram" aria-hidden="true"/></div>
     {stops.map((stop, index)=><button type="button" key={stop.id} className={`fg-stop ${active===index?"is-active":""}`} onClick={()=>onVisit(stop.id)} aria-current={active===index?"step":undefined}>
       <span className="fg-stop-no">{stop.number}</span>
       <span className="fg-stop-bullet"/>
@@ -144,8 +134,8 @@ function WaitlistPanel({ open, setOpen }: { open: boolean; setOpen: (open:boolea
     <aside className={`fg-waitlist ${open?"fg-waitlist--open":"fg-waitlist--closed"}`} aria-label="Early access waitlist">
       {open?<div className="fg-waitlist-inner">
         <div className="fg-panel-top"><span>EARLY ACCESS / FOG 001</span><button aria-label="Collapse waitlist" type="button" onClick={()=>setOpen(false)}>Hide <span>↗</span></button></div>
-        <div className="fg-panel-main"><span className="fg-panel-index">A CLEARER WAY TO BUILD.</span><div className="fg-panel-line-art" aria-hidden="true"><svg viewBox="0 0 240 76" fill="none"><path d="M3 59H36v-14H57V33H78V17h26v16h28v12h30v14h74" stroke="currentColor" strokeWidth="1" strokeDasharray="2 5"/><circle cx="104" cy="16" r="3" fill="currentColor"/><circle cx="163" cy="59" r="3" fill="currentColor"/></svg></div>
-          <h2>Good code<br/>deserves <em>clarity.</em></h2>
+        <div className="fg-panel-main"><span className="fg-panel-index">A CLEARER WAY TO BUILD.</span><div className="fg-panel-rule" aria-hidden="true"/>
+          <h2>Better reviews<br/>start with <em>clarity.</em></h2>
           <p>Get first access to a quieter way to review code, connect context and keep your team moving.</p>
           <form onSubmit={submit}><label htmlFor="fg-email">WORK EMAIL</label><input id="fg-email" placeholder="you@company.com" type="email" autoComplete="email" required value={email} onChange={e=>{setEmail(e.target.value);setPreviewNotice(false)}}/><button type="submit">Join the waitlist <span>↗</span></button></form>
           {previewNotice && <p role="status" className="fg-panel-notice">This is a design preview. Your email hasn&apos;t been saved.</p>}
@@ -205,10 +195,10 @@ export function FoglineLanding(){
     <JourneyRail active={active} onVisit={visit}/>
     <main className="fg-main">
       <section id="morning" className="fg-section fg-section--morning" aria-label="Discover Fogline">
-        <div className="fg-landscape"><FoglineScene time="fog"/><FoglinePixelScene time="fog"/><div className="fg-scene-vignette fg-scene-vignette--morning"/></div>
+        <div className="fg-landscape"><FoglinePixelScene time="fog"/><div className="fg-scene-vignette fg-scene-vignette--morning"/></div>
         <div className="fg-hero-inner">
           <TextsReveal><p className="fg-eyebrow t-stagger-line t-stagger-line--1">A CLEARER WAY TO REVIEW. &nbsp; / &nbsp; SAN FRANCISCO, CA</p>
-            <h1 className="t-stagger-line t-stagger-line--2">Lift the fog<br/>around <span>your code.</span></h1>
+            <h1 className="t-stagger-line t-stagger-line--2">Lift the fog<br/>around <em>your code.</em></h1>
             <p className="fg-hero-description t-stagger-line t-stagger-line--3">Pull requests, comments and the context behind every change. Together in one thoughtful workspace.</p>
             <a href="#connections" onClick={scrollTo} className="fg-link t-stagger-line t-stagger-line--4">Take a closer look <span>↘</span></a>
           </TextsReveal>
@@ -217,26 +207,26 @@ export function FoglineLanding(){
       </section>
 
       <section id="connections" className="fg-section fg-section--connections" aria-label="Connect your reviews">
-        <div className="fg-landscape"><FoglineScene time="day"/><FoglinePixelScene time="day"/><div className="fg-scene-vignette fg-scene-vignette--day"/></div>
+        <div className="fg-landscape"><FoglinePixelScene time="day"/><div className="fg-scene-vignette fg-scene-vignette--day"/></div>
         <div className="fg-section-content">
-          <Reveal><p className="fg-eyebrow">02 / PAINTED LADIES &nbsp; • &nbsp; 10:15 AM</p><h2>Every change has<br/><span>a bigger picture.</span></h2><p className="fg-description">Open a review and see the full story: related tasks, the latest decisions and the docs your team needs. No digging through tabs.</p></Reveal>
+          <Reveal><p className="fg-eyebrow">02 / PAINTED LADIES &nbsp; • &nbsp; 10:15 AM</p><h2>Every change has<br/><em>a bigger picture.</em></h2><p className="fg-description">Open a review and see the full story: related tasks, the latest decisions and the docs your team needs. No digging through tabs.</p></Reveal>
           <div className="fg-two-up"><Reveal delay={120}><ReviewQueue/></Reveal><Reveal delay={220}><ContextCards/></Reveal></div>
         </div>
         <div className="fg-landmark"><span>02 / THE CITY OPENS UP</span><span>FROM SCATTERED CONTEXT TO ONE CLEAR VIEW</span></div>
       </section>
 
       <section id="review" className="fg-section fg-section--review" aria-label="Review code with clarity">
-        <div className="fg-landscape"><FoglineScene time="coast"/><FoglinePixelScene time="coast"/><div className="fg-scene-vignette fg-scene-vignette--coast"/></div>
+        <div className="fg-landscape"><FoglinePixelScene time="coast"/><div className="fg-scene-vignette fg-scene-vignette--coast"/></div>
         <div className="fg-section-content fg-section-content--wide">
-          <Reveal><p className="fg-eyebrow">03 / CRISSY FIELD &nbsp; • &nbsp; GOLDEN HOUR</p><h2>Less back-and-forth.<br/><span>Better reviews.</span></h2><p className="fg-description">Discuss changes right beside the diff. Spot blockers early, keep relevant context close and know exactly what&apos;s left before merge.</p></Reveal>
+          <Reveal><p className="fg-eyebrow">03 / CRISSY FIELD &nbsp; • &nbsp; GOLDEN HOUR</p><h2>Less back-and-forth.<br/><em>Better reviews.</em></h2><p className="fg-description">Discuss changes right beside the diff. Spot blockers early, keep relevant context close and know exactly what&apos;s left before merge.</p></Reveal>
           <Reveal delay={180} className="fg-review-container"><FullReview/></Reveal>
         </div>
         <div className="fg-landmark"><span>03 / A LITTLE BREATHING ROOM</span><span>FOCUS ON WHAT MATTERS IN THE DIFF</span></div>
       </section>
 
       <section id="sunset" className="fg-section fg-section--sunset" aria-label="Ship with confidence">
-        <div className="fg-landscape"><FoglineScene time="sunset"/><FoglinePixelScene time="sunset"/><div className="fg-scene-vignette fg-scene-vignette--sunset"/></div>
-        <div className="fg-section-content fg-section-content--end"><Reveal><p className="fg-eyebrow">04 / ABOVE THE CITY &nbsp; • &nbsp; SUNSET</p><h2>A better view of<br/><span>what&apos;s next.</span></h2><p className="fg-description">Less uncertainty between first commit and final approval. Keep the work moving, without losing the thread.</p><button type="button" className="fg-end-cta" onClick={()=>setPanelOpen(true)}>Request early access <span>↗</span></button></Reveal>
+        <div className="fg-landscape"><FoglinePixelScene time="sunset"/><div className="fg-scene-vignette fg-scene-vignette--sunset"/></div>
+        <div className="fg-section-content fg-section-content--end"><Reveal><p className="fg-eyebrow">04 / ABOVE THE CITY &nbsp; • &nbsp; SUNSET</p><h2>A better view of<br/><em>what&apos;s next.</em></h2><p className="fg-description">Less uncertainty between first commit and final approval. Keep the work moving, without losing the thread.</p><button type="button" className="fg-end-cta" onClick={()=>setPanelOpen(true)}>Request early access <span>↗</span></button></Reveal>
           <Reveal delay={160} className="fg-ship-container"><ShipCard/></Reveal>
         </div>
         <footer className="fg-footer"><FoglineLogo/><p>Clear thinking. Confident shipping.</p><span>DESIGN CONCEPT FOR LITEBOX &nbsp; · &nbsp; 2026</span></footer>
