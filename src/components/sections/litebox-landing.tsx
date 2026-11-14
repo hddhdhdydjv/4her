@@ -165,6 +165,9 @@ function Waitlist({open,setOpen}:{open:boolean;setOpen:(v:boolean)=>void}) {
 
 export function LiteboxLanding() {
   const [panelOpen,setPanelOpen]=useState(true);
+  useEffect(()=>{
+    if(window.matchMedia("(max-width: 760px)").matches) setPanelOpen(false);
+  },[]);
   const [active,setActive]=useState(0);
   const lenis=useLenisInstance();
   const scrollTo=useAnchorScroll();
@@ -192,7 +195,7 @@ export function LiteboxLanding() {
         <span className="lb-journey-number">{chapter.number}</span><span className="lb-journey-dot"/><span className="lb-journey-label">{chapter.label}</span>
       </a>)}
     </nav>
-    <div className="lb-story">
+    <main className="lb-story">
       <section className="lb-chapter lb-chapter--discover" id="discover">
         <div className="lb-hero-text">
           <span className="lb-kicker">01 / MADE TO MOVE WITH YOU</span>
@@ -228,7 +231,7 @@ export function LiteboxLanding() {
         <div className="lb-city-frame lb-city-frame--final"><Cityscape phase="sunset"/></div>
         <footer className="lb-footer"><OrganicMark/><span>CONCEPT EXPLORATION FOR LITEBOX · 2026</span></footer>
       </section>
-    </div>
+    </main>
     <Waitlist open={panelOpen} setOpen={setPanelOpen}/>
   </div>;
 }
