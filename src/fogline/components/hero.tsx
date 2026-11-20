@@ -22,60 +22,78 @@ import { Icon } from "./icons";
 const W = 1440;
 const H = 900;
 const UNITS = 5;
-/** El mockup arranca en y 420 y sube hasta 140 (como en Figma). */
-const MOCKUP = { x: 205, y: 140, rise: 280 };
+/** El mockup arranca en y 480 (debajo del botón Start free) y sube hasta 140. */
+const MOCKUP = { x: 205, y: 140, rise: 340, w: 1031 };
+/** Escala de la pantalla dentro del mockup: 1005 px de ancho útil para una UI de 1280. */
+const K = (MOCKUP.w - 2 - 24) / 1280;
+const INSET = 13; // borde + padding del mockup
 
-type Pop = { pantalla: number; src: [number, number, number, number]; to: [number, number, number] };
-/** Elementos que se levantan en cada paso: recorte de la pantalla (coords de la UI 1280×840) → destino en la escena (x, y, ancho). */
+type Pop = { pantalla: number; src: [number, number, number, number]; grow: number };
+/** Lo que se levanta en cada paso: recorte de la pantalla (coords de la UI 1280×840) que crece en su lugar. */
 const POPS: Pop[][] = [
-    [{ pantalla: 1, src: [916, 225, 340, 254], to: [972, 298, 281] }],
+    [{ pantalla: 1, src: [916, 225, 340, 254], grow: 1.12 }],
     [
-        { pantalla: 2, src: [81, 475, 694, 280], to: [281, 529, 599] },
-        { pantalla: 2, src: [916, 225, 340, 198], to: [937, 298, 316] },
+        { pantalla: 2, src: [81, 475, 694, 280], grow: 1.06 },
+        { pantalla: 2, src: [916, 225, 340, 198], grow: 1.1 },
     ],
     [
-        { pantalla: 3, src: [81, 531, 694, 128], to: [281, 529, 546] },
-        { pantalla: 3, src: [916, 225, 340, 166], to: [937, 306, 316] },
+        { pantalla: 3, src: [81, 531, 694, 128], grow: 1.06 },
+        { pantalla: 3, src: [916, 225, 340, 166], grow: 1.1 },
     ],
-    [{ pantalla: 4, src: [916, 225, 340, 256], to: [945, 284, 322] }],
+    [{ pantalla: 4, src: [916, 225, 340, 256], grow: 1.12 }],
 ];
-/** Dónde apunta y hace clic el cursor en cada paso (coords de la escena). */
-const CURSOR = [
-    [960, 348],
-    [373, 744],
-    [637, 608],
-    [993, 491],
+
+/** Rectángulo del recorte en su lugar (n) y ya agrandado (t), en coords del mockup. */
+function popRect(p: Pop) {
+    const [ux, uy, uw, uh] = p.src;
+    const n = { x: INSET + ux * K, y: INSET + uy * K, w: uw * K, h: uh * K };
+    const w = n.w * p.grow;
+    const h = n.h * p.grow;
+    const x = Math.min(Math.max(n.x - (w - n.w) / 2, 4), MOCKUP.w - 4 - w);
+    const y = n.y - (h - n.h) / 2;
+    return { n, t: { x, y, w, h }, k: w / uw };
+}
+
+/** Dónde hace clic el cursor en cada paso, en coords de la UI (como en Figma): logo del panel de review, Apply fix, Resolved y Merge. */
+const CLICKS: { pop: number; ui: [number, number] }[] = [
+    { pop: 0, ui: [956, 268] },
+    { pop: 0, ui: [150, 716] },
+    { pop: 0, ui: [208, 560] },
+    { pop: 0, ui: [1086, 438] },
 ];
+const CURSOR = CLICKS.map(({ pop, ui }, i) => {
+    const p = POPS[i][pop];
+    const { t, k } = popRect(p);
+    return [MOCKUP.x + t.x + (ui[0] - p.src[0]) * k, MOCKUP.y + t.y + (ui[1] - p.src[1]) * k];
+});
 
 function PopCrop({ p }: { p: Pop }) {
-    const [ux, uy, uw, uh] = p.src;
-    const [tx, ty, tw] = p.to;
-    const k = tw / uw;
+    const { t, k } = popRect(p);
     return (
         <div
             className="fl-pop"
             style={{
-                left: tx - MOCKUP.x,
-                top: ty - MOCKUP.y,
-                width: tw,
-                height: Math.round(uh * k),
+                left: t.x,
+                top: t.y,
+                width: t.w,
+                height: t.h,
                 backgroundImage: `url(/fogline/ui/pantalla-${p.pantalla}.webp)`,
                 backgroundSize: `${1280 * k}px auto`,
-                backgroundPosition: `${-ux * k}px ${-uy * k}px`,
+                backgroundPosition: `${-p.src[0] * k}px ${-p.src[1] * k}px`,
             }}
         />
     );
 }
 
+/** Cursor de Figma (la punta queda en 0,0 del contenedor). */
 function Cursor() {
     return (
         <svg className="fl-cursor" width="26" height="30" viewBox="0 0 26 30" fill="none" aria-hidden="true">
             <path
-                d="M5.6 10C4.4 10.5 4.5 12.2 5.7 12.6l6.3 1.8 2.9 5.9c.6 1.2 2.3 1 2.6-.3l2.9-13.7c.2-1.1-.8-2-1.9-1.6L5.6 10Z"
+                d="M19.6084 9.96946C20.813 10.4587 20.7211 12.194 19.4716 12.5532L13.1662 14.3657L10.2864 20.2605C9.71567 21.4287 7.9907 21.2179 7.71811 19.9466L4.78249 6.25634C4.5521 5.18192 5.61782 4.28768 6.6359 4.70114L19.6084 9.96946Z"
                 fill="#F1FD82"
                 stroke="#000"
                 strokeWidth="1.5"
-                strokeLinejoin="round"
             />
         </svg>
     );
@@ -127,9 +145,15 @@ export function Hero() {
         const el = ref.current;
         if (!el) return;
         const stages = el.querySelectorAll<HTMLElement>(".fl-stage");
+        let lastW = 0;
+        let lastH = 0;
         const layout = () => {
             const vw = window.innerWidth;
             const vh = window.innerHeight;
+            // En el celu la barra del navegador cambia el alto al scrollear: eso no reencuadra la escena (si no, salta).
+            if (vw === lastW && Math.abs(vh - lastH) < 160) return;
+            lastW = vw;
+            lastH = vh;
             const portrait = vw / vh < 0.95;
             let s: number, tx: number, ty: number;
             if (!portrait) {
@@ -194,19 +218,26 @@ export function Hero() {
                 // texto de la card: cambia y se pinta palabra por palabra
                 if (i > 0) tl.to(q(`.fl-card__step[data-i="${i - 1}"]`), { autoAlpha: 0, duration: 0.25 }, start);
                 tl.fromTo(q(`.fl-card__step[data-i="${i}"]`), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.25 }, start);
-                tl.fromTo(words, { opacity: 0.18 }, { opacity: 1, stagger: 0.04, duration: 0.2, ease: "none" }, start + 0.1);
-                tl.fromTo(q(`.fl-card__step[data-i="${i}"] .fl-card__body, .fl-card__step[data-i="${i}"] li`), { autoAlpha: 0, y: 8 }, { autoAlpha: 1, y: 0, stagger: 0.04, duration: 0.2 }, start + 0.3);
+                tl.fromTo(words, { opacity: 0.18 }, { opacity: 1, stagger: 0.04, duration: 0.2, ease: "none", immediateRender: false }, start + 0.1);
+                tl.fromTo(q(`.fl-card__step[data-i="${i}"] .fl-card__body, .fl-card__step[data-i="${i}"] li`), { autoAlpha: 0, y: 8 }, { autoAlpha: 1, y: 0, stagger: 0.04, duration: 0.2, immediateRender: false }, start + 0.3);
                 // pantalla del mockup
                 if (i > 0) tl.to(q(`.fl-screen[data-i="${i}"]`), { autoAlpha: 1, duration: 0.3 }, start);
-                // elementos que se levantan
-                if (i > 0) tl.to(q(`.fl-pops[data-i="${i - 1}"]`), { autoAlpha: 0, duration: 0.2 }, start);
-                tl.fromTo(q(`.fl-pops[data-i="${i}"] .fl-pop`), { autoAlpha: 0, scale: 0.96, y: 8 }, { autoAlpha: 1, scale: 1, y: 0, stagger: 0.08, duration: 0.3, ease: "back.out(1.6)" }, start + 0.1);
+                // lo que importa crece en su lugar, como si se levantara de la UI
+                POPS[i].forEach((p, j) => {
+                    const { n, t: r } = popRect(p);
+                    const sel = q(`.fl-pops[data-i="${i}"] .fl-pop`)[j];
+                    const from = { scale: 1 / p.grow, x: n.x + n.w / 2 - (r.x + r.w / 2), y: n.y + n.h / 2 - (r.y + r.h / 2) };
+                    tl.fromTo(sel, { autoAlpha: 0, ...from }, { autoAlpha: 1, duration: 0.04, ease: "none", immediateRender: false }, start + 0.1 + j * 0.06)
+                        .fromTo(sel, from, { scale: 1, x: 0, y: 0, duration: 0.35, ease: "power3.out", immediateRender: false }, start + 0.1 + j * 0.06);
+                    if (i < POPS.length - 1) tl.to(sel, { ...from, autoAlpha: 0, duration: 0.25, ease: "power2.in" }, start + 1 - 0.3);
+                });
                 // el cursor viaja hasta lo que importa y hace clic
-                if (i > 0) tl.to(q(".fl-cursor-wrap"), { x: CURSOR[i][0], y: CURSOR[i][1], duration: 0.45 }, start);
-                tl.fromTo(q(".fl-cursor"), { scale: 1 }, { scale: 0.82, duration: 0.08, yoyo: true, repeat: 1, ease: "power1.inOut" }, start + 0.5);
-                tl.fromTo(q(".fl-cursor-ring"), { scale: 0.3, autoAlpha: 0.9 }, { scale: 1.6, autoAlpha: 0, duration: 0.3, ease: "power2.out" }, start + 0.52);
+                if (i > 0) tl.to(q(".fl-cursor-wrap"), { x: CURSOR[i][0], y: CURSOR[i][1], duration: 0.4 }, start + 0.05);
+                tl.fromTo(q(".fl-cursor"), { scale: 1 }, { scale: 0.78, duration: 0.07, yoyo: true, repeat: 1, ease: "power1.inOut", immediateRender: false }, start + 0.5);
+                tl.fromTo(q(".fl-cursor-ring"), { scale: 0.2, autoAlpha: 1 }, { scale: 1.5, autoAlpha: 0, duration: 0.35, ease: "power2.out", immediateRender: false }, start + 0.52);
+                tl.fromTo(q(`.fl-pops[data-i="${i}"] .fl-pop`)[CLICKS[i].pop], { filter: "brightness(1)" }, { filter: "brightness(0.96)", duration: 0.07, yoyo: true, repeat: 1, immediateRender: false }, start + 0.5);
                 // anillo del indicador
-                tl.fromTo(q(`.fl-ind[data-i="${i}"] circle`), { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1, ease: "none" }, i === 0 ? 0.9 : t);
+                tl.fromTo(q(`.fl-ind[data-i="${i}"] circle`), { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1, ease: "none", immediateRender: i === 0 }, i === 0 ? 0.9 : t);
             });
 
             // 4.5 → 5: salida. La escena entera sigue de largo con el scroll.
@@ -313,8 +344,12 @@ export function Hero() {
                                 ))}
                             </div>
                         ))}
-                        {/* Desenfoque progresivo de abajo hacia arriba en la llegada */}
-                        <div className="fl-mockup__veil" />
+                        {/* Desenfoque progresivo de abajo hacia arriba en la llegada (capas apiladas) */}
+                        <div className="fl-mockup__veil">
+                            {[0, 1, 2, 3, 4].map((n) => (
+                                <span key={n} />
+                            ))}
+                        </div>
                     </div>
                     <img className="fl-colina" src="/fogline/scene/colina-dither.webp" alt="" />
                 </div>

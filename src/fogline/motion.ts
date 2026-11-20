@@ -5,7 +5,11 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLenisInstance } from "@/components/providers/lenis-provider";
 
-if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
+if (typeof window !== "undefined") {
+    gsap.registerPlugin(ScrollTrigger);
+    // Que la barra del navegador del celu no recalcule todo al scrollear (evita saltos).
+    ScrollTrigger.config({ ignoreMobileResize: true });
+}
 
 /** Conecta el scroll de Lenis (el de 4HER) con ScrollTrigger. Una vez por página. */
 export function useLenisScrollTrigger() {

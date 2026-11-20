@@ -42,7 +42,6 @@ export const heroSteps = [
 export const clients = {
     lead: "Trusted by 2,000 engineering teams",
     rest: "who review faster, merge with confidence and ship every day.",
-    link: "Read customer stories",
     /** Dos filas que se mueven en sentidos opuestos. `url`: la web de cada cliente (placeholder). */
     rows: [
         ["codecraft", "layers", "warpspeed", "hourglass", "capsule"],
@@ -54,12 +53,32 @@ export const clients = {
 export const features = {
     lead: "Built for the whole team,",
     rest: "not just the reviewer.",
+    /** Mismo orden y fragmentos que la sección de Figma (405:17214). */
     cards: [
-        { lead: "PR summaries.", rest: "The what and the why before anyone reads a line.", img: "/fogline/features/card-1.webp", size: "lg" },
-        { lead: "Learns your conventions.", rest: "Teach your rules once. Fogline checks them on every PR.", img: "/fogline/features/card-2.webp", size: "lg" },
-        { lead: "Severity-ranked findings.", rest: "High-risk issues first. Nitpicks stay quiet.", img: "/fogline/features/card-3.webp", size: "sm" },
-        { lead: "Built for every role.", rest: "Authors ship faster, leads review architecture.", img: "/fogline/features/card-4.webp", size: "sm" },
-        { lead: "Private by default.", rest: "Read-only access. Your code never trains models.", img: "/fogline/features/card-5.webp", size: "sm" },
+        { lead: "Learns your conventions.", rest: "Teach your rules once. Fogline checks them on every PR.", art: "rules", size: "lg" },
+        { lead: "PR summaries.", rest: "The what and the why before anyone reads a line.", art: "summary", size: "lg" },
+        { lead: "Severity-ranked findings.", rest: "High-risk issues first. Nitpicks stay quiet.", art: "severity", size: "sm" },
+        { lead: "Built for every role.", rest: "Authors ship faster, leads review architecture.", art: "roles", size: "sm" },
+        { lead: "Private by default.", rest: "Read-only access. Your code never trains models.", art: "privacy", size: "sm" },
+    ],
+} as const;
+
+/** Contenido de los fragmentos de UI de las cards chicas. */
+export const featureArt = {
+    severity: [
+        { title: "Retry loop has no upper bound", level: "high" },
+        { title: "Idempotency key missing", level: "medium" },
+        { title: "Unused import in invoice.ts", level: "low" },
+    ],
+    roles: [
+        { name: "sam", role: "Author", status: "Ready for review", photo: "/fogline/people/1.jpg" },
+        { name: "maya", role: "Tech lead", status: "Approved", photo: "/fogline/people/3.jpg" },
+        { name: "Fogline", role: "Reviewer", status: "2 findings fixed", photo: null },
+    ],
+    privacy: [
+        { label: "Read-only access", on: true },
+        { label: "Never trains on your code", on: true },
+        { label: "Self-hosted runner", on: false },
     ],
 } as const;
 

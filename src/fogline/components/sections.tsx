@@ -1,5 +1,5 @@
 import { Reveal } from "@/components/motion/reveal";
-import { clients, features, footer, metrics, nav, testimonials } from "../content";
+import { clients, featureArt, features, footer, metrics, nav, testimonials } from "../content";
 import { Icon, Logo } from "./icons";
 import { ScrubText } from "./scrub-text";
 import { FooterScene } from "./footer-scene";
@@ -35,10 +35,7 @@ export function Clients() {
     return (
         <section className="fl-section fl-clients" aria-labelledby="fl-clients">
             <div className="fl-container">
-                <ScrubText id="fl-clients" lead={clients.lead} rest={clients.rest} className="fl-h-lg fl-measure-lg" />
-                <a className="fl-link" href="#">
-                    {clients.link} <Icon name="arrow" size={14} />
-                </a>
+                <ScrubText id="fl-clients" lead={clients.lead} rest={clients.rest} className="fl-h-lg fl-measure-xl" />
             </div>
             <div className="fl-marquee" role="list">
                 {clients.rows.map((row, r) => (
@@ -55,7 +52,7 @@ export function Clients() {
                                         tabIndex={copy > 0 ? -1 : 0}
                                         aria-label={l}
                                     >
-                                        <img src={`/fogline/brand/${l}.svg`} alt="" height={34} />
+                                        <img src={`/fogline/brand/${l}.svg`} alt="" height={26} />
                                         <span className="fl-logo-cell__arrow" aria-hidden="true">
                                             <Icon name="arrow-up-right" size={14} />
                                         </span>
@@ -70,6 +67,51 @@ export function Clients() {
     );
 }
 
+/** Fragmento de UI de cada card de features, con las medidas del frame de Figma (card de 596 × 440 o 389 × 360). */
+function FeatureArt({ art }: { art: (typeof features.cards)[number]["art"] }) {
+    if (art === "rules" || art === "summary") {
+        // Mockup grande: entra desde el borde y se desenfoca hacia los costados (bokeh)
+        return (
+            <div className={`fl-art fl-art--shot fl-art--${art}`} aria-hidden="true">
+                <div className="fl-art__frame" />
+                <img className="fl-art__screen" src={`/fogline/features/${art}.webp`} alt="" loading="lazy" />
+                <div className="fl-art__bokeh" />
+            </div>
+        );
+    }
+    return (
+        <div className="fl-art fl-art--panel" aria-hidden="true">
+            {art === "severity" &&
+                featureArt.severity.map((f) => (
+                    <div key={f.title} className="fl-art__row">
+                        <span>{f.title}</span>
+                        <span className={`fl-sev fl-sev--${f.level}`}>{f.level[0].toUpperCase() + f.level.slice(1)}</span>
+                    </div>
+                ))}
+            {art === "roles" &&
+                featureArt.roles.map((r) => (
+                    <div key={r.name} className="fl-art__row fl-art__row--plain">
+                        <span className="fl-art__who">
+                            {r.photo ? <img src={r.photo} alt="" width={28} height={28} /> : <img src="/fogline/brand/isotipo.svg" alt="" width={28} height={28} className="is-logo" />}
+                            <span>
+                                <b>{r.name}</b>
+                                <small>{r.role}</small>
+                            </span>
+                        </span>
+                        <span className="fl-art__status">{r.status}</span>
+                    </div>
+                ))}
+            {art === "privacy" &&
+                featureArt.privacy.map((t) => (
+                    <div key={t.label} className={`fl-art__row ${t.on ? "" : "is-off"}`}>
+                        <span>{t.label}</span>
+                        <span className={`fl-toggle ${t.on ? "is-on" : ""}`} />
+                    </div>
+                ))}
+        </div>
+    );
+}
+
 export function Features() {
     return (
         <section className="fl-section" aria-labelledby="fl-features">
@@ -78,10 +120,10 @@ export function Features() {
                 <div className="fl-features">
                     {features.cards.map((c, i) => (
                         <Reveal key={c.lead} delay={(i % 3) * 80} className={`fl-feature fl-feature--${c.size}`}>
-                            <img className="fl-feature__img" src={c.img} alt="" loading="lazy" />
                             <h3>
                                 {c.lead} <span className="fl-muted">{c.rest}</span>
                             </h3>
+                            <FeatureArt art={c.art} />
                             <span className="fl-chip-arrow" aria-hidden="true">
                                 <Icon name="arrow" size={16} />
                             </span>
