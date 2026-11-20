@@ -108,7 +108,7 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    font-weight: 500;
+    font-weight: 600;
     letter-spacing: -0.02em;
     line-height: 1;
 }
@@ -149,14 +149,16 @@
     gap: 22px;
     padding-right: 0;
     box-sizing: content-box;
-    font-size: 15px;
+    font-size: 16px;
+    line-height: 22px;
+    font-weight: 500;
     opacity: 0;
     visibility: hidden;
     max-width: 0;
     overflow: hidden;
     white-space: nowrap;
 }
-.fl-pill__links li { color: rgb(255 255 255 / 0.66); }
+.fl-pill__links li { color: rgb(255 255 255 / 0.72); }
 .fl-pill__links li.is-active { color: #fff; }
 .fl-pill__links a:hover { color: #fff; }
 .fl-pill__cta {
@@ -164,7 +166,8 @@
     align-items: center;
     gap: 6px;
     margin-left: auto;
-    font-size: 15px;
+    font-size: 16px;
+    line-height: 22px;
     font-weight: 500;
     white-space: nowrap;
 }
@@ -411,6 +414,7 @@
 }
 .fl-card h2 {
     margin-top: 10px;
+    text-wrap: balance;
     font-size: 28px;
     line-height: 32px;
     letter-spacing: -0.02em;
@@ -418,9 +422,9 @@
 }
 .fl-card__body {
     margin-top: 10px;
-    font-size: 15px;
+    font-size: 16px;
     line-height: 22px;
-    color: var(--fl-text-3);
+    color: #404040;
 }
 .fl-card ul {
     margin-top: 16px;
@@ -429,7 +433,8 @@
     display: grid;
     gap: 6px;
     font-size: 14px;
-    color: var(--fl-text-2);
+    line-height: 20px;
+    color: #0a0a0a;
 }
 .fl-card li { display: flex; align-items: center; gap: 10px; }
 .fl-card li::before {
@@ -456,11 +461,12 @@
     display: flex;
     align-items: center;
     gap: 28px;
-    font-size: 15px;
+    font-size: 16px;
+    font-weight: 500;
     color: var(--fl-text-2);
 }
 .fl-hero__header nav a:not(.fl-btn):hover { color: var(--fl-text); }
-.fl-btn--sm { height: 40px; padding: 0 18px; font-size: 15px; gap: 8px; }
+.fl-btn--sm { height: 40px; padding: 0 18px; font-size: 16px; gap: 8px; }
 .fl-hero__copy {
     position: absolute;
     z-index: 4;
@@ -482,9 +488,10 @@
     margin: 20px auto 0;
     max-width: 640px;
     text-wrap: pretty;
-    font-size: 18px;
+    font-size: 20px;
     line-height: 28px;
-    color: var(--fl-text-3);
+    letter-spacing: -0.02em;
+    color: #737373;
 }
 .fl-hero__mobile-cta { display: none; }
 
