@@ -3,7 +3,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { hero, heroSteps, nav } from "../content";
-import { gsap, useLenisScrollTrigger } from "../motion";
+import { gsap, ScrollTrigger, useLenisScrollTrigger } from "../motion";
 import { Fog, type FogHandle } from "./fog";
 import { Icon } from "./icons";
 
@@ -28,10 +28,10 @@ const MOCKUP = { x: 205, y: 140, rise: 340, w: 1031 };
 const K = (MOCKUP.w - 2 - 24) / 1280;
 const INSET = 13; // borde + padding del mockup
 
-type Pop = { pantalla: number; src: [number, number, number, number]; grow: number };
+type Pop = { pantalla: number; src: [number, number, number, number]; grow: number; live?: boolean };
 /** Lo que se levanta en cada paso: recorte de la pantalla (coords de la UI 1280×840) que crece en su lugar. */
 const POPS: Pop[][] = [
-    [{ pantalla: 1, src: [916, 225, 340, 254], grow: 1.12 }],
+    [{ pantalla: 1, src: [916, 225, 340, 254], grow: 1.12, live: true }],
     [
         { pantalla: 2, src: [81, 475, 694, 280], grow: 1.06 },
         { pantalla: 2, src: [916, 225, 340, 198], grow: 1.1 },
@@ -67,6 +67,28 @@ const CURSOR = CLICKS.map(({ pop, ui }, i) => {
     return [MOCKUP.x + t.x + (ui[0] - p.src[0]) * k, MOCKUP.y + t.y + (ui[1] - p.src[1]) * k];
 });
 
+/** Paso 1: la barra de review se completa y los checks se marcan con el scroll (coords de la UI). */
+const REVIEW = { bar: [936, 307, 300, 8], checks: [333, 369, 405, 441].map((y) => [936, y]) };
+
+function LiveReview({ p, k }: { p: Pop; k: number }) {
+    const at = (x: number, y: number) => ({ left: (x - p.src[0]) * k, top: (y - p.src[1]) * k });
+    const [bx, by, bw, bh] = REVIEW.bar;
+    return (
+        <>
+            <span className="fl-live-bar" style={{ ...at(bx, by), width: bw * k, height: bh * k }}>
+                <span />
+            </span>
+            {REVIEW.checks.map(([x, y], i) => (
+                <span key={i} className="fl-live-check" style={{ ...at(x, y), width: 16 * k, height: 16 * k }}>
+                    <svg viewBox="0 0 16 16" aria-hidden="true">
+                        <path d="M5 8.2 7 10.2 11 6" fill="none" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                </span>
+            ))}
+        </>
+    );
+}
+
 function PopCrop({ p }: { p: Pop }) {
     const { t, k } = popRect(p);
     return (
@@ -81,7 +103,9 @@ function PopCrop({ p }: { p: Pop }) {
                 backgroundSize: `${1280 * k}px auto`,
                 backgroundPosition: `${-p.src[0] * k}px ${-p.src[1] * k}px`,
             }}
-        />
+        >
+            {p.live && <LiveReview p={p} k={k} />}
+        </div>
     );
 }
 
@@ -139,6 +163,8 @@ export function Hero() {
     const fog = useRef<FogHandle>({ density: 0.55 });
     const [active, setActive] = useState(-1);
     const lenis = useLenisScrollTrigger();
+    const tlRef = useRef<gsap.core.Timeline | null>(null);
+    const jumping = useRef(false);
 
     // Encuadre de la escena según la orientación de la pantalla.
     useEffect(() => {
@@ -207,6 +233,14 @@ export function Hero() {
                 .fromTo(q(".fl-screen"), { filter: "blur(0px)" }, { filter: "blur(1.2px)", duration: 0.4 }, 0.75)
                 .fromTo(q(".fl-cursor-wrap"), { autoAlpha: 0, x: CURSOR[0][0] + 80, y: CURSOR[0][1] + 120 }, { autoAlpha: 1, x: CURSOR[0][0], y: CURSOR[0][1], duration: 0.4 }, 0.75);
 
+            tlRef.current = tl;
+
+            // Paso 1: la barra de review se completa y se marcan los checks
+            tl.fromTo(q(".fl-live-bar > span"), { scaleX: 0.06 }, { scaleX: 1, duration: 0.6, ease: "none" }, 1.0);
+            q(".fl-live-check svg").forEach((c, j) => {
+                tl.fromTo(c.parentElement, { backgroundColor: "#f5f3ec" }, { backgroundColor: "#16b364", duration: 0.08, ease: "none" }, 1.05 + j * 0.15).fromTo(c, { autoAlpha: 0, scale: 0.4 }, { autoAlpha: 1, scale: 1, duration: 0.1, ease: "back.out(2)" }, 1.05 + j * 0.15);
+            });
+
             // La niebla se disipa al empezar el scroll
             tl.to(fog.current, { density: 0.12, duration: 0.8, ease: "none" }, 0).to(fog.current, { density: 0, duration: 0.6, ease: "none" }, 0.8);
 
@@ -236,15 +270,18 @@ export function Hero() {
                 tl.fromTo(q(".fl-cursor"), { scale: 1 }, { scale: 0.78, duration: 0.07, yoyo: true, repeat: 1, ease: "power1.inOut", immediateRender: false }, start + 0.5);
                 tl.fromTo(q(".fl-cursor-ring"), { scale: 0.2, autoAlpha: 1 }, { scale: 1.5, autoAlpha: 0, duration: 0.35, ease: "power2.out", immediateRender: false }, start + 0.52);
                 tl.fromTo(q(`.fl-pops[data-i="${i}"] .fl-pop`)[CLICKS[i].pop], { filter: "brightness(1)" }, { filter: "brightness(0.96)", duration: 0.07, yoyo: true, repeat: 1, immediateRender: false }, start + 0.5);
-                // anillo del indicador
-                tl.fromTo(q(`.fl-ind[data-i="${i}"] circle`), { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1, ease: "none", immediateRender: i === 0 }, i === 0 ? 0.9 : t);
+                // el anillo del indicador se completa mientras dura el paso
+                tl.fromTo(q(`.fl-ind[data-i="${i}"] .fl-ind__fill`), { strokeDashoffset: 1 }, { strokeDashoffset: 0, autoRound: false, duration: i === 0 ? 0.9 : 1, ease: "none", immediateRender: i === 0 }, start);
             });
 
             // 4.5 → 5: salida. La escena entera sigue de largo con el scroll.
             tl.to(q(".fl-card, .fl-indicators, .fl-cursor-wrap, .fl-pops, .fl-dim"), { autoAlpha: 0, duration: 0.35 }, 4.55)
                 .to(q(".fl-screen"), { filter: "blur(0px)", duration: 0.35 }, 4.55);
         }, el);
-        return () => ctx.revert();
+        return () => {
+            tlRef.current = null;
+            ctx.revert();
+        };
     }, []);
 
     // Como en Assemble: el botón sube 1:1 con la página, al llegar arriba se queda
@@ -316,12 +353,23 @@ export function Hero() {
         };
     }, []);
 
+    /** Ir a un paso desde los indicadores: se disuelve, salta y vuelve a aparecer (sin rebobinar todo el recorrido). */
     const goTo = (i: number) => {
         const el = ref.current;
-        if (!el || !lenis) return;
+        if (!el || !lenis || jumping.current) return;
         const total = el.offsetHeight - window.innerHeight;
         const top = el.getBoundingClientRect().top + window.scrollY;
-        lenis.scrollTo(top + ((1.4 + i) / UNITS) * total, { duration: 1.2 });
+        const target = top + ((1.4 + i) / UNITS) * total;
+        const veil = el.querySelector(".fl-hero__fade");
+        jumping.current = true;
+        gsap.timeline({ onComplete: () => void (jumping.current = false) })
+            .to(veil, { autoAlpha: 1, duration: 0.35, ease: "power2.out" })
+            .add(() => {
+                lenis.scrollTo(target, { immediate: true, force: true });
+                ScrollTrigger.update();
+                tlRef.current?.scrollTrigger?.getTween()?.progress(1);
+            })
+            .to(veil, { autoAlpha: 0, duration: 0.5, ease: "power2.inOut" }, "+=0.08");
     };
 
     return (
@@ -390,12 +438,16 @@ export function Hero() {
                     </a>
                 </div>
 
+                {/* Fundido al saltar de paso con los indicadores */}
+                <div className="fl-hero__fade" aria-hidden="true" />
+
                 <ol className="fl-indicators" aria-label="Steps">
                     {heroSteps.map((s, i) => (
                         <li key={s.icon} className={`fl-ind ${active === i ? "is-active" : active > i ? "is-done" : ""}`} data-i={i}>
                             <button type="button" onClick={() => goTo(i)} aria-label={s.title} aria-current={active === i}>
                                 <svg className="fl-ind__ring" viewBox="0 0 44 44" aria-hidden="true">
-                                    <circle cx="22" cy="22" r="20.5" pathLength={1} />
+                                    <circle className="fl-ind__track" cx="22" cy="22" r="20.5" />
+                                    <circle className="fl-ind__fill" cx="22" cy="22" r="20.5" pathLength={1} />
                                 </svg>
                                 <Icon name={s.icon} size={18} />
                             </button>

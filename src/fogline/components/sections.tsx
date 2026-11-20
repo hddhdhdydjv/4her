@@ -135,32 +135,39 @@ export function Features() {
     );
 }
 
+/** Resultados (Figma 422:18496): encabezado a lo ancho, isotipo grande a la izquierda y las métricas en la columna derecha. */
 export function Metrics() {
     return (
         <section className="fl-section fl-metrics" aria-labelledby="fl-metrics">
-            <img className="fl-metrics__iso" src="/fogline/brand/isotipo.svg" alt="" aria-hidden="true" />
             <div className="fl-container">
-                <Reveal className="fl-metrics__head">
-                    <ScrubText lead={metrics.lead} rest={metrics.rest} className="fl-h-lg" />
-                    <p className="fl-lead">{metrics.intro}</p>
-                </Reveal>
-                <ul className="fl-metrics__rows">
-                    {metrics.rows.map((m, i) => (
-                        <Reveal as="li" key={m.title} delay={i * 80} className="fl-metric">
-                            <div className="fl-metric__text">
-                                <img src="/fogline/brand/isotipo.svg" alt="" width={22} height={22} />
-                                <div>
-                                    <h3>{m.title}</h3>
-                                    <p>{m.body}</p>
+                <div className="fl-metrics__head">
+                    <ScrubText id="fl-metrics" lead={metrics.lead} rest={metrics.rest} breakBetween className="fl-h-lg" />
+                    <Reveal as="p" className="fl-metrics__intro">
+                        {metrics.intro}
+                    </Reveal>
+                </div>
+                <div className="fl-metrics__body">
+                    <div className="fl-metrics__art" aria-hidden="true">
+                        <img src="/fogline/brand/isotipo.svg" alt="" />
+                    </div>
+                    <ul className="fl-metrics__rows">
+                        {metrics.rows.map((m, i) => (
+                            <Reveal as="li" key={m.title} delay={i * 80} className="fl-metric">
+                                <div className="fl-metric__text">
+                                    <img src="/fogline/brand/isotipo.svg" alt="" width={22} height={22} />
+                                    <div>
+                                        <h3>{m.title}</h3>
+                                        <p>{m.body}</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <p className="fl-metric__value">
-                                {m.value}
-                                <span>{m.unit}</span>
-                            </p>
-                        </Reveal>
-                    ))}
-                </ul>
+                                <p className="fl-metric__value">
+                                    {m.value}
+                                    <span>{m.unit}</span>
+                                </p>
+                            </Reveal>
+                        ))}
+                    </ul>
+                </div>
             </div>
         </section>
     );

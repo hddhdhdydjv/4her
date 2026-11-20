@@ -319,6 +319,38 @@
     visibility: hidden;
 }
 
+/* Paso 1 en vivo: barra de review y checks */
+.fl-live-bar {
+    position: absolute;
+    overflow: hidden;
+    border-radius: 999px;
+    background: #e5e5e5;
+}
+.fl-live-bar span {
+    position: absolute;
+    inset: 0;
+    background: #171717;
+    transform-origin: left center;
+    transform: scaleX(0.06);
+}
+.fl-live-check {
+    position: absolute;
+    border-radius: 999px;
+    background: #f5f3ec;
+}
+.fl-live-check svg { display: block; width: 100%; height: 100%; opacity: 0; }
+
+/* Fundido al saltar de paso con los indicadores */
+.fl-hero__fade {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    background: var(--fl-bg);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
 /* Cursor que guía la vista y hace clic */
 .fl-cursor-wrap {
     position: absolute;
@@ -459,7 +491,7 @@
 /* Indicadores (se pueden tocar: llevan a ese paso) */
 .fl-indicators {
     position: absolute;
-    z-index: 4;
+    z-index: 6;
     left: 0;
     right: 0;
     bottom: 32px;
@@ -495,10 +527,11 @@
     inset: 0;
     transform: rotate(-90deg);
 }
-.fl-ind__ring circle {
-    fill: none;
-    stroke: rgb(0 0 0 / 0.22);
-    stroke-width: 2;
+.fl-ind__ring circle { fill: none; stroke-width: 2; }
+.fl-ind__track { stroke: rgb(0 0 0 / 0.08); }
+.fl-ind__fill {
+    stroke: var(--fl-text);
+    stroke-linecap: round;
     stroke-dasharray: 1;
     stroke-dashoffset: 1;
 }
@@ -734,38 +767,43 @@
    ========================================================================== */
 
 .fl-metrics { overflow: hidden; }
-.fl-metrics__iso {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 520px;
-    height: 520px;
-    transform: translate(-60%, -40%);
-    opacity: 0.07;
-    pointer-events: none;
-}
 .fl-metrics__head {
     display: flex;
     flex-wrap: wrap;
     align-items: flex-end;
     justify-content: space-between;
-    gap: 16px;
-    padding-bottom: 48px;
-    border-bottom: 1px solid var(--fl-line);
+    gap: 24px;
 }
-.fl-metrics__head .fl-lead { max-width: 340px; }
+.fl-metrics__intro {
+    max-width: 210px;
+    font-size: 18px;
+    line-height: 26px;
+    color: #525252;
+}
+.fl-metrics__body {
+    display: grid;
+    grid-template-columns: 1fr minmax(0, 58%);
+    margin-top: 72px;
+}
+/* Isotipo grande y apagado, abajo a la izquierda */
+.fl-metrics__art {
+    display: flex;
+    align-items: flex-end;
+    padding-bottom: 34px;
+}
+.fl-metrics__art img { width: clamp(200px, 21.5vw, 310px); height: auto; opacity: 0.12; }
 .fl-metric {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 24px;
-    padding-block: 36px;
-    border-bottom: 1px solid var(--fl-line);
+    min-height: 205px;
+    border-bottom: 1px solid rgb(0 0 0 / 0.08);
 }
 .fl-metric__text { display: flex; gap: 20px; align-items: flex-start; }
-.fl-metric__text img { opacity: 0.85; margin-top: 4px; }
-.fl-metric h3 { font-size: 23px; line-height: 32px; font-weight: 500; }
-.fl-metric p:not(.fl-metric__value) { font-size: 16px; line-height: 24px; color: var(--fl-text-3); }
+.fl-metric__text img { flex: none; margin-top: 5px; }
+.fl-metric h3 { font-size: 23px; line-height: 32px; font-weight: 500; letter-spacing: -0.005em; }
+.fl-metric p:not(.fl-metric__value) { margin-top: 8px; font-size: 16px; line-height: 22px; color: #525252; }
 .fl-metric__value {
     display: flex;
     align-items: flex-start;
@@ -776,10 +814,10 @@
     font-weight: 300;
 }
 .fl-metric__value span {
-    font-size: 0.32em;
-    line-height: 1;
+    font-size: 0.305em;
+    line-height: 1.2;
     letter-spacing: 0;
-    color: var(--fl-muted);
+    color: #737373;
 }
 
 /* ==========================================================================
@@ -971,7 +1009,9 @@
     .fl-metric { align-items: flex-start; }
     .fl-metric h3 { font-size: 16px; line-height: 24px; }
     .fl-metric p:not(.fl-metric__value) { font-size: 14px; line-height: 20px; }
-    .fl-metrics__iso { width: 260px; height: 260px; }
+    .fl-metrics__body { grid-template-columns: 1fr; margin-top: 40px; }
+    .fl-metrics__art { display: none; }
+    .fl-metric { min-height: 0; padding-block: 32px; }
 
     .fl-testimonial { padding: 24px; }
     .fl-testimonial blockquote { font-size: 18px; line-height: 28px; }
