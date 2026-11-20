@@ -122,9 +122,7 @@ export function Hero() {
             });
 
             // 0 → 1: llegada
-            tl.to(q(".fl-hero__copy"), { y: -260, autoAlpha: 0, duration: 0.6 }, 0)
-                .to(q(".fl-hero__logo"), { autoAlpha: 0, duration: 0.4 }, 0.2)
-                .fromTo(q(".fl-mockup"), { y: 0 }, { y: -360, duration: 1 }, 0)
+            tl.fromTo(q(".fl-mockup"), { y: 0 }, { y: -360, duration: 1 }, 0)
                 .fromTo(q(".fl-mockup"), { filter: "blur(14px)" }, { filter: "blur(5px)", duration: 1, ease: "none" }, 0)
                 .to(q(".fl-mockup"), { filter: "blur(0px)", duration: 1.4, ease: "none" }, 1)
                 .fromTo(q(".fl-indicators"), { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.4 }, 0.6)
@@ -166,20 +164,43 @@ export function Hero() {
         return () => ctx.revert();
     }, []);
 
-    // La píldora crece con el scroll hasta ser la navegación (desktop y tablet horizontal)
+    // Como en Assemble: el botón sube 1:1 con la página, al llegar arriba se queda
+    // pegado y recién ahí se estira hasta ser la navegación. El texto y el header
+    // del hero también se van 1:1 con el scroll.
     useEffect(() => {
         const el = ref.current;
         const pill = document.querySelector<HTMLElement>(".fl-pill");
         if (!el || !pill) return;
         const mm = gsap.matchMedia();
         mm.add("(min-width: 768px)", () => {
+            const start = () => Math.min(400, window.innerHeight * 0.46);
+            const travel = () => start() - 20;
+            // 1. sube con la página
+            gsap.fromTo(pill, { top: start }, {
+                top: 20,
+                ease: "none",
+                scrollTrigger: { trigger: el, start: "top top", end: () => `+=${travel()}`, scrub: true, invalidateOnRefresh: true },
+            });
+            // 2. pegada arriba, se estira hasta ser la navegación
             gsap.timeline({
-                scrollTrigger: { trigger: el, start: "top top", end: () => `+=${window.innerHeight * 0.55}`, scrub: 0.6 },
+                scrollTrigger: { trigger: el, start: () => `top top-=${travel()}`, end: () => `+=${Math.max(200, window.innerHeight * 0.25)}`, scrub: 0.4, invalidateOnRefresh: true },
             })
-                .fromTo(pill, { top: () => Math.min(400, window.innerHeight * 0.46), width: 156 }, { top: 20, width: 448, ease: "power2.inOut", duration: 1 }, 0)
-                .fromTo(pill.querySelector(".fl-pill__links"), { autoAlpha: 0, maxWidth: 0 }, { autoAlpha: 1, maxWidth: 300, duration: 0.7 }, 0.3)
-                .fromTo(pill.querySelector(".fl-pill__cta"), { color: "#ffffff" }, { color: "#f1fd82", duration: 0.5 }, 0.5)
-                .fromTo(pill.querySelector(".fl-pill__cta svg"), { width: 0 }, { width: 14, duration: 0.5 }, 0.5);
+                .fromTo(pill, { width: 156 }, { width: 448, ease: "power2.inOut", duration: 1 }, 0)
+                .fromTo(pill.querySelector(".fl-pill__links"), { autoAlpha: 0, maxWidth: 0 }, { autoAlpha: 1, maxWidth: 300, duration: 0.7 }, 0.25)
+                .fromTo(pill.querySelector(".fl-pill__cta"), { color: "#ffffff" }, { color: "#f1fd82", duration: 0.5 }, 0.4)
+                .fromTo(pill.querySelector(".fl-pill__cta svg"), { width: 0 }, { width: 14, duration: 0.5 }, 0.4);
+        });
+        // Texto y header del hero: suben 1:1 y se apagan al final del recorrido
+        const dist = () => window.innerHeight * 0.6;
+        gsap.fromTo(el.querySelectorAll(".fl-hero__copy, .fl-hero__header"), { y: 0 }, {
+            y: () => -dist(),
+            ease: "none",
+            scrollTrigger: { trigger: el, start: "top top", end: () => `+=${dist()}`, scrub: true, invalidateOnRefresh: true },
+        });
+        gsap.fromTo(el.querySelectorAll(".fl-hero__copy, .fl-hero__header"), { autoAlpha: 1 }, {
+            autoAlpha: 0,
+            ease: "none",
+            scrollTrigger: { trigger: el, start: () => `top top-=${dist() * 0.45}`, end: () => `+=${dist() * 0.55}`, scrub: true, invalidateOnRefresh: true },
         });
         return () => mm.revert();
     }, []);
@@ -223,9 +244,16 @@ export function Hero() {
                     <CardBody />
                 </div>
 
-                <div className="fl-hero__logo">
+                <header className="fl-hero__header">
                     <Logo />
-                </div>
+                    <nav aria-label="Account">
+                        <a href="#">Pricing</a>
+                        <a href="#">Log in</a>
+                        <a href="#" className="fl-btn fl-btn--primary fl-btn--sm">
+                            Book a demo <Icon name="arrow" size={14} />
+                        </a>
+                    </nav>
+                </header>
 
                 <div className="fl-hero__copy">
                     <h1>{hero.title}</h1>

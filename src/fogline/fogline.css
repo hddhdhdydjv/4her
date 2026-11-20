@@ -17,6 +17,10 @@
     --fl-lime: #f1fd82;
     --fl-ink: #121212;
 
+    /* Márgenes y aire proporcionales al ancho (como Assemble) */
+    --fl-gutter: clamp(20px, 6vw, 112px);
+    --fl-section-y: clamp(96px, 11vw, 176px);
+
     --fl-ease: cubic-bezier(0.65, 0, 0.35, 1);
     --fl-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
     --fl-dur: 600ms;
@@ -41,7 +45,7 @@
 /* ---------- base ---------- */
 
 .fl-container {
-    width: min(1216px, 100% - 40px);
+    width: min(1120px, 100% - 2 * var(--fl-gutter));
     margin-inline: auto;
 }
 .fl-stack-56 > * + * { margin-top: 56px; }
@@ -110,7 +114,7 @@
 
 .fl-section {
     position: relative;
-    padding-block: 176px;
+    padding-block: var(--fl-section-y);
 }
 
 /* ==========================================================================
@@ -349,12 +353,27 @@
     background: var(--fl-text);
 }
 
-.fl-hero__logo {
+/* Header simple arriba de todo (se va con el scroll, como en Assemble) */
+.fl-hero__header {
     position: absolute;
-    left: 40px;
-    top: 28px;
     z-index: 4;
+    left: 0;
+    right: 0;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px var(--fl-gutter);
 }
+.fl-hero__header nav {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    font-size: 15px;
+    color: var(--fl-text-2);
+}
+.fl-hero__header nav a:not(.fl-btn):hover { color: var(--fl-text); }
+.fl-btn--sm { height: 40px; padding: 0 18px; font-size: 15px; gap: 8px; }
 .fl-hero__copy {
     position: absolute;
     z-index: 4;
@@ -453,7 +472,8 @@
 .fl-marquee {
     display: grid;
     gap: 12px;
-    margin-top: 56px;
+    width: min(1120px, 100% - 2 * var(--fl-gutter));
+    margin: 56px auto 0;
     overflow: hidden;
     mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
 }
@@ -510,17 +530,17 @@
 .fl-features {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    gap: 24px;
+    gap: clamp(16px, 2vw, 24px);
 }
 .fl-feature {
     position: relative;
     overflow: hidden;
     border-radius: 24px;
     background: var(--fl-surface);
-    padding: 30px 110px 32px 32px;
+    padding: 28px 76px 28px 28px;
 }
-.fl-feature--lg { grid-column: span 3; height: 440px; }
-.fl-feature--sm { grid-column: span 2; height: 360px; }
+.fl-feature--lg { grid-column: span 3; aspect-ratio: 596 / 440; }
+.fl-feature--sm { grid-column: span 2; aspect-ratio: 389 / 360; }
 .fl-feature__img {
     position: absolute;
     inset: 0;
@@ -709,7 +729,6 @@
 }
 
 @media (max-width: 767px) {
-    .fl-section { padding-block: 120px; }
 
     .fl-pill {
         top: 14px;
@@ -731,7 +750,7 @@
     .fl-pill__cta svg { display: none; }
     .fl-pill__menu { display: grid; place-items: center; width: 32px; height: 32px; }
 
-    .fl-hero__logo { display: none; }
+    .fl-hero__header { display: none; }
     .fl-hero__copy { top: 84px; text-align: left; }
     .fl-hero__copy p { font-size: 16px; line-height: 24px; margin-top: 16px; }
     .fl-hero__mobile-cta { display: flex; width: 100%; margin-top: 24px; }
@@ -748,6 +767,7 @@
         display: flex;
         flex-direction: column;
         height: auto;
+        aspect-ratio: auto;
         padding: 24px 72px 0 24px;
     }
     .fl-feature__img { order: 2; }
