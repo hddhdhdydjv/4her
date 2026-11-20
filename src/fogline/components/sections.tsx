@@ -1,21 +1,14 @@
 import { Reveal } from "@/components/motion/reveal";
 import { clients, features, footer, metrics, nav, testimonials } from "../content";
 import { Icon, Logo } from "./icons";
+import { ScrubText } from "./scrub-text";
 
 /* eslint-disable @next/next/no-img-element */
 
-function TwoTone({ lead, rest, as: Tag = "h2", className }: { lead: string; rest: string; as?: "h2" | "h3"; className?: string }) {
+/** Píldora fija: arranca como botón y el scroll del hero la estira hasta ser la navegación. */
+export function NavPill() {
     return (
-        <Tag className={className}>
-            {lead} <span className="fl-muted">{rest}</span>
-        </Tag>
-    );
-}
-
-/** Píldora fija: botón en la llegada, navegación desde el paso 2. */
-export function NavPill({ mode }: { mode: "button" | "nav" }) {
-    return (
-        <nav className={`fl-pill fl-pill--${mode}`} aria-label="Principal">
+        <nav className="fl-pill" aria-label="Main">
             <span className="fl-pill__logo">
                 <Logo dark size={18} />
             </span>
@@ -39,28 +32,38 @@ export function NavPill({ mode }: { mode: "button" | "nav" }) {
 
 export function Clients() {
     return (
-        <section className="fl-section" aria-labelledby="fl-clients">
-            <div className="fl-container fl-stack-56">
-                <Reveal>
-                    <h2 id="fl-clients" className="fl-h-lg fl-measure-lg">
-                        {clients.lead} <span className="fl-muted">{clients.rest}</span>
-                    </h2>
-                    <a className="fl-link" href="#">
-                        {clients.link} <Icon name="arrow" size={14} />
-                    </a>
-                </Reveal>
-                <Reveal delay={80}>
-                    <ul className="fl-logo-wall">
-                        {clients.logos.map((l, i) => (
-                            <li key={i} className="fl-logo-cell">
-                                <img src={`/fogline/brand/${l}.svg`} alt={l} height={32} />
-                                <span className="fl-logo-cell__arrow" aria-hidden="true">
-                                    <Icon name="arrow" size={14} />
-                                </span>
-                            </li>
+        <section className="fl-section fl-clients" aria-labelledby="fl-clients">
+            <div className="fl-container">
+                <ScrubText id="fl-clients" lead={clients.lead} rest={clients.rest} className="fl-h-lg fl-measure-lg" />
+                <a className="fl-link" href="#">
+                    {clients.link} <Icon name="arrow" size={14} />
+                </a>
+            </div>
+            <div className="fl-marquee" role="list">
+                {clients.rows.map((row, r) => (
+                    <div key={r} className={`fl-marquee__row ${r % 2 ? "fl-marquee__row--rev" : ""}`}>
+                        {/* La fila se repite para que el loop no tenga corte; la copia es solo visual */}
+                        {[0, 1, 2, 3].map((copy) => (
+                            <div key={copy} className="fl-marquee__track" aria-hidden={copy > 0}>
+                                {row.map((l) => (
+                                    <a
+                                        key={l}
+                                        role="listitem"
+                                        href={clients.url(l)}
+                                        className="fl-logo-cell"
+                                        tabIndex={copy > 0 ? -1 : 0}
+                                        aria-label={l}
+                                    >
+                                        <img src={`/fogline/brand/${l}.svg`} alt="" height={28} />
+                                        <span className="fl-logo-cell__arrow" aria-hidden="true">
+                                            <Icon name="arrow-up-right" size={14} />
+                                        </span>
+                                    </a>
+                                ))}
+                            </div>
                         ))}
-                    </ul>
-                </Reveal>
+                    </div>
+                ))}
             </div>
         </section>
     );
@@ -70,9 +73,7 @@ export function Features() {
     return (
         <section className="fl-section" aria-labelledby="fl-features">
             <div className="fl-container fl-stack-72">
-                <Reveal>
-                    <TwoTone lead={features.lead} rest={features.rest} className="fl-h-lg fl-measure-lg" />
-                </Reveal>
+                <ScrubText lead={features.lead} rest={features.rest} className="fl-h-lg fl-measure-lg" />
                 <div className="fl-features">
                     {features.cards.map((c, i) => (
                         <Reveal key={c.lead} delay={(i % 3) * 80} className={`fl-feature fl-feature--${c.size}`}>
@@ -97,7 +98,7 @@ export function Metrics() {
             <img className="fl-metrics__iso" src="/fogline/brand/isotipo.svg" alt="" aria-hidden="true" />
             <div className="fl-container">
                 <Reveal className="fl-metrics__head">
-                    <TwoTone lead={metrics.lead} rest={metrics.rest} className="fl-h-lg" />
+                    <ScrubText lead={metrics.lead} rest={metrics.rest} className="fl-h-lg" />
                     <p className="fl-lead">{metrics.intro}</p>
                 </Reveal>
                 <ul className="fl-metrics__rows">
@@ -126,13 +127,7 @@ export function Testimonials() {
     return (
         <section className="fl-section" aria-labelledby="fl-testimonials">
             <div className="fl-container fl-stack-80">
-                <Reveal>
-                    <h2 id="fl-testimonials" className="fl-h-lg fl-center">
-                        {testimonials.lead}
-                        <br />
-                        <span className="fl-muted">{testimonials.rest}</span>
-                    </h2>
-                </Reveal>
+                <ScrubText id="fl-testimonials" lead={testimonials.lead} rest={testimonials.rest} breakBetween className="fl-h-lg fl-center" />
                 <ul className="fl-testimonials">
                     {testimonials.items.map((t, i) => (
                         <Reveal as="li" key={t.name} delay={(i % 2) * 80} className="fl-testimonial">

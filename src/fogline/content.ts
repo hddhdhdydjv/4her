@@ -42,10 +42,12 @@ export const clients = {
     lead: "Trusted by 2,000 engineering teams",
     rest: "who review faster, merge with confidence and ship every day.",
     link: "Read customer stories",
-    logos: [
-        "codecraft", "layers", "warpspeed", "hourglass", "capsule", "quotient",
-        "lightbox", "boltshift", "featherdev", "codecraft", "layers", "warpspeed",
+    /** Dos filas que se mueven en sentidos opuestos. `url`: la web de cada cliente (placeholder). */
+    rows: [
+        ["codecraft", "layers", "warpspeed", "hourglass", "capsule"],
+        ["quotient", "lightbox", "boltshift", "featherdev"],
     ],
+    url: (company: string) => `#${company}`,
 };
 
 export const features = {
