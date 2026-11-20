@@ -130,9 +130,8 @@
     transform: translateX(-50%);
     display: flex;
     align-items: center;
-    gap: 12px;
     height: 48px;
-    width: 156px;
+    width: 132px;
     padding: 0 20px;
     border-radius: 999px;
     color: #fff;
@@ -140,11 +139,15 @@
     box-shadow: var(--fl-shadow-btn);
     overflow: hidden;
 }
+/* Sin gap: así los links escondidos no dejan aire entre el punto y el texto */
+.fl-pill .fl-dot { margin-right: 10px; }
 .fl-pill__logo,
 .fl-pill__menu { display: none; }
 .fl-pill__links {
     display: flex;
     gap: 22px;
+    padding-right: 0;
+    box-sizing: content-box;
     font-size: 15px;
     opacity: 0;
     visibility: hidden;
@@ -165,6 +168,14 @@
     white-space: nowrap;
 }
 .fl-pill__cta svg { width: 0; }
+
+/* Logo fijo arriba a la izquierda: no se va con el scroll */
+.fl-brand {
+    position: fixed;
+    z-index: 50;
+    left: var(--fl-gutter);
+    top: 32px;
+}
 
 /* ==========================================================================
    Hero (scroll-driven con GSAP)
@@ -362,7 +373,7 @@
     top: 0;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     padding: 20px var(--fl-gutter);
 }
 .fl-hero__header nav {
@@ -750,7 +761,8 @@
     .fl-pill__cta svg { display: none; }
     .fl-pill__menu { display: grid; place-items: center; width: 32px; height: 32px; }
 
-    .fl-hero__header { display: none; }
+    .fl-hero__header,
+    .fl-brand { display: none; }
     .fl-hero__copy { top: 84px; text-align: left; }
     .fl-hero__copy p { font-size: 16px; line-height: 24px; margin-top: 16px; }
     .fl-hero__mobile-cta { display: flex; width: 100%; margin-top: 24px; }

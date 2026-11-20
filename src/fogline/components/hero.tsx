@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { hero, heroSteps, nav } from "../content";
 import { gsap, useLenisScrollTrigger } from "../motion";
 import { Fog, type FogHandle } from "./fog";
-import { Icon, Logo } from "./icons";
+import { Icon } from "./icons";
 
 /**
  * Hero scroll-driven. Todo sigue al scroll (scrub), nada salta:
@@ -185,8 +185,8 @@ export function Hero() {
             gsap.timeline({
                 scrollTrigger: { trigger: el, start: () => `top top-=${travel()}`, end: () => `+=${Math.max(200, window.innerHeight * 0.25)}`, scrub: 0.4, invalidateOnRefresh: true },
             })
-                .fromTo(pill, { width: 156 }, { width: 448, ease: "power2.inOut", duration: 1 }, 0)
-                .fromTo(pill.querySelector(".fl-pill__links"), { autoAlpha: 0, maxWidth: 0 }, { autoAlpha: 1, maxWidth: 300, duration: 0.7 }, 0.25)
+                .fromTo(pill, { width: 132 }, { width: 448, ease: "power2.inOut", duration: 1 }, 0)
+                .fromTo(pill.querySelector(".fl-pill__links"), { autoAlpha: 0, maxWidth: 0, paddingRight: 0 }, { autoAlpha: 1, maxWidth: 300, paddingRight: 22, duration: 0.7 }, 0.25)
                 .fromTo(pill.querySelector(".fl-pill__cta"), { color: "#ffffff" }, { color: "#f1fd82", duration: 0.5 }, 0.4)
                 .fromTo(pill.querySelector(".fl-pill__cta svg"), { width: 0 }, { width: 14, duration: 0.5 }, 0.4);
         });
@@ -245,7 +245,6 @@ export function Hero() {
                 </div>
 
                 <header className="fl-hero__header">
-                    <Logo />
                     <nav aria-label="Account">
                         <a href="#">Pricing</a>
                         <a href="#">Log in</a>
