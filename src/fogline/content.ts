@@ -6,8 +6,9 @@ export const nav = {
 };
 
 export const hero = {
-    title: "Clear the fog from every pull request.",
-    lead: "Fogline reviews every pull request like your sharpest teammate: it flags bugs, risky changes and missing context before merge. You still make the call.",
+    /** Sin punto final; el salto evita una palabra sola en la segunda línea. */
+    titleLines: ["Clear the fog", "from every pull request"],
+    lead: "Fogline is an AI code reviewer. It reads every pull request like your sharpest teammate and flags bugs, risky changes and missing context before merge. You still make the call.",
 };
 
 /** Un paso por pantalla del hero (2 a 5). El 1 es la llegada y el 6 la salida. */
@@ -16,25 +17,25 @@ export const heroSteps = [
         icon: "eye",
         title: "Fogline reads the whole change",
         body: "Before it writes a single comment, Fogline gathers the context a reviewer would go looking for.",
-        chips: ["Related files", "Code history", "Tests and ticket"],
+        chips: ["Related files and call sites", "History of the code it touches", "Tests and the linked ticket"],
     },
     {
         icon: "search",
         title: "Findings, ranked by severity",
         body: "Fogline comments only where it matters, right on the line that needs attention.",
-        chips: ["High, medium and low", "Plain words", "No nitpicks"],
+        chips: ["High, medium and low severity", "Explained in plain words", "Nitpicks stay quiet"],
     },
     {
         icon: "wand",
         title: "Fix it without leaving the PR",
         body: "Every finding comes with a suggested patch you can review and apply.",
-        chips: ["One click", "Diff preview", "You decide"],
+        chips: ["Apply in one click", "Preview the diff first", "You still make the call"],
     },
     {
         icon: "merge",
         title: "Ready to merge",
         body: "Reviewed, fixed and explained. Your team decides when to ship.",
-        chips: ["Checks pass", "Summary posted", "GitHub and GitLab"],
+        chips: ["Status check passes", "Summary posted to the PR", "Works with GitHub and GitLab"],
     },
 ] as const;
 

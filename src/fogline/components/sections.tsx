@@ -2,6 +2,7 @@ import { Reveal } from "@/components/motion/reveal";
 import { clients, features, footer, metrics, nav, testimonials } from "../content";
 import { Icon, Logo } from "./icons";
 import { ScrubText } from "./scrub-text";
+import { FooterScene } from "./footer-scene";
 
 /* eslint-disable @next/next/no-img-element */
 
@@ -54,7 +55,7 @@ export function Clients() {
                                         tabIndex={copy > 0 ? -1 : 0}
                                         aria-label={l}
                                     >
-                                        <img src={`/fogline/brand/${l}.svg`} alt="" height={28} />
+                                        <img src={`/fogline/brand/${l}.svg`} alt="" height={34} />
                                         <span className="fl-logo-cell__arrow" aria-hidden="true">
                                             <Icon name="arrow-up-right" size={14} />
                                         </span>
@@ -127,7 +128,7 @@ export function Testimonials() {
     return (
         <section className="fl-section" aria-labelledby="fl-testimonials">
             <div className="fl-container fl-stack-80">
-                <ScrubText id="fl-testimonials" lead={testimonials.lead} rest={testimonials.rest} breakBetween className="fl-h-lg fl-center" />
+                <ScrubText id="fl-testimonials" lead={testimonials.lead} rest={testimonials.rest} breakBetween className="fl-h-lg" />
                 <ul className="fl-testimonials">
                     {testimonials.items.map((t, i) => (
                         <Reveal as="li" key={t.name} delay={(i % 2) * 80} className="fl-testimonial">
@@ -153,10 +154,7 @@ export function Testimonials() {
 export function Footer() {
     return (
         <footer className="fl-footer">
-            <picture className="fl-footer__scene">
-                <source media="(max-width: 767px)" srcSet="/fogline/footer/escena-mobile.webp" />
-                <img src="/fogline/footer/escena-desktop.webp" alt="" />
-            </picture>
+            <FooterScene />
             <div className="fl-footer__panel">
                 <div className="fl-container">
                     <div className="fl-footer__brand">

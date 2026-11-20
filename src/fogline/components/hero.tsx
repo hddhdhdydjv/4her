@@ -8,25 +8,78 @@ import { Fog, type FogHandle } from "./fog";
 import { Icon } from "./icons";
 
 /**
- * Hero scroll-driven. Todo sigue al scroll (scrub), nada salta:
- *  0 → 1  el texto sube, la píldora crece hasta ser navegación, el mockup sube y se enfoca.
- *  1 → 4  la card se mueve hasta la parte del producto que explica (pin) y su título
- *         se va pintando palabra por palabra; la niebla baja paso a paso.
- *  4 → 5  salida: se va la card; la escena completa sigue de largo con el scroll y se funde abajo en el crema.
- * Escena en coordenadas de Figma (1440 × 900), escalada por orientación.
+ * Hero scroll-driven (como la sección de notas de interacción de Figma, 399:13891):
+ *  0 → 1  el texto sube, la píldora se estira hasta ser navegación, el mockup sube,
+ *         se le va el desenfoque progresivo de abajo y la niebla se disipa.
+ *  1 → 4  en cada paso el elemento que importa "se levanta" del mockup con sombra,
+ *         el resto se apaga y se desenfoca un poco, y el cursor lima guía la vista
+ *         y hace clic. La card de vidrio queda fija en la esquina con el texto que
+ *         se pinta palabra por palabra.
+ *  4 → 5  salida: la escena completa sigue de largo con el scroll.
+ * Coordenadas de la escena = las del frame de Figma (1440 × 900).
  */
 
 const W = 1440;
 const H = 900;
 const UNITS = 5;
+/** El mockup arranca en y 420 y sube hasta 140 (como en Figma). */
+const MOCKUP = { x: 205, y: 140, rise: 280 };
 
-/** Posición de la card y del pin (coordenadas de la escena) por paso. */
-const SPOTS = [
-    { card: { x: 548, y: 300 }, pin: { x: 972, y: 349 } },
-    { card: { x: 380, y: 560 }, pin: { x: 311, y: 522 } },
-    { card: { x: 560, y: 360 }, pin: { x: 453, y: 412 } },
-    { card: { x: 560, y: 470 }, pin: { x: 1004, y: 475 } },
+type Pop = { pantalla: number; src: [number, number, number, number]; to: [number, number, number] };
+/** Elementos que se levantan en cada paso: recorte de la pantalla (coords de la UI 1280×840) → destino en la escena (x, y, ancho). */
+const POPS: Pop[][] = [
+    [{ pantalla: 1, src: [916, 225, 340, 254], to: [972, 298, 281] }],
+    [
+        { pantalla: 2, src: [81, 475, 694, 280], to: [281, 529, 599] },
+        { pantalla: 2, src: [916, 225, 340, 198], to: [937, 298, 316] },
+    ],
+    [
+        { pantalla: 3, src: [81, 531, 694, 128], to: [281, 529, 546] },
+        { pantalla: 3, src: [916, 225, 340, 166], to: [937, 306, 316] },
+    ],
+    [{ pantalla: 4, src: [916, 225, 340, 256], to: [945, 284, 322] }],
 ];
+/** Dónde apunta y hace clic el cursor en cada paso (coords de la escena). */
+const CURSOR = [
+    [960, 348],
+    [373, 744],
+    [637, 608],
+    [993, 491],
+];
+
+function PopCrop({ p }: { p: Pop }) {
+    const [ux, uy, uw, uh] = p.src;
+    const [tx, ty, tw] = p.to;
+    const k = tw / uw;
+    return (
+        <div
+            className="fl-pop"
+            style={{
+                left: tx - MOCKUP.x,
+                top: ty - MOCKUP.y,
+                width: tw,
+                height: Math.round(uh * k),
+                backgroundImage: `url(/fogline/ui/pantalla-${p.pantalla}.webp)`,
+                backgroundSize: `${1280 * k}px auto`,
+                backgroundPosition: `${-ux * k}px ${-uy * k}px`,
+            }}
+        />
+    );
+}
+
+function Cursor() {
+    return (
+        <svg className="fl-cursor" width="26" height="30" viewBox="0 0 26 30" fill="none" aria-hidden="true">
+            <path
+                d="M5.6 10C4.4 10.5 4.5 12.2 5.7 12.6l6.3 1.8 2.9 5.9c.6 1.2 2.3 1 2.6-.3l2.9-13.7c.2-1.1-.8-2-1.9-1.6L5.6 10Z"
+                fill="#F1FD82"
+                stroke="#000"
+                strokeWidth="1.5"
+                strokeLinejoin="round"
+            />
+        </svg>
+    );
+}
 
 function Words({ text }: { text: string }) {
     return (
@@ -122,44 +175,43 @@ export function Hero() {
             });
 
             // 0 → 1: llegada
-            tl.fromTo(q(".fl-mockup"), { y: 0 }, { y: -360, duration: 1 }, 0)
-                .fromTo(q(".fl-mockup"), { filter: "blur(3px)" }, { filter: "blur(1px)", duration: 1, ease: "none" }, 0)
-                .to(q(".fl-mockup"), { filter: "blur(0px)", duration: 0.6, ease: "none" }, 1)
+            tl.fromTo(q(".fl-mockup"), { y: 0 }, { y: -MOCKUP.rise, duration: 1 }, 0)
+                .fromTo(q(".fl-mockup__veil"), { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.8, ease: "none" }, 0)
                 .fromTo(q(".fl-indicators"), { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.4 }, 0.6)
-                .fromTo(q(".fl-card"), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4 }, 0.7);
+                .fromTo(q(".fl-card"), { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.4 }, 0.7)
+                .fromTo(q(".fl-dim"), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4 }, 0.75)
+                .fromTo(q(".fl-screen"), { filter: "blur(0px)" }, { filter: "blur(1.2px)", duration: 0.4 }, 0.75)
+                .fromTo(q(".fl-cursor-wrap"), { autoAlpha: 0, x: CURSOR[0][0] + 80, y: CURSOR[0][1] + 120 }, { autoAlpha: 1, x: CURSOR[0][0], y: CURSOR[0][1], duration: 0.4 }, 0.75);
 
-            // Niebla: baja con cada paso (la lee el shader en cada frame)
-            tl.to(fog.current, { density: 0.42, duration: 1, ease: "none" }, 0)
-                .to(fog.current, { density: 0.3, duration: 1, ease: "none" }, 1)
-                .to(fog.current, { density: 0.2, duration: 1, ease: "none" }, 2)
-                .to(fog.current, { density: 0.12, duration: 1, ease: "none" }, 3)
-                .to(fog.current, { density: 0.04, duration: 0.6, ease: "none" }, 4.4);
+            // La niebla se disipa al empezar el scroll
+            tl.to(fog.current, { density: 0.12, duration: 0.8, ease: "none" }, 0).to(fog.current, { density: 0, duration: 0.6, ease: "none" }, 0.8);
 
             // Pasos 1–4
             heroSteps.forEach((_, i) => {
                 const t = 1 + i; // inicio del paso
-                const step = q(`.fl-card__step[data-i="${i}"]`);
+                const start = i === 0 ? 0.8 : t - 0.3;
                 const words = q(`.fl-card__step[data-i="${i}"] .fl-word`);
-                // la card viaja hasta su lugar (solo en horizontal)
-                if (i > 0) tl.to(q(".fl-card--stage"), { x: SPOTS[i].card.x - SPOTS[0].card.x, y: SPOTS[i].card.y - SPOTS[0].card.y, duration: 0.6 }, t - 0.3);
-                // cambio de contenido
-                if (i > 0) tl.to(q(`.fl-card__step[data-i="${i - 1}"]`), { autoAlpha: 0, duration: 0.25 }, t - 0.3);
-                tl.fromTo(step, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.25 }, i === 0 ? 0.75 : t - 0.3);
-                // el título se pinta palabra por palabra
-                tl.fromTo(words, { opacity: 0.18 }, { opacity: 1, stagger: 0.04, duration: 0.2, ease: "none" }, i === 0 ? 0.8 : t - 0.15);
-                tl.fromTo(q(`.fl-card__step[data-i="${i}"] .fl-card__body, .fl-card__step[data-i="${i}"] li`), { autoAlpha: 0, y: 8 }, { autoAlpha: 1, y: 0, stagger: 0.04, duration: 0.2 }, (i === 0 ? 0.8 : t - 0.15) + 0.2);
-                // pin sobre la parte del producto
-                tl.fromTo(q(`.fl-pin[data-i="${i}"]`), { autoAlpha: 0, scale: 0.4 }, { autoAlpha: 1, scale: 1, duration: 0.3 }, i === 0 ? 0.8 : t);
-                if (i < 3) tl.to(q(`.fl-pin[data-i="${i}"]`), { autoAlpha: 0, duration: 0.2 }, t + 0.7);
+                // texto de la card: cambia y se pinta palabra por palabra
+                if (i > 0) tl.to(q(`.fl-card__step[data-i="${i - 1}"]`), { autoAlpha: 0, duration: 0.25 }, start);
+                tl.fromTo(q(`.fl-card__step[data-i="${i}"]`), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.25 }, start);
+                tl.fromTo(words, { opacity: 0.18 }, { opacity: 1, stagger: 0.04, duration: 0.2, ease: "none" }, start + 0.1);
+                tl.fromTo(q(`.fl-card__step[data-i="${i}"] .fl-card__body, .fl-card__step[data-i="${i}"] li`), { autoAlpha: 0, y: 8 }, { autoAlpha: 1, y: 0, stagger: 0.04, duration: 0.2 }, start + 0.3);
+                // pantalla del mockup
+                if (i > 0) tl.to(q(`.fl-screen[data-i="${i}"]`), { autoAlpha: 1, duration: 0.3 }, start);
+                // elementos que se levantan
+                if (i > 0) tl.to(q(`.fl-pops[data-i="${i - 1}"]`), { autoAlpha: 0, duration: 0.2 }, start);
+                tl.fromTo(q(`.fl-pops[data-i="${i}"] .fl-pop`), { autoAlpha: 0, scale: 0.96, y: 8 }, { autoAlpha: 1, scale: 1, y: 0, stagger: 0.08, duration: 0.3, ease: "back.out(1.6)" }, start + 0.1);
+                // el cursor viaja hasta lo que importa y hace clic
+                if (i > 0) tl.to(q(".fl-cursor-wrap"), { x: CURSOR[i][0], y: CURSOR[i][1], duration: 0.45 }, start);
+                tl.fromTo(q(".fl-cursor"), { scale: 1 }, { scale: 0.82, duration: 0.08, yoyo: true, repeat: 1, ease: "power1.inOut" }, start + 0.5);
+                tl.fromTo(q(".fl-cursor-ring"), { scale: 0.3, autoAlpha: 0.9 }, { scale: 1.6, autoAlpha: 0, duration: 0.3, ease: "power2.out" }, start + 0.52);
                 // anillo del indicador
                 tl.fromTo(q(`.fl-ind[data-i="${i}"] circle`), { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1, ease: "none" }, i === 0 ? 0.9 : t);
-                // pantalla del mockup
-                if (i > 0) tl.to(q(`.fl-screen[data-i="${i}"]`), { autoAlpha: 1, duration: 0.4 }, t - 0.2);
             });
 
-            // 4.5 → 5: salida. El paisaje se queda y la escena entera sigue de largo
-            // con el scroll; abajo se funde en el crema de la sección siguiente.
-            tl.to(q(".fl-card, .fl-indicators, .fl-pin"), { autoAlpha: 0, duration: 0.35 }, 4.55);
+            // 4.5 → 5: salida. La escena entera sigue de largo con el scroll.
+            tl.to(q(".fl-card, .fl-indicators, .fl-cursor-wrap, .fl-pops, .fl-dim"), { autoAlpha: 0, duration: 0.35 }, 4.55)
+                .to(q(".fl-screen"), { filter: "blur(0px)", duration: 0.35 }, 4.55);
         }, el);
         return () => ctx.revert();
     }, []);
@@ -173,7 +225,11 @@ export function Hero() {
         if (!el || !pill) return;
         const mm = gsap.matchMedia();
         mm.add("(min-width: 768px)", () => {
-            const start = () => Math.min(400, window.innerHeight * 0.46);
+            // el botón arranca justo debajo del texto del hero
+            const start = () => {
+                const copy = el.querySelector<HTMLElement>(".fl-hero__copy p");
+                return copy ? Math.round(copy.getBoundingClientRect().bottom + window.scrollY - el.offsetTop + 28) : 360;
+            };
             const travel = () => start() - 20;
             // 1. sube con la página
             gsap.fromTo(pill, { top: start }, {
@@ -205,6 +261,30 @@ export function Hero() {
         return () => mm.revert();
     }, []);
 
+    // Al mover el mouse, las capas de la ilustración se corren un poquito (profundidad)
+    useEffect(() => {
+        const el = ref.current;
+        if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        let tx = 0, ty = 0, cx = 0, cy = 0, raf = 0;
+        const onMove = (e: PointerEvent) => {
+            tx = (e.clientX / window.innerWidth) * 2 - 1;
+            ty = (e.clientY / window.innerHeight) * 2 - 1;
+        };
+        const tick = () => {
+            cx += (tx - cx) * 0.06;
+            cy += (ty - cy) * 0.06;
+            el.style.setProperty("--mx", cx.toFixed(3));
+            el.style.setProperty("--my", cy.toFixed(3));
+            raf = requestAnimationFrame(tick);
+        };
+        window.addEventListener("pointermove", onMove, { passive: true });
+        raf = requestAnimationFrame(tick);
+        return () => {
+            cancelAnimationFrame(raf);
+            window.removeEventListener("pointermove", onMove);
+        };
+    }, []);
+
     const goTo = (i: number) => {
         const el = ref.current;
         if (!el || !lenis) return;
@@ -223,24 +303,33 @@ export function Hero() {
                             {[1, 2, 3, 4].map((n, i) => (
                                 <img key={n} src={`/fogline/ui/pantalla-${n}.webp`} alt="" className="fl-screen" data-i={i} />
                             ))}
+                            {/* El resto de la interfaz se apaga y se desenfoca un poco */}
+                            <div className="fl-dim" />
                         </div>
+                        {POPS.map((group, i) => (
+                            <div key={i} className="fl-pops" data-i={i}>
+                                {group.map((p, j) => (
+                                    <PopCrop key={j} p={p} />
+                                ))}
+                            </div>
+                        ))}
+                        {/* Desenfoque progresivo de abajo hacia arriba en la llegada */}
+                        <div className="fl-mockup__veil" />
                     </div>
-                    <img className="fl-colina" src="/fogline/scene/colina.webp" alt="" />
+                    <img className="fl-colina" src="/fogline/scene/colina-dither.webp" alt="" />
                 </div>
 
                 <Fog handle={fog} />
 
-                {/* Capa delantera: misma escala que la escena, por encima de la niebla */}
+                {/* Capa delantera: el cursor que guía la vista */}
                 <div className="fl-stage fl-stage--front">
-                    {SPOTS.map((s, i) => (
-                        <span key={i} className="fl-pin" data-i={i} style={{ left: s.pin.x, top: s.pin.y }} />
-                    ))}
-                    <div className="fl-card fl-card--stage" style={{ left: SPOTS[0].card.x, top: SPOTS[0].card.y }}>
-                        <CardBody />
+                    <div className="fl-cursor-wrap">
+                        <span className="fl-cursor-ring" />
+                        <Cursor />
                     </div>
                 </div>
 
-                <div className="fl-card fl-card--panel">
+                <div className="fl-card">
                     <CardBody />
                 </div>
 
@@ -255,7 +344,11 @@ export function Hero() {
                 </header>
 
                 <div className="fl-hero__copy">
-                    <h1>{hero.title}</h1>
+                    <h1>
+                        {hero.titleLines[0]}
+                        <br />
+                        {hero.titleLines[1]}
+                    </h1>
                     <p>{hero.lead}</p>
                     <a className="fl-btn fl-btn--primary fl-hero__mobile-cta" href="#">
                         <span className="fl-dot" /> {nav.cta}
