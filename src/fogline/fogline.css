@@ -57,8 +57,8 @@
 .fl-measure-xl { max-width: 1060px; }
 
 .fl-h-lg {
-    font-size: clamp(32px, 3.2vw + 4px, 48px);
-    line-height: 1.12;
+    font-size: clamp(32px, 3.2vw + 4px, 45px);
+    line-height: 1.156;
     letter-spacing: -0.03em;
     font-weight: 500;
 }
@@ -411,8 +411,8 @@
 }
 .fl-card h2 {
     margin-top: 10px;
-    font-size: 26px;
-    line-height: 30px;
+    font-size: 28px;
+    line-height: 32px;
     letter-spacing: -0.02em;
     font-weight: 500;
 }
@@ -473,10 +473,10 @@
 }
 .fl-hero__copy h1 {
     text-wrap: balance;
-    font-size: clamp(36px, 4.4vw, 64px);
+    font-size: clamp(32px, 4.4vw, 64px);
     line-height: 1;
     letter-spacing: -0.04em;
-    font-weight: 600;
+    font-weight: 500;
 }
 .fl-hero__copy p {
     margin: 20px auto 0;
@@ -842,10 +842,10 @@
     box-shadow: var(--fl-shadow-xs);
 }
 .fl-testimonial blockquote {
-    font-size: 20px;
-    line-height: 30px;
+    font-size: 23px;
+    line-height: 32px;
     font-weight: 500;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.005em;
 }
 .fl-testimonial__foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 .fl-testimonial__logo { height: 28px; width: auto; opacity: 0.72; }
@@ -886,8 +886,8 @@
     color: #fff;
     font-size: calc(158 / 1440 * 100vw);
     line-height: 1;
-    font-weight: 500;
-    letter-spacing: -0.03em;
+    font-weight: 600;
+    letter-spacing: -0.02em;
     opacity: 0.95;
     filter: drop-shadow(0 6px 24px rgb(0 0 0 / 0.12));
     transform: translate(calc(var(--mx, 0) * -14px), calc(var(--my, 0) * -8px));
@@ -989,6 +989,7 @@
     .fl-hero__header,
     .fl-brand { display: none; }
     .fl-hero__copy { top: 84px; text-align: left; }
+    .fl-hero__copy h1 { font-size: 32px; line-height: 36px; letter-spacing: -0.03em; }
     .fl-hero__copy p { font-size: 16px; line-height: 24px; margin-top: 16px; }
     .fl-hero__mobile-cta { display: flex; width: 100%; margin-top: 24px; }
 
@@ -996,7 +997,8 @@
     .fl-logo-cell { width: 148px; height: 152px; }
     .fl-logo-cell img { height: 22px; }
     [data-layout="port"] .fl-card { top: 84px; left: 16px; right: 16px; padding: 20px; }
-    .fl-card h2 { font-size: 22px; line-height: 28px; }
+    .fl-card h2 { font-size: 23px; line-height: 28px; }
+    .fl-h-lg { font-size: 28px; line-height: 32px; letter-spacing: -0.02em; }
     .fl-testimonials { grid-template-columns: 1fr; }
 
 
