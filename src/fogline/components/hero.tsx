@@ -65,7 +65,7 @@ function CardBody() {
 
 export function Hero() {
     const ref = useRef<HTMLElement>(null);
-    const fog = useRef<FogHandle>({ density: 1 });
+    const fog = useRef<FogHandle>({ density: 0.55 });
     const [active, setActive] = useState(-1);
     const lenis = useLenisScrollTrigger();
 
@@ -123,17 +123,17 @@ export function Hero() {
 
             // 0 → 1: llegada
             tl.fromTo(q(".fl-mockup"), { y: 0 }, { y: -360, duration: 1 }, 0)
-                .fromTo(q(".fl-mockup"), { filter: "blur(14px)" }, { filter: "blur(5px)", duration: 1, ease: "none" }, 0)
-                .to(q(".fl-mockup"), { filter: "blur(0px)", duration: 1.4, ease: "none" }, 1)
+                .fromTo(q(".fl-mockup"), { filter: "blur(3px)" }, { filter: "blur(1px)", duration: 1, ease: "none" }, 0)
+                .to(q(".fl-mockup"), { filter: "blur(0px)", duration: 0.6, ease: "none" }, 1)
                 .fromTo(q(".fl-indicators"), { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.4 }, 0.6)
                 .fromTo(q(".fl-card"), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4 }, 0.7);
 
             // Niebla: baja con cada paso (la lee el shader en cada frame)
-            tl.to(fog.current, { density: 0.75, duration: 1, ease: "none" }, 0)
-                .to(fog.current, { density: 0.5, duration: 1, ease: "none" }, 1)
-                .to(fog.current, { density: 0.32, duration: 1, ease: "none" }, 2)
-                .to(fog.current, { density: 0.18, duration: 1, ease: "none" }, 3)
-                .to(fog.current, { density: 0.06, duration: 0.6, ease: "none" }, 4.4);
+            tl.to(fog.current, { density: 0.42, duration: 1, ease: "none" }, 0)
+                .to(fog.current, { density: 0.3, duration: 1, ease: "none" }, 1)
+                .to(fog.current, { density: 0.2, duration: 1, ease: "none" }, 2)
+                .to(fog.current, { density: 0.12, duration: 1, ease: "none" }, 3)
+                .to(fog.current, { density: 0.04, duration: 0.6, ease: "none" }, 4.4);
 
             // Pasos 1–4
             heroSteps.forEach((_, i) => {

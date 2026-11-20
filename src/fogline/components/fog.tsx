@@ -69,7 +69,7 @@ void main(){
   dens = clamp(dens, 0.0, 1.0);
 
   float dots = step(bayer4(cell), dens);
-  float a = dens * 0.55 + dots * 0.35;
+  float a = dens * 0.32 + dots * 0.26;
   gl_FragColor = vec4(uColor * a, a);
 }
 `;
